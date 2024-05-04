@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { BsStarFill } from "react-icons/bs";
 import { setAverageRating } from "../app/features/averageRatingSlice";
 import { useDispatch } from "react-redux";
+import CookieServices from "../services/CookieServices";
 
 const Reviews = ({ productId }) => {
   const [rating, setRating] = useState(0);
@@ -41,6 +42,8 @@ const Reviews = ({ productId }) => {
 
   const { data: userData } = useQuery("users", getMyUser);
 
+  const token = CookieServices.get("jwt");
+
   const handleRating = (newRating) => {
     setRating(newRating); // Update rating state when the user clicks on a star
   };
@@ -51,10 +54,10 @@ const Reviews = ({ productId }) => {
     formData.append(
       "data",
       JSON.stringify({
-        username: userData.username,
+        username: userData?.username,
         rating: rating,
         review: submitData.review,
-        user: userData.id,
+        user: userData?.id,
         product: productId,
       })
     );
@@ -65,7 +68,7 @@ const Reviews = ({ productId }) => {
   const hasReviewed = reviewsData?.data?.some(
     (review) =>
       review?.attributes?.product?.data?.id === Number(productId) &&
-      review?.attributes?.username === userData.username
+      review?.attributes?.username === userData?.username
   );
 
   const dispatch = useDispatch();
@@ -108,7 +111,7 @@ const Reviews = ({ productId }) => {
           backgroundColor="purple.600"
         />
       </Heading>
-      {!hasReviewed && (
+      {token && !hasReviewed && (
         <Box as="form" onSubmit={handleSubmit(onSubmit)} mb="40px">
           <VStack>
             <FormControl>
