@@ -27,8 +27,6 @@ const DashboardReviewsTable = () => {
   const queryClient = useQueryClient();
   const { data: reviewsData } = useQuery("reviews", getReviewsList);
 
-  console.log(reviewsData);
-
   const { isLoading: isDeleting, mutate: mutateDelete } = useMutation({
     mutationFn: () => deleteReview(clickedReviewId),
     onSuccess: () => {

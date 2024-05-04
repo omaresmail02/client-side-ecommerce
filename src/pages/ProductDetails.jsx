@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductDetailsSkeleton from "../components/ProductDetailsSkeleton";
@@ -8,7 +7,7 @@ import { addItem } from "../app/features/cartSlice";
 import { addItem as addItemToFavorite } from "../app/features/favoriteSlice";
 import { HiArrowLeft } from "react-icons/hi2";
 
-import { getProduct } from "../services/apiProduct";
+import { axiosInstance } from "../api/axios.config";
 
 import {
   Box,
@@ -38,7 +37,14 @@ function ProductDetailsPage() {
     dispatch(addItemToFavorite(data.data));
   };
 
-  const { isLoading, data } = useQuery(["products", id], () => getProduct(id));
+  const getProduct = async (id) => {
+    const { data } = await axiosInstance.get(
+      `/api/products/${id}?populate=thumbnail,category`
+    );
+    return data;
+  };
+
+  const { isLoading, data } = useQuery(["products", id], getProduct);
 
   useEffect(() => {
     document.title = `متجر التجارة الالكتروني | ${data?.data?.attributes?.title} `;

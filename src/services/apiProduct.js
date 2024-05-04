@@ -13,13 +13,6 @@ export const getProductList = async () => {
   }
 };
 
-export const getProduct = async (id) => {
-  const { data } = await axiosInstance.get(
-    `/api/products/${id}?populate=thumbnail,category`
-  );
-  return data;
-};
-
 export const createProduct = async ({ body }) => {
   try {
     const { data } = await axiosInstance.post(

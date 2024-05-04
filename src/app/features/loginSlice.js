@@ -59,7 +59,6 @@ const loginSlice = createSlice({
         state.loading = false;
         state.data = [];
         state.error = action.payload;
-        console.log(action);
 
         toast({
           title: action.payload.response.data.error.message,

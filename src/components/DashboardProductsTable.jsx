@@ -157,7 +157,6 @@ const DashboardProductsTable = () => {
     if (data.thumbnail.length > 0) {
       formData.append("files.thumbnail", data.thumbnail[0]);
     }
-    console.log("Update product with id:", editId); // Check if product.id is correct here
     mutateUpdate({ id: editId, body: formData });
   };
 
