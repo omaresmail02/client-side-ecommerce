@@ -233,6 +233,8 @@ export default function Nav() {
                   color="purple.800"
                   border="2px solid"
                   borderColor="purple.800"
+                  w={{ base: "75px", md: "110px" }}
+                  fontSize={{ base: "10px", md: "14px" }}
                   _hover={{
                     bg: "purple.800",
                     color: "white",
@@ -249,6 +251,8 @@ export default function Nav() {
                   color="purple.800"
                   border="2px solid"
                   borderColor="purple.800"
+                  w={{ base: "75px", md: "110px" }}
+                  fontSize={{ base: "10px", md: "14px" }}
                   _hover={{
                     bg: "purple.800",
                     color: "white",
