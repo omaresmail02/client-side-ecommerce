@@ -37,7 +37,7 @@ function ProductDetailsPage() {
     dispatch(addItemToFavorite(data.data));
   };
 
-  const getProduct = async (id) => {
+  const getProduct = async () => {
     const { data } = await axiosInstance.get(
       `/api/products/${id}?populate=thumbnail,category`
     );
