@@ -1,11 +1,9 @@
-import axios from "axios";
 import CookieServices from "./CookieServices";
+import { axiosInstance } from "../api/axios.config.js";
 
 export const getCategoriesList = async () => {
   try {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/api/categories`
-    );
+    const { data } = await axiosInstance.get(`/api/categories`);
     return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -15,15 +13,11 @@ export const getCategoriesList = async () => {
 
 export const createCategory = async ({ body }) => {
   try {
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_SERVER_URL}/api/categories`,
-      body,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.post(`/api/categories`, body, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error creating category:", error);
@@ -33,14 +27,11 @@ export const createCategory = async ({ body }) => {
 
 export const deleteCategory = async (id) => {
   try {
-    const { data } = await axios.delete(
-      `${import.meta.env.VITE_SERVER_URL}/api/categories/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.delete(`/api/categories/${id}`, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error deleting category:", error);

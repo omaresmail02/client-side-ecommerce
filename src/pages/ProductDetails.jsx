@@ -8,6 +8,8 @@ import { addItem } from "../app/features/cartSlice";
 import { addItem as addItemToFavorite } from "../app/features/favoriteSlice";
 import { HiArrowLeft } from "react-icons/hi2";
 
+import { getProduct } from "../services/apiProduct";
+
 import {
   Box,
   Button,
@@ -36,16 +38,7 @@ function ProductDetailsPage() {
     dispatch(addItemToFavorite(data.data));
   };
 
-  const getProduct = async () => {
-    const { data } = await axios.get(
-      `${
-        import.meta.env.VITE_SERVER_URL
-      }/api/products/${id}?populate=thumbnail,category`
-    );
-    return data;
-  };
-
-  const { isLoading, data } = useQuery(["products", id], getProduct);
+  const { isLoading, data } = useQuery(["products", id], () => getProduct(id));
 
   useEffect(() => {
     document.title = `متجر التجارة الالكتروني | ${data?.data?.attributes?.title} `;

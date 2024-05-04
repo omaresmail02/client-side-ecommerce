@@ -1,8 +1,5 @@
-import axios from "axios";
 import CookieServices from "./CookieServices";
 import { axiosInstance } from "../api/axios.config.js";
-
-console.log(axiosInstance);
 
 export const getProductList = async () => {
   try {
@@ -16,14 +13,17 @@ export const getProductList = async () => {
   }
 };
 
-console.log(import.meta.env.VITE_SERVER_URL);
+export const getProduct = async (id) => {
+  const { data } = await axiosInstance.get(
+    `/api/products/${id}?populate=thumbnail,category`
+  );
+  return data;
+};
 
 export const createProduct = async ({ body }) => {
   try {
-    const { data } = await axios.post(
-      `${
-        import.meta.env.VITE_SERVER_URL
-      }/api/products?populate=category,thumbnail`,
+    const { data } = await axiosInstance.post(
+      `/api/products?populate=category,thumbnail`,
       body,
       {
         headers: {
@@ -40,14 +40,11 @@ export const createProduct = async ({ body }) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const { data } = await axios.delete(
-      `${import.meta.env.VITE_SERVER_URL}/api/products/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.delete(`/api/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error deleting product:", error);
@@ -57,10 +54,8 @@ export const deleteProduct = async (id) => {
 
 export const updateProduct = async ({ id, body }) => {
   try {
-    const { data } = await axios.put(
-      `${
-        import.meta.env.VITE_SERVER_URL
-      }/api/products/${id}?populate=thumbnail,category`,
+    const { data } = await axiosInstance.put(
+      `/api/products/${id}?populate=thumbnail,category`,
       body,
       {
         headers: {

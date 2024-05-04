@@ -1,11 +1,9 @@
-import axios from "axios";
 import CookieServices from "./CookieServices";
+import { axiosInstance } from "../api/axios.config.js";
 
 export const getUsersList = async () => {
   try {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/api/users?populate=role`
-    );
+    const { data } = await axiosInstance.get(`/api/users?populate=role`);
     return data;
   } catch (error) {
     console.error("Error fetching users list:", error);
@@ -15,14 +13,11 @@ export const getUsersList = async () => {
 
 export const getMyUser = async () => {
   try {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/api/users/me?populate=role`,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.get(`/api/users/me?populate=role`, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -32,15 +27,11 @@ export const getMyUser = async () => {
 
 export const updateUser = async ({ id, body }) => {
   try {
-    const { data } = await axios.put(
-      `${import.meta.env.VITE_SERVER_URL}/api/users/${id}`,
-      body,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.put(`/api/users/${id}`, body, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error updating user:", error);
@@ -50,14 +41,11 @@ export const updateUser = async ({ id, body }) => {
 
 export const deleteUser = async (id) => {
   try {
-    const { data } = await axios.delete(
-      `${import.meta.env.VITE_SERVER_URL}/api/users/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        },
-      }
-    );
+    const { data } = await axiosInstance.delete(`/api/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error deleting user:", error);
