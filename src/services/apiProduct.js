@@ -1,12 +1,13 @@
 import axios from "axios";
 import CookieServices from "./CookieServices";
+import { axiosInstance } from "../api/axios.config.js";
+
+console.log(axiosInstance);
 
 export const getProductList = async () => {
   try {
-    const { data } = await axios.get(
-      `${
-        import.meta.env.VITE_SERVER_URL
-      }/api/products?populate=thumbnail,category`
+    const { data } = await axiosInstance.get(
+      `/api/products?populate=thumbnail,category`
     );
     return data;
   } catch (error) {
@@ -14,6 +15,8 @@ export const getProductList = async () => {
     throw error;
   }
 };
+
+console.log(import.meta.env.VITE_SERVER_URL);
 
 export const createProduct = async ({ body }) => {
   try {
