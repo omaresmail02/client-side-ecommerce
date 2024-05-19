@@ -105,17 +105,13 @@ export default function Login() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Stack spacing={4}>
-              <FormControl>
-                <FormLabel>البريد الالكتروني</FormLabel>
-                <Input type="text" {...register("username")} />
-              </FormControl>
-              {/* <FormControl id="email" isInvalid={!!errors.email}>
+              <FormControl id="email" isInvalid={!!errors.email}>
                 <FormLabel>البريد الالكتروني</FormLabel>
                 <Input type="email" {...register("email")} />
                 <FormErrorMessage color={"red.500"}>
                   {errors.email?.message}
                 </FormErrorMessage>
-              </FormControl> */}
+              </FormControl>
               <FormControl id="password" isInvalid={!!errors.password}>
                 <FormLabel>كلمة السر</FormLabel>
                 <Input type="password" {...register("password")} />
