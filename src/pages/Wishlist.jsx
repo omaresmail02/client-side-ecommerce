@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Box, Button, Heading, Text } from "@chakra-ui/react";
-import FavoriteItem from "../components/FavoriteItem";
-import { clearFavorite } from "../app/features/favoriteSlice";
+import { clearWishlist } from "../app/features/wishlistSlice";
+import WishlistItem from "../components/WishlistItem";
+import { HiXMark } from "react-icons/hi2";
 
-function FavoritePage() {
-  const favorite = useSelector((state) => state.favorite);
+function WishlistPage() {
+  const wishlist = useSelector((state) => state.wishlist);
 
   const dispatch = useDispatch();
 
   return (
     <Box p="4">
-      {favorite.favorite.length > 0 ? (
+      {wishlist.wishlist.length > 0 ? (
         <>
           <Heading
             fontSize={{ base: "large", lg: "xx-large" }}
@@ -18,7 +19,7 @@ function FavoritePage() {
             position="relative"
             display="inline-block"
           >
-            المفضلة
+            قائمة الرغبات
             <Box
               position="absolute"
               bottom="-5px"
@@ -29,26 +30,28 @@ function FavoritePage() {
               backgroundColor="purple.600"
             />
           </Heading>
-          {favorite.favorite.map((item) => (
-            <FavoriteItem item={item} key={item.id} />
+          {wishlist.wishlist.map((item) => (
+            <WishlistItem item={item} key={item.id} />
           ))}
 
           <Button
             backgroundColor={"red.600"}
             color="white"
             _hover={{ backgroundColor: "red.800" }}
-            onClick={() => dispatch(clearFavorite())}
+            onClick={() => dispatch(clearWishlist())}
+            rightIcon={<HiXMark size={24} />}
+            aria-label="مسح قائمة الرغبات"
           >
-            مسح المفضلة
+            مسح قائمة الرغبات
           </Button>
         </>
       ) : (
         <Text fontWeight={"bold"} fontSize={"xx-large"} textAlign={"center"}>
-          مفضلتك فارغة
+          قائمة الرغبات فارغة
         </Text>
       )}
     </Box>
   );
 }
 
-export default FavoritePage;
+export default WishlistPage;

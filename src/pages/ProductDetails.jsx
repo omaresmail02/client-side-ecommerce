@@ -1,56 +1,93 @@
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ProductDetailsSkeleton from "../components/ProductDetailsSkeleton";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addItem } from "../app/features/cartSlice";
-import { addItem as addItemToFavorite } from "../app/features/favoriteSlice";
-import { HiArrowLeft } from "react-icons/hi2";
-
-import { axiosInstance } from "../api/axios.config";
+import { addItem as addItemToWishlist } from "../app/features/wishlistSlice";
+import {
+  HiOutlineExclamationTriangle,
+  HiOutlineHeart,
+  HiOutlineShoppingBag,
+} from "react-icons/hi2";
 
 import {
   Box,
-  Button,
   Heading,
   HStack,
+  IconButton,
   Image,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import Reviews from "../components/Reviews";
 import { useSelector } from "react-redux";
 import { BsStarFill } from "react-icons/bs";
+import { getProduct } from "../services/apiProduct";
+import { formatPrice } from "../utils";
 
 function ProductDetailsPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const goBack = () => navigate(-1);
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+  const wishlist = useSelector((state) => state.wishlist);
+
+  const toast = useToast();
 
   const handleAddToCart = () => {
-    dispatch(addItem(data.data));
+    dispatch(addItem(data));
+    const existingProduct = cart.cart.find((item) => item.id === data.id);
+    !existingProduct &&
+      toast({
+        title: "المنتج تمت اضافته الى عربة التسوق بنجاح",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineShoppingBag size={20} />,
+      });
+
+    existingProduct &&
+      toast({
+        title: " المنتج موجود بالفعل في عربة التسوق",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineExclamationTriangle size={20} />,
+      });
   };
 
-  const handleAddToFavorite = () => {
-    dispatch(addItemToFavorite(data.data));
-  };
-
-  const getProduct = async () => {
-    const { data } = await axiosInstance.get(
-      `/api/products/${id}?populate=thumbnail,category`
+  const handleAddToWishlist = () => {
+    dispatch(addItemToWishlist(data));
+    const existingProduct = wishlist.wishlist.find(
+      (item) => item.id === data.id
     );
-    return data;
+    !existingProduct &&
+      toast({
+        title: " المنتج تمت اضافته الى قائمة الرغبات بنجاح",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineHeart size={20} />,
+      });
+
+    existingProduct &&
+      toast({
+        title: "المنتج موجود بالفعل في قائمة الرغبات",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineExclamationTriangle size={20} />,
+      });
   };
 
-  const { isLoading, data } = useQuery(["products", id], getProduct);
+  const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
 
-  useEffect(() => {
-    document.title = `متجر التجارة الالكتروني | ${data?.data?.attributes?.title} `;
-  }, [data]);
-
-  const averageRating = useSelector((state) => state.averageRating);
+  // const averageRating = useSelector((state) => state.averageRating);
 
   if (isLoading) return <ProductDetailsSkeleton />;
 
@@ -63,7 +100,7 @@ function ProductDetailsPage() {
           position="relative"
           display="inline-block"
         >
-          {data?.data?.attributes.title}
+          {data?.title}
           <Box
             position="absolute"
             bottom="-5px"
@@ -78,8 +115,8 @@ function ProductDetailsPage() {
           borderWidth="1px"
           borderRadius="md"
           borderColor={"purple.600"}
+          rounded="lg"
           boxShadow="xl"
-          p="4"
           mb="4"
         >
           <HStack
@@ -89,52 +126,84 @@ function ProductDetailsPage() {
             flexDirection={{ base: "column", lg: "row" }}
           >
             <Image
-              src={data?.data?.attributes?.thumbnail?.data?.attributes?.url}
-              alt={data.data.attributes.title}
-              width={"50%"}
+              src={data?.thumbnail}
+              alt={data.title}
+              width="100%"
               objectFit={"fill"}
-              rounded={"sm"}
+              rounded="lg"
+              roundedBottom={{ base: "none", lg: "lg" }}
+              roundedLeft={{ base: "lg", lg: "none" }}
+              flexBasis="50%"
             />
-            <VStack align="start" justify="center" spacing="4">
-              <Text fontSize="lg">{data.data.attributes.description}</Text>
-              <Text fontSize="xl" fontWeight="bold">
-                السعر: ${data.data.attributes.price}
+            <VStack
+              align="start"
+              justify="center"
+              spacing="4"
+              flexBasis="50%"
+              p="20px"
+            >
+              <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
+                {data.description}
               </Text>
-              <Text fontSize="md">
-                عدد القطع المتوفرة :{data.data.attributes.stock}
-              </Text>
-              <Text>
+
+              {data.discountPercentage > 0 ? (
+                <Text fontSize="lg" fontWeight="semibold">
+                  تخفيض : {`${Math.ceil(data.discountPercentage)} %`}
+                </Text>
+              ) : null}
+
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                gap="10px"
+              >
+                <Text
+                  fontSize="large"
+                  fontWeight="semibold"
+                  textDecoration={
+                    data.discountPercentage ? "line-through" : "none"
+                  }
+                >
+                  {formatPrice(data.price)}
+                </Text>
+                <Text fontSize="large" fontWeight="semibold">
+                  {formatPrice(
+                    data.price - data.price * (data.discountPercentage / 100)
+                  )}
+                </Text>
+              </Box>
+              <Text fontSize="md">عدد القطع المتوفرة :{data.stock}</Text>
+              {/* <Text>
                 التقييم :{" "}
                 {averageRating === 0
                   ? "لايوجد مراجعات , كن اول المراجعين"
                   : averageRating}
-              </Text>
-              <Text as="span" display="flex" gap="1">
+              </Text> */}
+              {/* <Text as="span" display="flex" gap="1">
                 {[...Array(Math.round(averageRating))].map((_, index) => (
                   <BsStarFill color="gold" key={index} />
                 ))}
-              </Text>
-              <HStack spacing="4" flexDirection={{ base: "column", lg: "row" }}>
-                <Button
+              </Text> */}
+              <HStack spacing="2" flexDirection="row">
+                <IconButton
                   backgroundColor="purple.600"
                   color="white"
-                  size="large"
-                  p="5"
+                  size="lg"
                   _hover={{ backgroundColor: "purple.800" }}
                   onClick={handleAddToCart}
-                >
-                  اضافة الى العربة
-                </Button>
-                <Button
+                  aria-label="اضافة الى العربة"
+                  icon={<HiOutlineShoppingBag />}
+                />
+                <IconButton
                   backgroundColor="purple.600"
                   color="white"
-                  size="large"
-                  p="5"
+                  size="lg"
                   _hover={{ backgroundColor: "purple.800" }}
-                  onClick={handleAddToFavorite}
-                >
-                  اضافة الى المفضلة
-                </Button>
+                  onClick={handleAddToWishlist}
+                  aria-label="اضافة الى المفضلة"
+                  icon={<HiOutlineHeart />}
+                />
               </HStack>
             </VStack>
           </HStack>
@@ -142,22 +211,6 @@ function ProductDetailsPage() {
       </Box>
 
       <Reviews productId={id} />
-
-      <Button
-        fontSize={"lg"}
-        fontWeight={"bold"}
-        cursor={"pointer"}
-        onClick={goBack}
-        mt={3}
-        backgroundColor="purple.600"
-        color="white"
-        size="large"
-        p="5"
-        _hover={{ backgroundColor: "purple.800" }}
-      >
-        <HiArrowLeft />
-        <Text>الرجوع!</Text>
-      </Button>
     </Box>
   );
 }

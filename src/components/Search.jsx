@@ -1,20 +1,3 @@
-// import { useState } from "react";
-// import SearchInput from "./SearchInput";
-
-// import SearchResults from "./SearchResults";
-// const Search = () => {
-//   const [searchResults, setSearchResults] = useState([]);
-
-//   return (
-//     <>
-//       <SearchInput setSearchResults={setSearchResults} />
-//       <SearchResults searchResults={searchResults} />
-//     </>
-//   );
-// };
-
-// export default Search;
-
 import { useState } from "react";
 import {
   Box,
@@ -26,10 +9,12 @@ import {
   Text,
   Divider,
   useColorMode,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { getProductList } from "../services/apiProduct";
 import { Link } from "react-router-dom";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 const SearchComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,8 +25,8 @@ const SearchComponent = () => {
   const { data } = useQuery("products", getProductList);
 
   const searchData = (value) => {
-    const results = data?.data?.filter((product) =>
-      product?.attributes?.title?.toLowerCase().includes(value.toLowerCase())
+    const results = data?.products.filter((product) =>
+      product?.title?.toLowerCase().includes(value.toLowerCase())
     );
     setSearchResults(results);
   };
@@ -67,13 +52,19 @@ const SearchComponent = () => {
   return (
     <Box position="relative">
       <InputGroup>
+        <InputLeftElement pointerEvents="none">
+          <HiOutlineMagnifyingGlass color="white" size={20} />
+        </InputLeftElement>
         <Input
           placeholder="ابحث عن منتجك..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
           bg={"none"}
           color={"white"}
-          _focus={{ outline: "2px solid purple.800" }}
+          _focus={{
+            _placeholder: { opacity: 0.5 },
+            boxShadow: "none",
+          }}
           rounded={{ base: "none", md: "md" }}
           border="none"
         />
@@ -104,7 +95,7 @@ const SearchComponent = () => {
                   onClick={handleClearSearch}
                 >
                   <Text fontWeight="bold" fontSize="md" p={2}>
-                    {result.attributes.title}
+                    {result.title}
                   </Text>
                 </ListItem>
                 <Divider />

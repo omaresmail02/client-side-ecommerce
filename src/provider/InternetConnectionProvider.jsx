@@ -14,12 +14,24 @@ const InternetConnectionProvider = ({ children }) => {
     toast.closeAll(toastIdRef.current);
   }
 
-  function addToast() {
+  function offlineToast() {
     toastIdRef.current = toast({
-      title: "You are offline!",
-      description: "Please check your internet connection",
+      title: "انت غير متصل بالانترنت",
+      description: "الرجاء التحقق من اتصال الانترنت الخاص بك",
       status: "warning",
       duration: null,
+      isClosable: true,
+      position: "top-right",
+      icon: <BiWifi size={20} />,
+    });
+  }
+
+  function onlineToast() {
+    toastIdRef.current = toast({
+      title: "انت متصل بالانترنت",
+      description: "تمت استعادة اتصالك بالإنترنت",
+      status: "success",
+      duration: "4000",
       isClosable: true,
       position: "top-right",
       icon: <BiWifi size={20} />,
@@ -29,10 +41,11 @@ const InternetConnectionProvider = ({ children }) => {
   const setOnLine = () => {
     dispatch(networkMode(true));
     close();
+    onlineToast();
   };
   const setOffLine = () => {
     dispatch(networkMode(false));
-    addToast();
+    offlineToast();
   };
 
   useEffect(() => {

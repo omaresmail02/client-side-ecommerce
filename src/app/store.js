@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./features/loginSlice";
 import cartSlice from "./features/cartSlice";
-import favoriteSlice from "./features/favoriteSlice";
+import wishlistSlice from "./features/wishlistSlice";
 import networkSlice from "./features/networkSlice";
 
 import { persistStore, persistReducer } from "redux-persist";
@@ -10,12 +10,12 @@ import signupSlice from "./features/signupSlice";
 import averageRatingSlice from "./features/averageRatingSlice";
 
 const persistCartConfig = {
-  key: ["cart", "favorite"],
+  key: ["cart", "wishlist"],
   storage,
 };
 
 const persistedCart = persistReducer(persistCartConfig, cartSlice);
-const persistedFavorite = persistReducer(persistCartConfig, favoriteSlice);
+const persistedWishlist = persistReducer(persistCartConfig, wishlistSlice);
 
 export const store = configureStore({
   reducer: {
@@ -24,7 +24,7 @@ export const store = configureStore({
     login: loginSlice,
     averageRating: averageRatingSlice,
     cart: persistedCart,
-    favorite: persistedFavorite,
+    wishlist: persistedWishlist,
   },
 });
 

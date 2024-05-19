@@ -1,16 +1,12 @@
 import { Box, Flex, Heading, IconButton, Image, Text } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import {
-  decressItem,
-  deleteItem,
-  incressItem,
-} from "../app/features/cartSlice";
-import { HiTrash } from "react-icons/hi2";
+import { deleteItem } from "../app/features/wishlistSlice";
+import { HiEye, HiTrash } from "react-icons/hi";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { formatPrice } from "../utils";
-import { HiMinus, HiPlus } from "react-icons/hi";
 
-const CartItem = ({ item }) => {
+const WishlistItem = ({ item }) => {
   const dispatch = useDispatch();
 
   return (
@@ -18,16 +14,15 @@ const CartItem = ({ item }) => {
       <Flex
         key={item.id}
         alignItems="center"
-        justify={"space-between"}
         borderWidth="1px"
         borderRadius="md"
         borderColor={"purple.600"}
         p="2"
         mb="2"
-        gap={2}
+        justify={"space-between"}
         boxShadow="md"
         flexDirection={{ base: "column", md: "row" }}
-        w="100%"
+        gap="20px"
       >
         <Flex
           gap="20px"
@@ -35,18 +30,22 @@ const CartItem = ({ item }) => {
           alignItems={{ base: "start", md: "center" }}
           w="100%"
         >
-          <Box w="100%">
+          <Box w={{ base: "100%", md: "25%" }} h="100%">
             <Image
-              src={item?.thumbnail}
+              src={item.thumbnail}
               alt={item.title}
-              boxSize="200px"
               objectFit="cover"
               rounded="md"
               w="100%"
+              h="100%"
             />
           </Box>
-          <Box w="100%">
-            <Heading fontSize="large" mb="10px">
+          <Box flexBasis="75%">
+            <Heading
+              fontSize={{ base: "xl", md: "2xl" }}
+              fontWeight="bold"
+              mb="2"
+            >
               {item.title}
             </Heading>
             {item.discountPercentage > 0 && (
@@ -70,52 +69,25 @@ const CartItem = ({ item }) => {
             >
               {formatPrice(item.price)}
             </Text>
-            <Flex align={"center"} justify={"flex-start"} gap={4} mt={4}>
-              <IconButton
-                backgroundColor="purple.600"
-                color="white"
-                p="5"
-                _hover={{ backgroundColor: "purple.800" }}
-                onClick={() => dispatch(incressItem(item.id))}
-                icon={<HiPlus />}
-              />
-              <Text color="purple.600" fontWeight="bold">
-                {item.quantity}
-              </Text>
-              <IconButton
-                backgroundColor="purple.600"
-                color="white"
-                p="5"
-                _hover={{ backgroundColor: "purple.800" }}
-                onClick={() => dispatch(decressItem(item.id))}
-                icon={<HiMinus />}
-              />
-            </Flex>
-          </Box>
-        </Flex>
-        <Flex
-          flexDirection={{ base: "row", md: "column" }}
-          gap="10px"
-          justifyContent="space-between"
-          alignItems="flex-end"
-          w="100%"
-        >
-          <Box>
-            <Text fontWeight="bold">
-              <Text> السعر الكلي</Text>
-              {item.discountPercentage > 0
-                ? formatPrice(
-                    (item.price -
-                      item.price * (item.discountPercentage / 100)) *
-                      item.quantity
-                  )
-                : formatPrice(item.price * item.quantity)}
+
+            <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
+              {item.description}
             </Text>
           </Box>
+        </Flex>
+        <Flex gap={1} my="20px">
           <IconButton
-            backgroundColor="red.600"
+            backgroundColor={"purple.600"}
             color="white"
-            maxW={"120px"}
+            _hover={{ backgroundColor: "purple.800" }}
+            as={Link}
+            to={`/products/${item.id}`}
+            icon={<HiEye />}
+          />
+
+          <IconButton
+            backgroundColor={"red.600"}
+            color="white"
             _hover={{ backgroundColor: "red.800" }}
             onClick={() => dispatch(deleteItem(item.id))}
             icon={<HiTrash />}
@@ -126,4 +98,4 @@ const CartItem = ({ item }) => {
   );
 };
 
-export default CartItem;
+export default WishlistItem;

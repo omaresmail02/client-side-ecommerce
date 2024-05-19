@@ -1,4 +1,4 @@
-import DashboardCategoriesTable from "../../components/DashboardCategoriesTable";
+import DashboardCategoriesTable from "../../components/Dashboard/DashboardCategoriesTable";
 
 const DashboardCategories = () => {
   return <DashboardCategoriesTable />;

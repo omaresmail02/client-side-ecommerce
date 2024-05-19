@@ -13,14 +13,27 @@ export const addItemToShoppingCart = (
   return [...shoppingCartItems, { ...cartItem, quantity: 1 }];
 };
 
-export const addItemToFavorite = (favItem = {}, favoriteItems = []) => {
-  const existsItem = favoriteItems.find((item) => item.id === favItem.id);
+export const addItemToWishlist = (favItem = {}, wishlistItems = []) => {
+  const existsItem = wishlistItems.find((item) => item.id === favItem.id);
 
   if (existsItem) {
-    return favoriteItems.map((item) =>
+    return wishlistItems.map((item) =>
       item.id === favItem.id ? { ...item, quantity: item.quantity + 1 } : item
     );
   }
 
-  return [...favoriteItems, { ...favItem, quantity: 1 }];
+  return [...wishlistItems, { ...favItem, quantity: 1 }];
+};
+
+export const formatPrice = (price) => {
+  const formatedPrice = price.toLocaleString("ar-EG", {
+    style: "currency",
+    currency: "EGP",
+  });
+  return formatedPrice;
+};
+
+export const textSlicer = (txt, max = 50) => {
+  if (txt.length >= max) return `${txt.slice(0, max)}...`;
+  return txt;
 };

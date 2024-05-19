@@ -19,6 +19,7 @@ const UserProfile = () => {
   const queryClient = useQueryClient();
 
   const { data } = useQuery("users", getMyUser);
+  console.log(data);
   const userId = data?.id;
 
   const { isOpen, onOpen, onClose } = useDisclosure();

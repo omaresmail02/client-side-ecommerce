@@ -17,7 +17,6 @@ const CustomeModal = ({
   okTxt = "Done",
   cancelTxt = "Cancel",
   onSubmit,
-  mutate,
   loading,
   errorsExist,
 }) => {
@@ -29,28 +28,20 @@ const CustomeModal = ({
       motionPreset="slideInBottom"
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent as="form" onSubmit={onSubmit}>
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{children}</ModalBody>
-        <ModalFooter>
-          <Button mr={3} onClick={onModalClose}>
-            {cancelTxt}
-          </Button>
+        <ModalFooter gap="8px">
+          <Button onClick={onModalClose}>{cancelTxt}</Button>
           <Button
+            type="submit"
             backgroundColor="purple.600"
             color="white"
             p="5"
             _hover={{ backgroundColor: "purple.800" }}
-            onClick={() => {
-              onSubmit();
-              mutate();
-              if (!errorsExist) {
-                onModalClose();
-              }
-            }}
             isLoading={loading}
-            disabled={errorsExist}
+            isDisabled={errorsExist}
           >
             {okTxt}
           </Button>

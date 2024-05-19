@@ -1,4 +1,4 @@
-import DashboardProductsTable from "../../components/DashboardProductsTable";
+import DashboardProductsTable from "../../components/Dashboard/DashboardProductsTable";
 
 const DashboardProducts = () => {
   return <DashboardProductsTable />;

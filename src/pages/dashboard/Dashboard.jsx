@@ -1,4 +1,4 @@
-import DashboardStatistics from "../../components/DashboardStatistics";
+import DashboardStatistics from "../../components/Dashboard/DashboardStatistics";
 
 const Dashboard = () => {
   return <DashboardStatistics />;

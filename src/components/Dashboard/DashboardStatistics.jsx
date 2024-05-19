@@ -1,26 +1,31 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 
 import { useQuery } from "react-query";
-import { getProductList } from "../services/apiProduct";
+import { getProductList } from "../../services/apiProduct";
 import TinyBarChart from "./BarChart";
-import { getReviewsList } from "../services/apiReviews";
-import { getUsersList } from "../services/apiUsers";
+import { getReviewsList } from "../../services/apiReviews";
+import { getUsersList } from "../../services/apiUsers";
+import {
+  HiOutlineChartBar,
+  HiOutlinePencilSquare,
+  HiOutlineUser,
+  HiOutlineViewColumns,
+} from "react-icons/hi2";
 
 const DashboardStatistics = () => {
   const { data: productsList } = useQuery("products", getProductList);
   const { data: reviewsList } = useQuery("reviews", getReviewsList);
   const { data: usersList } = useQuery("users", getUsersList);
 
-  const productData = productsList?.data?.map((product) => ({
-    name: product?.attributes?.title,
-    value: product?.attributes?.stock,
+  const productData = productsList?.products?.map((product) => ({
+    name: product?.title,
+    value: product?.stock,
   }));
 
   const categoryCounts = {};
 
-  productsList?.data?.forEach((product) => {
-    const categoryName =
-      product?.attributes?.category?.data[0]?.attributes?.title;
+  productsList?.products?.forEach((product) => {
+    const categoryName = product?.category;
 
     if (!categoryCounts[categoryName]) {
       categoryCounts[categoryName] = 1;
@@ -37,55 +42,59 @@ const DashboardStatistics = () => {
   return (
     <Flex flexDir="column" gap="100px">
       <Flex justify="center" gap="5px" flexWrap="wrap">
-        <Box
+        <VStack
+          spacing="4px"
           bg="purple.600"
           rounded="md"
           color="white"
           p="4px"
-          textAlign="center"
           _hover={{ bg: "purple.800" }}
           transition="0.3s"
         >
+          <HiOutlineViewColumns size={24} />
           <Text fontSize="lg">عدد المنتجات</Text>
-          <Text fontSize="2xl">{productsList?.data?.length}</Text>
-        </Box>
-        <Box
+          <Text fontSize="2xl">{productsList?.products.length}</Text>
+        </VStack>
+        <VStack
+          spacing="4px"
           bg="purple.600"
           rounded="md"
           color="white"
           p="4px"
-          textAlign="center"
           _hover={{ bg: "purple.800" }}
           transition="0.3s"
         >
+          <HiOutlineChartBar size={24} />
           <Text fontSize="lg">عدد الفئات</Text>
           <Text fontSize="2xl">{categoryData?.length}</Text>
-        </Box>
+        </VStack>
 
-        <Box
+        <VStack
+          spacing="4px"
           bg="purple.600"
           rounded="md"
           color="white"
           p="4px"
-          textAlign="center"
           _hover={{ bg: "purple.800" }}
           transition="0.3s"
         >
+          <HiOutlineUser size={24} />
           <Text fontSize="lg">عدد المستخدمين</Text>
           <Text fontSize="2xl">{usersList?.length}</Text>
-        </Box>
-        <Box
+        </VStack>
+        <VStack
+          spacing="4px"
           bg="purple.600"
           rounded="md"
           color="white"
           p="4px"
-          textAlign="center"
           _hover={{ bg: "purple.800" }}
           transition="0.3s"
         >
+          <HiOutlinePencilSquare size={24} />
           <Text fontSize="lg">عدد المراجعات</Text>
           <Text fontSize="2xl">{reviewsList?.data?.length}</Text>
-        </Box>
+        </VStack>
       </Flex>
       <Box w="100%" h="50vh">
         <Heading

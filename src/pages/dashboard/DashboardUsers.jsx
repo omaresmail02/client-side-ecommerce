@@ -1,4 +1,4 @@
-import DashboardUsersTable from "../../components/DashboardUsersTable";
+import DashboardUsersTable from "../../components/Dashboard/DashboardUsersTable";
 
 const DashboardUsers = () => {
   return <DashboardUsersTable />;

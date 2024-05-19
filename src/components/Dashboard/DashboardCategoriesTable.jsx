@@ -17,16 +17,16 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import TableSkeleton from "./TableSkeleton";
-import CustomeAlertDialog from "../shared/AlretDialog";
-import CustomeModal from "../shared/Modal";
+import TableSkeleton from "../TableSkeleton";
+import CustomeAlertDialog from "../../shared/AlretDialog";
+import CustomeModal from "../../shared/Modal";
 
 import { BiTrash } from "react-icons/bi";
 import {
   createCategory,
   deleteCategory,
   getCategoriesList,
-} from "../services/apiCategories";
+} from "../../services/apiCategories";
 
 const DashboardCategoriesTable = () => {
   const [clickedProductId, setClickedProductId] = useState(null);
@@ -35,6 +35,7 @@ const DashboardCategoriesTable = () => {
 
   const queryClient = useQueryClient();
   const { isLoading, data } = useQuery("categories", getCategoriesList);
+  console.log(data);
 
   const { isLoading: isDeleting, mutate: mutateDelete } = useMutation({
     mutationFn: () => deleteCategory(clickedProductId),
@@ -92,14 +93,14 @@ const DashboardCategoriesTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data?.data?.map((product) => {
+            {data.map((category, index) => {
               return (
-                <Tr key={product.id}>
-                  <Td>{product.id}</Td>
-                  <Td>{product?.attributes?.title}</Td>
+                <Tr key={category}>
+                  <Td>{index + 1}</Td>
+                  <Td>{category}</Td>
 
                   <Td>
-                    <Button
+                    {/* <Button
                       backgroundColor="red.600"
                       color="white"
                       p="5"
@@ -111,7 +112,7 @@ const DashboardCategoriesTable = () => {
                       }}
                     >
                       <BiTrash size={17} />
-                    </Button>
+                    </Button> */}
                   </Td>
                 </Tr>
               );

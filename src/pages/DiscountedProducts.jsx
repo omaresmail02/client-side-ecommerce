@@ -8,7 +8,7 @@ import { getProductList } from "../services/apiProduct";
 import Pagination from "../components/Pagination";
 import useProductFilterAndSort from "../hooks/useProductFilterAndSort";
 
-const Products = () => {
+const DiscountedProducts = () => {
   const { isLoading, data } = useQuery("products", getProductList);
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
@@ -31,8 +31,12 @@ const Products = () => {
     );
   }
 
+  const discountedProducts = filteredProducts.filter(
+    (product) => product.discountPercentage > 0
+  );
+
   const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(discountedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -43,9 +47,9 @@ const Products = () => {
           <FilterAndSortDrawer data={data} {...filterAndSortProps} />
         </Container>
       </Box>
-      {filteredProducts.length === 0 ? (
+      {discountedProducts.length === 0 ? (
         <Text textAlign={"center"} fontWeight={"bolder"} fontSize={"xx-large"}>
-          لا يوجد منتجات تطابق الفرز
+          لا يوجد منتجات
         </Text>
       ) : (
         <>
@@ -54,7 +58,7 @@ const Products = () => {
             templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"}
             gap={"6"}
           >
-            {filteredProducts.slice(startIndex, endIndex).map((product) => (
+            {discountedProducts.slice(startIndex, endIndex).map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
           </Grid>
@@ -69,4 +73,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default DiscountedProducts;

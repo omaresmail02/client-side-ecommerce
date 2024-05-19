@@ -1,4 +1,4 @@
-import DashboardReviewsTable from "../../components/DashboardReviewsTable";
+import DashboardReviewsTable from "../../components/Dashboard/DashboardReviewsTable";
 
 const DashboardReviews = () => {
   return <DashboardReviewsTable />;

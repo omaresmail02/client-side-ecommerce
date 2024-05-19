@@ -14,8 +14,8 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { BiTrash } from "react-icons/bi";
-import CustomeAlertDialog from "../shared/AlretDialog";
-import { deleteUser, getUsersList } from "../services/apiUsers";
+import CustomeAlertDialog from "../../shared/AlretDialog";
+import { deleteUser, getUsersList } from "../../services/apiUsers";
 import { format } from "date-fns";
 
 const DashboardUsersTable = () => {

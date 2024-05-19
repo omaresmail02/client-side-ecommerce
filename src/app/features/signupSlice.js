@@ -1,18 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../api/axios.config";
-import { createStandaloneToast } from "@chakra-ui/react";
-
-const { toast } = createStandaloneToast();
 
 const initialState = {
   loading: false,
   data: null,
   error: null,
+  success: false,
 };
 
 export const userSignup = createAsyncThunk(
   "signup/userSignup",
-  async ({ email, password, username, role }, thunkApi) => {
+  async ({ email, password, username }, thunkApi) => {
     const { rejectWithValue } = thunkApi;
 
     try {
@@ -20,49 +18,38 @@ export const userSignup = createAsyncThunk(
         email,
         password,
         username,
-        role,
       });
       return data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
 const signupSlice = createSlice({
-  initialState,
   name: "signup",
+  initialState,
   extraReducers: (builder) => {
     builder
       .addCase(userSignup.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.success = false;
       })
       .addCase(userSignup.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
         state.error = null;
-
-        toast({
-          title: "Signup successfully",
-          status: "success",
-          isClosable: true,
-          position: "top",
-        });
+        state.success = true;
       })
       .addCase(userSignup.rejected, (state, action) => {
         state.loading = false;
-        state.data = [];
+        state.data = null;
         state.error = action.payload;
-
-        toast({
-          title: action.payload.response.data.error.message,
-          status: "error",
-          isClosable: true,
-          position: "top",
-        });
+        state.success = false;
       });
   },
 });
 
-export const selectSignup = ({ signup }) => signup;
+export const selectSignup = (state) => state.signup;
 export default signupSlice.reducer;

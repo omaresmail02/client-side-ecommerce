@@ -3,7 +3,7 @@ import { axiosInstance } from "../api/axios.config.js";
 
 export const getUsersList = async () => {
   try {
-    const { data } = await axiosInstance.get(`/api/users?populate=role`);
+    const { data } = await axiosInstance.get(`/users`);
     return data;
   } catch (error) {
     console.error("Error fetching users list:", error);
@@ -13,7 +13,7 @@ export const getUsersList = async () => {
 
 export const getMyUser = async () => {
   try {
-    const { data } = await axiosInstance.get(`/api/users/me?populate=role`, {
+    const { data } = await axiosInstance.get(`/auth/me`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -27,7 +27,7 @@ export const getMyUser = async () => {
 
 export const updateUser = async ({ id, body }) => {
   try {
-    const { data } = await axiosInstance.put(`/api/users/${id}`, body, {
+    const { data } = await axiosInstance.put(`/users/${id}`, body, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -41,7 +41,7 @@ export const updateUser = async ({ id, body }) => {
 
 export const deleteUser = async (id) => {
   try {
-    const { data } = await axiosInstance.delete(`/api/users/${id}`, {
+    const { data } = await axiosInstance.delete(`/users/${id}`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

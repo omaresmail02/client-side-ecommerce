@@ -17,14 +17,11 @@ const cartSlice = createSlice({
     },
     incressItem(state, action) {
       const item = state.cart.find((item) => item.id === action.payload);
-      item.quantity++;
-      // item.totalPrice = item.quantity * item.unitPrice;
+      item.quantity++; // item.totalPrice = item.quantity * item.unitPrice;
     },
     decressItem(state, action) {
       const item = state.cart.find((item) => item.id === action.payload);
-      item.quantity--;
-      // item.totalPrice = item.quantity * item.unitPrice;
-
+      item.quantity--; // item.totalPrice = item.quantity * item.unitPrice;
       if (item.quantity === 0) cartSlice.caseReducers.deleteItem(state, action);
     },
     clearCart(state) {
@@ -35,7 +32,16 @@ const cartSlice = createSlice({
 
 export const selectTotalPrice = (state) =>
   state.cart.cart.reduce(
-    (total, item) => total + item.quantity * item.attributes.price,
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
+
+export const selectTotalDiscountedPrice = (state) =>
+  state.cart.cart.reduce(
+    (total, item) =>
+      total +
+      item.quantity *
+        (item.price - item.price * (item.discountPercentage / 100)),
     0
   );
 

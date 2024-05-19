@@ -1,21 +1,25 @@
-import { Box, Stack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Categories from "../components/Categories";
-import HomeSlider from "../components/Slider";
-import HomeProductsSlider from "../components/HomeProductsSlider";
 import SearchBar from "../components/Search";
+import Hero from "../components/Hero";
+import DiscountsCarousel from "../components/HomeDiscountsSlider";
+import ProductCarousel from "../components/HomeProductsSlider";
+import OffersSlider from "../components/OffersSlider";
 
 const Home = () => {
   return (
-    <Stack>
+    <>
       <Box display={{ base: "block", md: "none" }} bg="purple.600">
         <SearchBar />
       </Box>
-      <HomeSlider />
+      <Hero />
+      <OffersSlider />
       <Box mx="10px">
         <Categories />
-        <HomeProductsSlider />
+        <DiscountsCarousel />
+        <ProductCarousel />
       </Box>
-    </Stack>
+    </>
   );
 };
 

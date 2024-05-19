@@ -15,9 +15,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { HiEye } from "react-icons/hi2";
 import { BiTrash } from "react-icons/bi";
-import { getReviewsList, deleteReview } from "../services/apiReviews";
+import { getReviewsList, deleteReview } from "../../services/apiReviews";
 import { Link } from "react-router-dom";
-import CustomeAlertDialog from "../shared/AlretDialog";
+import CustomeAlertDialog from "../../shared/AlretDialog";
 
 const DashboardReviewsTable = () => {
   const [clickedReviewId, setClickedReviewId] = useState(null);

@@ -11,23 +11,33 @@ import {
   Drawer,
   DrawerContent,
   useDisclosure,
+  Container,
 } from "@chakra-ui/react";
-import { BiSolidGrid } from "react-icons/bi";
-import { FiHome, FiMenu } from "react-icons/fi";
-import { HiOutlineViewColumns, HiShoppingCart } from "react-icons/hi2";
-import { MdOutlineRateReview } from "react-icons/md";
-import { IoIosStats } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
+import {
+  HiOutlineBars3,
+  HiOutlineChartBar,
+  HiOutlineHome,
+  HiOutlinePencilSquare,
+  HiOutlineRectangleGroup,
+  HiOutlineUser,
+  HiOutlineViewColumns,
+  HiShoppingCart,
+} from "react-icons/hi2";
 
 import { Link, Outlet, Link as RouterLink } from "react-router-dom";
+import { DarkmodeToggle } from "../../components/DarkmodeToggle";
 
 const LinkItems = [
-  { name: "الرئيسية", to: "/", icon: FiHome },
-  { name: "الاحصائيات", to: "/dashboard", icon: IoIosStats },
+  { name: "الرئيسية", to: "/", icon: HiOutlineHome },
+  { name: "الاحصائيات", to: "/dashboard", icon: HiOutlineChartBar },
   { name: "المنتجات", to: "/dashboard/products", icon: HiOutlineViewColumns },
-  { name: "الفئات", to: "/dashboard/categories", icon: BiSolidGrid },
-  { name: "المستخدمين", to: "/dashboard/users", icon: FaUser },
-  { name: "المراجعات", to: "/dashboard/reviews", icon: MdOutlineRateReview },
+  {
+    name: "الفئات",
+    to: "/dashboard/categories",
+    icon: HiOutlineRectangleGroup,
+  },
+  { name: "المستخدمين", to: "/dashboard/users", icon: HiOutlineUser },
+  { name: "المراجعات", to: "/dashboard/reviews", icon: HiOutlinePencilSquare },
 ];
 
 const SidebarContent = ({ onClose, ...rest }) => {
@@ -37,10 +47,9 @@ const SidebarContent = ({ onClose, ...rest }) => {
       bg="purple.600"
       borderRight="1px"
       borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
+      w="full"
       pos="fixed"
       h="full"
-      _rtl="auto"
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
@@ -49,13 +58,25 @@ const SidebarContent = ({ onClose, ...rest }) => {
             <HiShoppingCart fontSize={"xxx-large"} color={"white"} />
           </Box>
         </Text>
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+        <CloseButton display="flex" onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
         <NavItem key={link.name} name={link.name} icon={link.icon} to={link.to}>
           {link.name}
         </NavItem>
       ))}
+      <Box
+        mt="20px"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        _hover={{ backgroundColor: "purple.800", color: "white" }}
+        p="16px"
+        mx="16px"
+        rounded="8px"
+      >
+        <DarkmodeToggle />
+      </Box>
     </Box>
   );
 };
@@ -83,7 +104,7 @@ const NavItem = ({ to, icon, name, ...rest }) => {
         {icon && (
           <Icon
             mr="4"
-            fontSize="16"
+            fontSize="24px"
             _groupHover={{
               color: "white",
             }}
@@ -99,28 +120,27 @@ const NavItem = ({ to, icon, name, ...rest }) => {
 const MobileNav = ({ onOpen, ...rest }) => {
   return (
     <Flex
-      mr={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="20"
       alignItems="center"
-      justifyContent={{ base: "space-between", md: "flex-end" }}
+      justifyContent="space-between"
       {...rest}
-      bg="transparent"
+      bg="purple.600"
+      shadow="lg"
     >
       <IconButton
-        display={{ base: "flex", md: "none" }}
+        color="purple.800"
+        bg="white"
+        _hover={{
+          color: "white",
+          bg: "purple.800",
+        }}
         onClick={onOpen}
-        variant="outline"
         aria-label="open menu"
-        icon={<FiMenu />}
+        icon={<HiOutlineBars3 size={34} />}
       />
 
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        fontFamily="monospace"
-        fontWeight="bold"
-      >
+      <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
         <Box as={Link} to="/">
           <HiShoppingCart fontSize={"xxx-large"} color="white" />
         </Box>
@@ -134,10 +154,6 @@ const SidebarWithHeader = () => {
 
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent
-        onClose={() => onClose}
-        display={{ base: "none", md: "block" }}
-      />
       <Drawer
         isOpen={isOpen}
         size="sm"
@@ -150,11 +166,10 @@ const SidebarWithHeader = () => {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box mr={{ base: 0, md: 60 }} p="4">
+      <Container maxW="6xl" my="10px">
         <Outlet />
-      </Box>
+      </Container>
     </Box>
   );
 };

@@ -5,7 +5,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Button,
   useDisclosure,
   Accordion,
   AccordionItem,
@@ -18,7 +17,9 @@ import {
   Radio,
   CheckboxGroup,
   Checkbox,
+  IconButton,
 } from "@chakra-ui/react";
+import { HiOutlineFunnel } from "react-icons/hi2";
 
 const FilterAndSortDrawer = ({
   sortBy,
@@ -35,14 +36,14 @@ const FilterAndSortDrawer = ({
 
   return (
     <>
-      <Button
+      <IconButton
         color="white"
         backgroundColor="purple.600"
         _hover={{ backgroundColor: "purple.800" }}
         onClick={onOpen}
-      >
-        فرز و ترتيب
-      </Button>
+        icon={<HiOutlineFunnel size={24} />}
+        aria-label="فرز و ترتيب"
+      />
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
@@ -92,58 +93,56 @@ const FilterAndSortDrawer = ({
                   >
                     <Stack>
                       <Checkbox value="0-99">$0-$99</Checkbox>
-                      <Checkbox value="100-199">$100-$199</Checkbox>
-                      <Checkbox value="200-299">$200-$299</Checkbox>
-                      <Checkbox value="300-399">$300-$399</Checkbox>
-                      <Checkbox value="400+">$400+</Checkbox>
+                      <Checkbox value="100-499">$100-$499</Checkbox>
+                      <Checkbox value="500-999">$500-$999</Checkbox>
+                      <Checkbox value="1000-4999">$1000-$4999</Checkbox>
+                      <Checkbox value="5000+">$5000+</Checkbox>
                     </Stack>
                   </CheckboxGroup>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-            <Accordion defaultIndex={[0]} allowMultiple>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      الفئات
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <CheckboxGroup
-                    value={categoryFilters}
-                    onChange={(values) => {
-                      setCategoryFilters(values);
-                    }}
-                  >
-                    <Stack>
-                      {data?.data
-                        ?.reduce((acc, product) => {
-                          const categoryTitles =
-                            product.attributes.category.data.map((item) =>
-                              item.attributes.title.trim()
-                            );
-
-                          categoryTitles.forEach((title) => {
-                            if (title && !acc.includes(title)) {
-                              acc.push(title);
+            {data && (
+              <Accordion defaultIndex={[0]} allowMultiple>
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="left">
+                        الفئات
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    <CheckboxGroup
+                      value={categoryFilters}
+                      onChange={(values) => {
+                        setCategoryFilters(values);
+                      }}
+                    >
+                      <Stack>
+                        {data.products
+                          .reduce((acc, product) => {
+                            const category = product.category;
+                            if (category) {
+                              const title = category.trim();
+                              if (title && !acc.includes(title)) {
+                                acc.push(title);
+                              }
                             }
-                          });
-
-                          return acc;
-                        }, [])
-                        .map((title) => (
-                          <Checkbox key={title} value={title}>
-                            {title}
-                          </Checkbox>
-                        ))}
-                    </Stack>
-                  </CheckboxGroup>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
+                            return acc;
+                          }, [])
+                          .map((title) => (
+                            <Checkbox key={title} value={title}>
+                              {title}
+                            </Checkbox>
+                          ))}
+                      </Stack>
+                    </CheckboxGroup>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            )}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

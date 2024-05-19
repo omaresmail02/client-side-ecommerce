@@ -9,30 +9,29 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Stack,
-  useColorMode,
   Center,
   Text,
+  IconButton,
 } from "@chakra-ui/react";
 import {
+  HiArrowLeftOnRectangle,
   HiOutlineHeart,
-  HiOutlineMoon,
   HiOutlineShoppingBag,
-  HiOutlineSun,
+  HiOutlineUser,
+  HiOutlineUserPlus,
   HiShoppingCart,
-} from "react-icons/hi";
+} from "react-icons/hi2";
 import { Link as RouterLink } from "react-router-dom";
 import CookieServices from "../services/CookieServices";
 import { useSelector } from "react-redux";
 import SearchBar from "../components/Search";
 import { useQuery } from "react-query";
 import { getMyUser } from "../services/apiUsers";
+import { DarkmodeToggle } from "../components/DarkmodeToggle";
 
 export default function Nav() {
-  const { colorMode, toggleColorMode } = useColorMode();
-
   const cart = useSelector((state) => state.cart);
-  const favorite = useSelector((state) => state.favorite);
+  const wishlist = useSelector((state) => state.wishlist);
 
   const token = CookieServices.get("jwt");
 
@@ -43,33 +42,31 @@ export default function Nav() {
 
   const { data } = useQuery("users", getMyUser);
 
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [visible, setVisible] = useState(true);
+  // const [prevScrollPos, setPrevScrollPos] = useState(0);
+  // const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollPos = window.scrollY;
+  //     setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+  //     setPrevScrollPos(currentScrollPos);
+  //   };
 
-      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+  //   window.addEventListener("scroll", handleScroll);
 
-      setPrevScrollPos(currentScrollPos);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos, visible]);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [prevScrollPos]);
 
   return (
     <Box
       bg={"purple.600"}
       px={4}
       boxShadow={"lg"}
-      position={"fixed"}
       width={"100%"}
-      zIndex={10}
-      transition={"top 0.3s"}
-      top={visible ? "0" : "-70px"}
+      // zIndex={10}
+      // position={"fixed"}
+      // transition={"top 0.3s"}
+      // top={visible ? "0" : "-70px"}
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <Box as={RouterLink} to="/">
@@ -84,39 +81,10 @@ export default function Nav() {
           <SearchBar />
         </Box>
 
-        <Flex alignItems={"center"}>
-          <Stack direction={"row"} spacing={1}>
-            <Button
-              onClick={toggleColorMode}
-              bg={"none"}
-              _hover={{ bg: "none" }}
-              p="0"
-            >
-              {colorMode === "light" ? (
-                <Text
-                  as={"span"}
-                  fontSize={{ base: "large", md: "x-large" }}
-                  transition="0.25s"
-                  _hover={{
-                    fontSize: "xx-large",
-                  }}
-                >
-                  <HiOutlineMoon color={"white"} />
-                </Text>
-              ) : (
-                <Text
-                  as={"span"}
-                  fontSize={{ base: "large", md: "x-large" }}
-                  transition="0.25s"
-                  _hover={{
-                    fontSize: "xx-large",
-                  }}
-                >
-                  <HiOutlineSun color={"white"} />
-                </Text>
-              )}
-            </Button>
-            <Box position="relative">
+        <Flex alignItems="center" justifyContent="space-between" gap="15px">
+          <Flex alignItems="center">
+            <DarkmodeToggle />
+            <Box className="cart" position="relative">
               <Button
                 as={RouterLink}
                 to={"/cart"}
@@ -127,12 +95,10 @@ export default function Nav() {
                 <Text
                   as={"span"}
                   fontSize={"x-large"}
-                  transition="0.25s"
-                  _hover={{
-                    fontSize: "xx-large",
-                  }}
+                  color="white"
+                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
                 >
-                  <HiOutlineShoppingBag color={"white"} />
+                  <HiOutlineShoppingBag size={24} />
                 </Text>
                 {cart.cart.length > 0 && (
                   <Box
@@ -152,25 +118,22 @@ export default function Nav() {
                 )}
               </Button>
             </Box>
-            <Box>
+            <Box className="wishlist" position="relative">
               <Button
                 as={RouterLink}
-                to={"/favorite"}
+                to={"/wishlist"}
                 bg={"none"}
                 _hover={{ bg: "none" }}
                 p="0"
               >
                 <Text
                   as={"span"}
-                  fontSize={{ base: "large", md: "x-large" }}
-                  transition="0.25s"
-                  _hover={{
-                    fontSize: "xx-large",
-                  }}
+                  color={"white"}
+                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
                 >
-                  <HiOutlineHeart color={"white"} />
+                  <HiOutlineHeart size={24} />
                 </Text>
-                {favorite.favorite.length > 0 && (
+                {wishlist.wishlist.length > 0 && (
                   <Box
                     position="absolute"
                     top="0"
@@ -178,18 +141,19 @@ export default function Nav() {
                     transform="translate(-50%, -50%)"
                     width="20px"
                     height="20px"
-                    // borderRadius="50%"
                     rounded="md"
                     backgroundColor="red"
                     color="white"
                     textAlign="center"
                   >
-                    {favorite.favorite.length}
+                    {wishlist.wishlist.length}
                   </Box>
                 )}
               </Button>
             </Box>
+          </Flex>
 
+          <Flex>
             {token ? (
               <Menu>
                 <MenuButton
@@ -199,7 +163,17 @@ export default function Nav() {
                   cursor={"pointer"}
                   minW={0}
                 >
-                  <Avatar size={"sm"} />
+                  <IconButton
+                    bg="white"
+                    color="purple.800"
+                    size="md"
+                    rounded="lg"
+                    _hover={{
+                      bg: "purple.800",
+                      color: "white",
+                    }}
+                    icon={<HiOutlineUser size={24} />}
+                  />
                 </MenuButton>
                 <MenuList
                   alignItems={"center"}
@@ -227,46 +201,36 @@ export default function Nav() {
                 </MenuList>
               </Menu>
             ) : (
-              <Flex gap={3}>
-                <Button
+              <Flex gap="4px" alignItems="center">
+                <IconButton
                   bg="white"
                   color="purple.800"
-                  border="2px solid"
-                  borderColor="purple.800"
-                  w={{ base: "75px", md: "110px" }}
-                  fontSize={{ base: "10px", md: "14px" }}
+                  size="md"
+                  rounded="lg"
                   _hover={{
                     bg: "purple.800",
                     color: "white",
-                    border: "2px solid",
-                    borderColor: "white",
                   }}
+                  icon={<HiOutlineUserPlus size={24} />}
                   as={RouterLink}
                   to={"/signup"}
-                >
-                  اشترك
-                </Button>
-                <Button
+                />
+                <IconButton
                   bg="white"
                   color="purple.800"
-                  border="2px solid"
-                  borderColor="purple.800"
-                  w={{ base: "75px", md: "110px" }}
-                  fontSize={{ base: "10px", md: "14px" }}
+                  size="md"
+                  rounded="lg"
                   _hover={{
                     bg: "purple.800",
                     color: "white",
-                    border: "2px solid",
-                    borderColor: "white",
                   }}
+                  icon={<HiArrowLeftOnRectangle size={24} />}
                   as={RouterLink}
                   to={"/login"}
-                >
-                  تسجيل الدخول
-                </Button>
+                />
               </Flex>
             )}
-          </Stack>
+          </Flex>
         </Flex>
       </Flex>
     </Box>

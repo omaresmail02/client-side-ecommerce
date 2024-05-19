@@ -1,26 +1,26 @@
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Box, Container, Heading, Stack, Text } from "@chakra-ui/react";
+import BackButton from "../shared/BackButton";
 
 const NotFoundPage = () => {
-  const navigate = useNavigate();
-
   return (
-    <Box textAlign="center" mt={20}>
-      <Heading as="h1" size="xl">
-        404 - Page Not Found
-      </Heading>
-      <Text mt={4}>Sorry, the page you are looking for does not exist.</Text>
-      <Button
-        backgroundColor="purple.600"
-        color="white"
-        size="large"
-        p="5"
-        _hover={{ backgroundColor: "purple.800" }}
-        onClick={() => navigate(-1)}
-      >
-        &larr; Go back
-      </Button>
-    </Box>
+    <>
+      <Container maxW="6xl" mt="10px" display="flex" justifyContent="flex-end">
+        <BackButton />
+      </Container>
+      <Box textAlign="center" mt={20}>
+        <Container>
+          <Stack spacing={6} justifyContent="center" alignItems="center">
+            <Heading as="h1" size="xl">
+              404 - الصفحة غير موجودة
+            </Heading>
+            <Text fontSize="lg">
+              عذراً، لم نتمكن من العثور على الصفحة التي تبحث عنها. قد تكون
+              الصفحة قد تم حذفها، أو أن الرابط غير صحيح.
+            </Text>
+          </Stack>
+        </Container>
+      </Box>
+    </>
   );
 };
 

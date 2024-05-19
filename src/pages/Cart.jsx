@@ -2,15 +2,19 @@ import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import {
   clearCart,
+  selectTotalDiscountedPrice,
   selectTotalPrice,
   selectTotalQuantity,
 } from "../app/features/cartSlice";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { formatPrice } from "../utils";
+import { HiCreditCard, HiXMark } from "react-icons/hi2";
 
 function CartPage() {
   const cart = useSelector((state) => state.cart);
   const totalPrice = useSelector(selectTotalPrice);
+  const totalDiscountedPrice = useSelector(selectTotalDiscountedPrice);
   const totalQuantity = useSelector(selectTotalQuantity);
 
   const dispatch = useDispatch();
@@ -39,14 +43,26 @@ function CartPage() {
           {cart.cart.map((item) => (
             <CartItem item={item} key={item.id} />
           ))}
-          <Flex align={"center"} justify={"space-between"}>
-            <Box>
+          <Flex align={"center"} justify={"space-between"} gap="20px">
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              borderColor={"purple.600"}
+              boxShadow="md"
+              p="8px"
+              fontSize="medium"
+            >
               <Text fontSize="lg" fontWeight="bold">
                 الكمية: {totalQuantity}
               </Text>
               <Text fontSize="lg" fontWeight="bold">
-                الاجمالي: ${totalPrice}
+                الاجمالي: {formatPrice(totalPrice)}
               </Text>
+              {totalDiscountedPrice !== totalPrice ? (
+                <Text fontSize="lg" fontWeight="bold">
+                  الاجمالي بعد الخصم: {formatPrice(totalDiscountedPrice)}
+                </Text>
+              ) : null}
               <Button
                 as={Link}
                 to="/checkout"
@@ -56,6 +72,8 @@ function CartPage() {
                 size="large"
                 p="3"
                 _hover={{ backgroundColor: "purple.800" }}
+                rightIcon={<HiCreditCard size={24} />}
+                aria-label="الدفع"
               >
                 الدفع
               </Button>
@@ -63,10 +81,12 @@ function CartPage() {
             <Button
               bg={"red.600"}
               color="white"
-              size="large"
-              p="3"
+              size="md"
+              p="10px"
               _hover={{ backgroundColor: "red.800" }}
               onClick={() => dispatch(clearCart())}
+              rightIcon={<HiXMark size={24} />}
+              aria-label="مسح العربة"
             >
               مسح العربة
             </Button>
