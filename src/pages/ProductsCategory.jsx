@@ -78,7 +78,12 @@ function ProductDetailsPage() {
         >
           {filteredProducts.map((product) => {
             return (
-              <motion.div whileHover={{ scale: 1.05 }} key={product.id}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                data-aos="zoom-in-up"
+                data-aos-duration="500"
+                key={product.id}
+              >
                 <Card
                   boxShadow="xl"
                   height="100%"

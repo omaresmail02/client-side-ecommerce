@@ -26,7 +26,9 @@ export const addItemToWishlist = (favItem = {}, wishlistItems = []) => {
 };
 
 export const formatPrice = (price) => {
-  const formatedPrice = price.toLocaleString("ar-EG", {
+  const numericPrice = Number(price);
+
+  const formatedPrice = numericPrice.toLocaleString("ar-EG", {
     style: "currency",
     currency: "EGP",
   });

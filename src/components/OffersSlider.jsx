@@ -1,65 +1,62 @@
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Box, Container, Heading, Image } from "@chakra-ui/react";
+import {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from "swiper/modules";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
+import "./offers-slider.css";
 
 import sliderImg1 from "../assets/phones.webp";
 import sliderImg2 from "../assets/electrical-devices.jpg";
 import sliderImg3 from "../assets/laptops.jpg";
+import { Box, Container, Heading, Image } from "@chakra-ui/react";
 
 const OffersSlider = () => {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 1000,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1,
-        },
-      },
-    ],
-  };
-
   return (
     <Container maxW="6xl">
-      <Box mb="50px">
-        <Heading
-          fontSize={{ base: "x-large", lg: "xx-large" }}
-          mb="30px"
-          position="relative"
-          display="inline-block"
-        >
-          عروضنا
-          <Box
-            position="absolute"
-            bottom="-5px"
-            left="50%"
-            transform="translateX(-50%)"
-            width="100%"
-            height="3px"
-            backgroundColor="purple.600"
-          />
-        </Heading>
-        <Box>
-          <Slider {...settings} arrows={false} rtl>
-            <Box rounded="lg">
+      <div data-aos="zoom-in-up" data-aos-duration="500">
+        <Box mb="50px">
+          <Heading
+            fontSize={{ base: "x-large", lg: "xx-large" }}
+            mb="30px"
+            position="relative"
+            display="inline-block"
+          >
+            عروضنا
+            <Box
+              position="absolute"
+              bottom="-5px"
+              left="50%"
+              transform="translateX(-50%)"
+              width="100%"
+              height="3px"
+              backgroundColor="purple.600"
+            />
+          </Heading>
+          <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+          >
+            <SwiperSlide>
               <Image
                 src={sliderImg1}
                 objectFit="cover"
@@ -67,8 +64,8 @@ const OffersSlider = () => {
                 width="100%"
                 rounded="lg"
               />
-            </Box>
-            <Box>
+            </SwiperSlide>
+            <SwiperSlide>
               <Image
                 src={sliderImg2}
                 objectFit="cover"
@@ -76,8 +73,8 @@ const OffersSlider = () => {
                 width="100%"
                 rounded="lg"
               />
-            </Box>
-            <Box>
+            </SwiperSlide>
+            <SwiperSlide>
               <Image
                 src={sliderImg3}
                 objectFit="cover"
@@ -85,10 +82,10 @@ const OffersSlider = () => {
                 width="100%"
                 rounded="lg"
               />
-            </Box>
-          </Slider>
+            </SwiperSlide>
+          </Swiper>
         </Box>
-      </Box>
+      </div>
     </Container>
   );
 };

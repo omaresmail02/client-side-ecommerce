@@ -11,7 +11,7 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { formatPrice, textSlicer } from "../utils";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,22 +22,27 @@ import { getProduct } from "../services/apiProduct";
 import { useQuery } from "react-query";
 import {
   HiInformationCircle,
+  HiOutlineArrowsRightLeft,
   HiOutlineExclamationTriangle,
   HiOutlineHeart,
   HiOutlineShoppingBag,
 } from "react-icons/hi2";
+import { addItemToCompare } from "../app/features/compareSlice";
 
 const ProductCard = (product) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const wishlist = useSelector((state) => state.wishlist);
+  const compare = useSelector((state) => state.compare);
 
   const toast = useToast();
 
+  const { pathname } = useLocation();
+
   const handleAddToCart = () => {
-    dispatch(addItem(data));
     const existingProduct = cart.cart.find((item) => item.id === data.id);
     !existingProduct &&
+      (dispatch(addItem(data)),
       toast({
         title: "المنتج تمت اضافته الى عربة التسوق بنجاح",
         status: "success",
@@ -45,7 +50,7 @@ const ProductCard = (product) => {
         isClosable: true,
         position: "top-right",
         icon: <HiOutlineShoppingBag size={20} />,
-      });
+      }));
 
     existingProduct &&
       toast({
@@ -59,11 +64,11 @@ const ProductCard = (product) => {
   };
 
   const handleAddToWishlist = () => {
-    dispatch(addItemToWishlist(data));
     const existingProduct = wishlist.wishlist.find(
       (item) => item.id === data.id
     );
     !existingProduct &&
+      (dispatch(addItemToWishlist(data)),
       toast({
         title: " المنتج تمت اضافته الى قائمة الرغبات بنجاح",
         status: "success",
@@ -71,7 +76,7 @@ const ProductCard = (product) => {
         isClosable: true,
         position: "top-right",
         icon: <HiOutlineHeart size={20} />,
-      });
+      }));
 
     existingProduct &&
       toast({
@@ -83,13 +88,53 @@ const ProductCard = (product) => {
         icon: <HiOutlineExclamationTriangle size={20} />,
       });
   };
+  const handleAddToCompare = () => {
+    const existingProduct = compare.compare.find((item) => item.id === data.id);
+
+    if (!existingProduct) {
+      if (compare.compare.length < 3) {
+        dispatch(addItemToCompare(data));
+        toast({
+          title: " المنتج تمت اضافته الى المقارنات بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+          icon: <HiOutlineArrowsRightLeft size={20} />,
+        });
+      } else {
+        toast({
+          title: "لا يمكن اضافة المنتج، يمكنك المقارنة بين 3 منتجات فقط",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+          icon: <HiOutlineExclamationTriangle size={20} />,
+        });
+      }
+    } else {
+      toast({
+        title: " المنتج موجود بالفعل في المقارنات ",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineExclamationTriangle size={20} />,
+      });
+    }
+  };
+
   const { data } = useQuery(["product", product.id], () =>
     getProduct(product.id)
   );
 
   return (
-    <motion.div whileHover={{ scale: 1.05 }}>
-      <Card boxShadow="xl" height="100%" rounded="lg" p="8px">
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      data-aos="zoom-in-up"
+      data-aos-duration="500"
+    >
+      <Card boxShadow="xl" height="100%" rounded="lg" p="8px" top="0">
         <CardHeader p="0" position="relative">
           {product.discountPercentage > 0 ? (
             <Text
@@ -142,6 +187,20 @@ const ProductCard = (product) => {
               icon={<HiOutlineHeart size="20" />}
               onClick={handleAddToWishlist}
             />
+            {pathname !== "/compare" && (
+              <IconButton
+                color="purple.600"
+                _hover={{
+                  color: "white",
+                  bg: "purple.800",
+                }}
+                bg="white"
+                size="sm"
+                rounded="lg"
+                icon={<HiOutlineArrowsRightLeft size="20" />}
+                onClick={handleAddToCompare}
+              />
+            )}
           </Box>
           <Image
             src={product.thumbnail}
@@ -171,11 +230,11 @@ const ProductCard = (product) => {
             wordBreak="break-word"
             // noOfLines="1"
           >
-            {product.title}
+            {textSlicer(product.title, 20)}
           </Heading>
 
           <Text mb={3} textAlign="center">
-            {textSlicer(product.description, 40)}
+            {textSlicer(product.description, 30)}
           </Text>
         </CardBody>
         <CardFooter

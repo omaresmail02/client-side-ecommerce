@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
-import { BiWifi } from "react-icons/bi";
+import { BiWifi, BiWifiOff } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { networkMode } from "../app/features/networkSlice";
 
@@ -22,7 +22,7 @@ const InternetConnectionProvider = ({ children }) => {
       duration: null,
       isClosable: true,
       position: "top-right",
-      icon: <BiWifi size={20} />,
+      icon: <BiWifiOff size={20} />,
     });
   }
 

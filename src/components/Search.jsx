@@ -65,7 +65,7 @@ const SearchComponent = () => {
             _placeholder: { opacity: 0.5 },
             boxShadow: "none",
           }}
-          rounded={{ base: "none", md: "md" }}
+          rounded={{ base: "none", md: "lg" }}
           border="none"
         />
       </InputGroup>

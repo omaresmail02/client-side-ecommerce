@@ -5,6 +5,7 @@ import Hero from "../components/Hero";
 import DiscountsCarousel from "../components/HomeDiscountsSlider";
 import ProductCarousel from "../components/HomeProductsSlider";
 import OffersSlider from "../components/OffersSlider";
+import Benefits from "../components/Benefits";
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
       <Hero />
       <OffersSlider />
       <Box mx="10px">
+        <Benefits />
         <Categories />
         <DiscountsCarousel />
         <ProductCarousel />

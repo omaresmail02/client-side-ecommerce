@@ -38,7 +38,7 @@ import {
   useColorModeValue,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { HiShoppingCart } from "react-icons/hi2";
 
@@ -102,11 +102,11 @@ export default function Footer() {
         >
           <Text> متجر التجارة الالكتروني {currentYear} ©</Text>
           <Stack direction={"row"} spacing={6}>
+            <SocialButton label={"YouTube"} href={"#"}>
+              <FaFacebook />
+            </SocialButton>
             <SocialButton label={"Twitter"} href={"#"}>
               <FaTwitter />
-            </SocialButton>
-            <SocialButton label={"YouTube"} href={"#"}>
-              <FaYoutube />
             </SocialButton>
             <SocialButton label={"Instagram"} href={"#"}>
               <FaInstagram />

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { addItem } from "../app/features/cartSlice";
 import { addItem as addItemToWishlist } from "../app/features/wishlistSlice";
 import {
+  HiOutlineArrowsRightLeft,
   HiOutlineExclamationTriangle,
   HiOutlineHeart,
   HiOutlineShoppingBag,
@@ -25,6 +26,7 @@ import { useSelector } from "react-redux";
 import { BsStarFill } from "react-icons/bs";
 import { getProduct } from "../services/apiProduct";
 import { formatPrice } from "../utils";
+import { addItemToCompare } from "../app/features/compareSlice";
 
 function ProductDetailsPage() {
   const { id } = useParams();
@@ -32,13 +34,14 @@ function ProductDetailsPage() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const wishlist = useSelector((state) => state.wishlist);
+  const compare = useSelector((state) => state.compare);
 
   const toast = useToast();
 
   const handleAddToCart = () => {
-    dispatch(addItem(data));
     const existingProduct = cart.cart.find((item) => item.id === data.id);
     !existingProduct &&
+      (dispatch(addItem(data)),
       toast({
         title: "المنتج تمت اضافته الى عربة التسوق بنجاح",
         status: "success",
@@ -46,7 +49,7 @@ function ProductDetailsPage() {
         isClosable: true,
         position: "top-right",
         icon: <HiOutlineShoppingBag size={20} />,
-      });
+      }));
 
     existingProduct &&
       toast({
@@ -60,11 +63,11 @@ function ProductDetailsPage() {
   };
 
   const handleAddToWishlist = () => {
-    dispatch(addItemToWishlist(data));
     const existingProduct = wishlist.wishlist.find(
       (item) => item.id === data.id
     );
     !existingProduct &&
+      (dispatch(addItemToWishlist(data)),
       toast({
         title: " المنتج تمت اضافته الى قائمة الرغبات بنجاح",
         status: "success",
@@ -72,7 +75,7 @@ function ProductDetailsPage() {
         isClosable: true,
         position: "top-right",
         icon: <HiOutlineHeart size={20} />,
-      });
+      }));
 
     existingProduct &&
       toast({
@@ -83,6 +86,42 @@ function ProductDetailsPage() {
         position: "top-right",
         icon: <HiOutlineExclamationTriangle size={20} />,
       });
+  };
+
+  const handleAddToCompare = () => {
+    const existingProduct = compare.compare.find((item) => item.id === data.id);
+
+    if (!existingProduct) {
+      if (compare.compare.length < 3) {
+        dispatch(addItemToCompare(data));
+        toast({
+          title: " المنتج تمت اضافته الى المقارنات بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+          icon: <HiOutlineArrowsRightLeft size={20} />,
+        });
+      } else {
+        toast({
+          title: "لا يمكن اضافة المنتج، يمكنك المقارنة بين 3 منتجات فقط",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+          icon: <HiOutlineExclamationTriangle size={20} />,
+        });
+      }
+    } else {
+      toast({
+        title: " المنتج موجود بالفعل في المقارنات ",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+        icon: <HiOutlineExclamationTriangle size={20} />,
+      });
+    }
   };
 
   const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
@@ -203,6 +242,14 @@ function ProductDetailsPage() {
                   onClick={handleAddToWishlist}
                   aria-label="اضافة الى المفضلة"
                   icon={<HiOutlineHeart />}
+                />
+                <IconButton
+                  backgroundColor="purple.600"
+                  color="white"
+                  size="lg"
+                  _hover={{ backgroundColor: "purple.800" }}
+                  icon={<HiOutlineArrowsRightLeft size="20" />}
+                  onClick={handleAddToCompare}
                 />
               </HStack>
             </VStack>

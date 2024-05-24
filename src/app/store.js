@@ -3,19 +3,31 @@ import loginSlice from "./features/loginSlice";
 import cartSlice from "./features/cartSlice";
 import wishlistSlice from "./features/wishlistSlice";
 import networkSlice from "./features/networkSlice";
+import signupSlice from "./features/signupSlice";
+import averageRatingSlice from "./features/averageRatingSlice";
+import compareSlice from "./features/compareSlice";
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import signupSlice from "./features/signupSlice";
-import averageRatingSlice from "./features/averageRatingSlice";
 
 const persistCartConfig = {
-  key: ["cart", "wishlist"],
+  key: "cart",
+  storage,
+};
+
+const persistWishlistConfig = {
+  key: "wishlist",
+  storage,
+};
+
+const persistCompareConfig = {
+  key: "compare",
   storage,
 };
 
 const persistedCart = persistReducer(persistCartConfig, cartSlice);
-const persistedWishlist = persistReducer(persistCartConfig, wishlistSlice);
+const persistedWishlist = persistReducer(persistWishlistConfig, wishlistSlice);
+const persistedCompare = persistReducer(persistCompareConfig, compareSlice);
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +37,7 @@ export const store = configureStore({
     averageRating: averageRatingSlice,
     cart: persistedCart,
     wishlist: persistedWishlist,
+    compare: persistedCompare,
   },
 });
 

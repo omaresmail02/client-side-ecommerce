@@ -3,6 +3,7 @@ import { Box, Button, Heading, Text } from "@chakra-ui/react";
 import { clearWishlist } from "../app/features/wishlistSlice";
 import WishlistItem from "../components/WishlistItem";
 import { HiXMark } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 function WishlistPage() {
   const wishlist = useSelector((state) => state.wishlist);
@@ -46,9 +47,31 @@ function WishlistPage() {
           </Button>
         </>
       ) : (
-        <Text fontWeight={"bold"} fontSize={"xx-large"} textAlign={"center"}>
-          قائمة الرغبات فارغة
-        </Text>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap="20px"
+        >
+          <Text fontWeight={"bold"} fontSize={"xx-large"} textAlign={"center"}>
+            قائمة الرغبات فارغة
+          </Text>
+          <Button
+            as={Link}
+            to="/"
+            backgroundColor="purple.600"
+            color="white"
+            size="sm"
+            py="20px"
+            px="10px"
+            _hover={{ backgroundColor: "purple.800" }}
+            rounded="lg"
+            aria-label="اذهب للتسوق"
+          >
+            اذهب للتسوق
+          </Button>
+        </Box>
       )}
     </Box>
   );

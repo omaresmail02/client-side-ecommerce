@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import {
   HiArrowLeftOnRectangle,
+  HiOutlineArrowsRightLeft,
   HiOutlineHeart,
   HiOutlineShoppingBag,
   HiOutlineUser,
@@ -32,6 +33,7 @@ import { DarkmodeToggle } from "../components/DarkmodeToggle";
 export default function Nav() {
   const cart = useSelector((state) => state.cart);
   const wishlist = useSelector((state) => state.wishlist);
+  const compare = useSelector((state) => state.compare);
 
   const token = CookieServices.get("jwt");
 
@@ -63,7 +65,7 @@ export default function Nav() {
       px={4}
       boxShadow={"lg"}
       width={"100%"}
-      // zIndex={10}
+      zIndex={10}
       // position={"fixed"}
       // transition={"top 0.3s"}
       // top={visible ? "0" : "-70px"}
@@ -76,7 +78,7 @@ export default function Nav() {
         <Box
           display={{ base: "none", md: "block" }}
           border="1px solid white"
-          rounded="md"
+          rounded="lg"
         >
           <SearchBar />
         </Box>
@@ -108,8 +110,8 @@ export default function Nav() {
                     transform="translate(-50%, -50%)"
                     width="20px"
                     height="20px"
-                    rounded="md"
-                    backgroundColor="red"
+                    rounded="lg"
+                    backgroundColor="red.500"
                     color="white"
                     textAlign="center"
                   >
@@ -141,12 +143,45 @@ export default function Nav() {
                     transform="translate(-50%, -50%)"
                     width="20px"
                     height="20px"
-                    rounded="md"
-                    backgroundColor="red"
+                    rounded="lg"
+                    backgroundColor="red.500"
                     color="white"
                     textAlign="center"
                   >
                     {wishlist.wishlist.length}
+                  </Box>
+                )}
+              </Button>
+            </Box>
+            <Box className="compare" position="relative">
+              <Button
+                as={RouterLink}
+                to={"/compare"}
+                bg={"none"}
+                _hover={{ bg: "none" }}
+                p="0"
+              >
+                <Text
+                  as={"span"}
+                  color={"white"}
+                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
+                >
+                  <HiOutlineArrowsRightLeft size={24} />
+                </Text>
+                {compare.compare.length > 0 && (
+                  <Box
+                    position="absolute"
+                    top="0"
+                    right="0"
+                    transform="translate(-50%, -50%)"
+                    width="20px"
+                    height="20px"
+                    rounded="lg"
+                    backgroundColor="red.500"
+                    color="white"
+                    textAlign="center"
+                  >
+                    {compare.compare.length}
                   </Box>
                 )}
               </Button>

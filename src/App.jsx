@@ -23,6 +23,10 @@ import DashboardUsers from "./pages/dashboard/DashboardUsers";
 import Popup from "./components/Popup";
 import WishlistPage from "./pages/Wishlist";
 import DiscountedProducts from "./pages/DiscountedProducts";
+import ComparePage from "./pages/Compare";
+
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const App = () => {
   const token = CookieServices.get("jwt");
@@ -42,6 +46,14 @@ const App = () => {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  });
+
   return (
     <>
       {!token && <Popup isOpen={isOpen} onClose={handleClose} />}
@@ -60,6 +72,7 @@ const App = () => {
           />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/compare" element={<ComparePage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/userProfile" element={<UserProfile />} />
         </Route>

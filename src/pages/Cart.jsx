@@ -93,9 +93,31 @@ function CartPage() {
           </Flex>
         </>
       ) : (
-        <Text fontWeight={"bold"} fontSize={"xx-large"} textAlign={"center"}>
-          عربتك فارغة
-        </Text>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          gap="20px"
+        >
+          <Text fontWeight={"bold"} fontSize={"xx-large"} textAlign={"center"}>
+            عربة التسوق فارغة
+          </Text>
+          <Button
+            as={Link}
+            to="/"
+            backgroundColor="purple.600"
+            color="white"
+            size="sm"
+            py="20px"
+            px="10px"
+            _hover={{ backgroundColor: "purple.800" }}
+            rounded="lg"
+            aria-label="اذهب للتسوق"
+          >
+            اذهب للتسوق
+          </Button>
+        </Box>
       )}
     </Box>
   );

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addItemToWishlist } from "../../utils";
 
 const initialState = {
   wishlist: [],
@@ -10,7 +9,7 @@ const wishlistSlice = createSlice({
   initialState,
   reducers: {
     addItem(state, action) {
-      state.wishlist = addItemToWishlist(action.payload, state.wishlist);
+      state.wishlist.push(action.payload);
     },
     deleteItem(state, action) {
       state.wishlist = state.wishlist.filter(
