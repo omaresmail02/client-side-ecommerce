@@ -60,11 +60,7 @@ const Categories = () => {
               ))
             : uniqueCategories.map((category) => (
                 <Box key={category}>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    data-aos="zoom-in-up"
-                    data-aos-duration="500"
-                  >
+                  <motion.div whileHover={{ scale: 1.05 }}>
                     <Button
                       as={Link}
                       to={`/products/categories/${category}`}

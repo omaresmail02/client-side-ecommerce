@@ -10,11 +10,7 @@ const WishlistItem = ({ item }) => {
   const dispatch = useDispatch();
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      data-aos="zoom-in-up"
-      data-aos-duration="500"
-    >
+    <motion.div whileHover={{ scale: 1.02 }}>
       <Flex
         key={item.id}
         alignItems="center"

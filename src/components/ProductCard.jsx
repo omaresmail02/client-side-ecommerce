@@ -21,7 +21,7 @@ import { getProduct } from "../services/apiProduct";
 
 import { useQuery } from "react-query";
 import {
-  HiInformationCircle,
+  HiEye,
   HiOutlineArrowsRightLeft,
   HiOutlineExclamationTriangle,
   HiOutlineHeart,
@@ -129,12 +129,8 @@ const ProductCard = (product) => {
   );
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      data-aos="zoom-in-up"
-      data-aos-duration="500"
-    >
-      <Card boxShadow="xl" height="100%" rounded="lg" p="8px" top="0">
+    <motion.div whileHover={{ scale: 1.05 }}>
+      <Card boxShadow="xl" height="100%" rounded="lg" p="10px">
         <CardHeader p="0" position="relative">
           {product.discountPercentage > 0 ? (
             <Text
@@ -207,9 +203,10 @@ const ProductCard = (product) => {
             alt={product.title}
             mx="auto"
             objectFit="fill"
-            height="350px" // Set a fixed height for all images
+            // height="350px" // Set a fixed height for all images
             width="100%"
             rounded="lg"
+            aspectRatio="1/1"
           />
         </CardHeader>
         <CardBody
@@ -240,7 +237,7 @@ const ProductCard = (product) => {
         <CardFooter
           justifyContent="space-between"
           alignItems="center"
-          padding="0"
+          padding="0 !important"
         >
           <Button
             as={Link}
@@ -250,7 +247,7 @@ const ProductCard = (product) => {
             size="sm"
             py="20px"
             px="10px"
-            rightIcon={<HiInformationCircle size={20} />}
+            rightIcon={<HiEye size={20} />}
             _hover={{ backgroundColor: "purple.800" }}
             rounded="lg"
             aria-label="التفاصيل"
@@ -259,10 +256,19 @@ const ProductCard = (product) => {
           </Button>
           <Box
             display="flex"
+            flexDirection="column"
             alignItems="center"
             justifyContent="space-between"
-            gap="10px"
+            gap="5px"
           >
+            {product.discountPercentage > 0 ? (
+              <Text color="purple.600" fontSize="larger" fontWeight="semibold">
+                {formatPrice(
+                  product.price -
+                    product.price * (product.discountPercentage / 100)
+                )}
+              </Text>
+            ) : null}
             <Text
               color={
                 product.discountPercentage > 0 ? "purple.300" : "purple.600"
@@ -275,14 +281,6 @@ const ProductCard = (product) => {
             >
               {formatPrice(product.price)}
             </Text>
-            {product.discountPercentage > 0 ? (
-              <Text color="purple.600" fontSize="large" fontWeight="semibold">
-                {formatPrice(
-                  product.price -
-                    product.price * (product.discountPercentage / 100)
-                )}
-              </Text>
-            ) : null}
           </Box>
         </CardFooter>
       </Card>

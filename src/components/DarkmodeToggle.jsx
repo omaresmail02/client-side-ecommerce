@@ -5,7 +5,13 @@ export const DarkmodeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Button onClick={toggleColorMode} bg={"none"} _hover={{ bg: "none" }} p="0">
+    <Button
+      onClick={toggleColorMode}
+      bg={"none"}
+      _hover={{ bg: "none" }}
+      p="0"
+      aria-label="dark-mode"
+    >
       {colorMode === "light" ? (
         <Text
           as={"span"}

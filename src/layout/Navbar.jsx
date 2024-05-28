@@ -12,6 +12,7 @@ import {
   Center,
   Text,
   IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   HiArrowLeftOnRectangle,
@@ -71,7 +72,7 @@ export default function Nav() {
       // top={visible ? "0" : "-70px"}
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <Box as={RouterLink} to="/">
+        <Box as={RouterLink} to="/" aria-label="logo">
           <HiShoppingCart fontSize={"xxx-large"} color={"white"} />
         </Box>
 
@@ -86,106 +87,116 @@ export default function Nav() {
         <Flex alignItems="center" justifyContent="space-between" gap="15px">
           <Flex alignItems="center">
             <DarkmodeToggle />
-            <Box className="cart" position="relative">
-              <Button
-                as={RouterLink}
-                to={"/cart"}
-                bg={"none"}
-                _hover={{ bg: "none" }}
-                p="0"
-              >
-                <Text
-                  as={"span"}
-                  fontSize={"x-large"}
-                  color="white"
-                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
+            <Tooltip label="عربة التسوق" fontSize="md">
+              <Box className="cart" position="relative">
+                <Button
+                  as={RouterLink}
+                  to={"/cart"}
+                  bg={"none"}
+                  _hover={{ bg: "none" }}
+                  p="0"
+                  aria-label="عربة التسوق"
                 >
-                  <HiOutlineShoppingBag size={24} />
-                </Text>
-                {cart.cart.length > 0 && (
-                  <Box
-                    position="absolute"
-                    top="0"
-                    right="0"
-                    transform="translate(-50%, -50%)"
-                    width="20px"
-                    height="20px"
-                    rounded="lg"
-                    backgroundColor="red.500"
+                  <Text
+                    as={"span"}
+                    fontSize={"x-large"}
                     color="white"
-                    textAlign="center"
+                    _hover={{ color: "purple.800", transition: "color 0.2s" }}
                   >
-                    {cart.cart.length}
-                  </Box>
-                )}
-              </Button>
-            </Box>
-            <Box className="wishlist" position="relative">
-              <Button
-                as={RouterLink}
-                to={"/wishlist"}
-                bg={"none"}
-                _hover={{ bg: "none" }}
-                p="0"
-              >
-                <Text
-                  as={"span"}
-                  color={"white"}
-                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
+                    <HiOutlineShoppingBag size={24} />
+                  </Text>
+                  {cart.cart.length > 0 && (
+                    <Box
+                      position="absolute"
+                      top="0"
+                      right="0"
+                      transform="translate(-50%, -50%)"
+                      width="20px"
+                      height="20px"
+                      rounded="lg"
+                      backgroundColor="red.500"
+                      color="white"
+                      textAlign="center"
+                    >
+                      {cart.cart.length}
+                    </Box>
+                  )}
+                </Button>
+              </Box>
+            </Tooltip>
+
+            <Tooltip label="قائمة الرغبات" fontSize="md">
+              <Box className="wishlist" position="relative">
+                <Button
+                  as={RouterLink}
+                  to={"/wishlist"}
+                  bg={"none"}
+                  _hover={{ bg: "none" }}
+                  p="0"
+                  aria-label="قائمة الرغبات"
                 >
-                  <HiOutlineHeart size={24} />
-                </Text>
-                {wishlist.wishlist.length > 0 && (
-                  <Box
-                    position="absolute"
-                    top="0"
-                    right="0"
-                    transform="translate(-50%, -50%)"
-                    width="20px"
-                    height="20px"
-                    rounded="lg"
-                    backgroundColor="red.500"
-                    color="white"
-                    textAlign="center"
+                  <Text
+                    as={"span"}
+                    color={"white"}
+                    _hover={{ color: "purple.800", transition: "color 0.2s" }}
                   >
-                    {wishlist.wishlist.length}
-                  </Box>
-                )}
-              </Button>
-            </Box>
-            <Box className="compare" position="relative">
-              <Button
-                as={RouterLink}
-                to={"/compare"}
-                bg={"none"}
-                _hover={{ bg: "none" }}
-                p="0"
-              >
-                <Text
-                  as={"span"}
-                  color={"white"}
-                  _hover={{ color: "purple.800", transition: "color 0.2s" }}
+                    <HiOutlineHeart size={24} />
+                  </Text>
+                  {wishlist.wishlist.length > 0 && (
+                    <Box
+                      position="absolute"
+                      top="0"
+                      right="0"
+                      transform="translate(-50%, -50%)"
+                      width="20px"
+                      height="20px"
+                      rounded="lg"
+                      backgroundColor="red.500"
+                      color="white"
+                      textAlign="center"
+                    >
+                      {wishlist.wishlist.length}
+                    </Box>
+                  )}
+                </Button>
+              </Box>
+            </Tooltip>
+            <Tooltip label=" المقارنة" fontSize="md">
+              <Box className="compare" position="relative">
+                <Button
+                  as={RouterLink}
+                  to={"/compare"}
+                  bg={"none"}
+                  _hover={{ bg: "none" }}
+                  p="0"
+                  aria-label="المقارنة"
                 >
-                  <HiOutlineArrowsRightLeft size={24} />
-                </Text>
-                {compare.compare.length > 0 && (
-                  <Box
-                    position="absolute"
-                    top="0"
-                    right="0"
-                    transform="translate(-50%, -50%)"
-                    width="20px"
-                    height="20px"
-                    rounded="lg"
-                    backgroundColor="red.500"
-                    color="white"
-                    textAlign="center"
+                  <Text
+                    as={"span"}
+                    color={"white"}
+                    _hover={{ color: "purple.800", transition: "color 0.2s" }}
                   >
-                    {compare.compare.length}
-                  </Box>
-                )}
-              </Button>
-            </Box>
+                    <HiOutlineArrowsRightLeft size={24} />
+                  </Text>
+                  {compare.compare.length > 0 && (
+                    <Box
+                      position="absolute"
+                      top="0"
+                      right="0"
+                      transform="translate(-50%, -50%)"
+                      width="20px"
+                      height="20px"
+                      rounded="lg"
+                      backgroundColor="red.500"
+                      color="white"
+                      textAlign="center"
+                    >
+                      {compare.compare.length}
+                    </Box>
+                  )}
+                </Button>
+              </Box>
+            </Tooltip>
           </Flex>
 
           <Flex>
@@ -208,6 +219,7 @@ export default function Nav() {
                       color: "white",
                     }}
                     icon={<HiOutlineUser size={24} />}
+                    aria-label="المستخدم"
                   />
                 </MenuButton>
                 <MenuList
@@ -237,32 +249,38 @@ export default function Nav() {
               </Menu>
             ) : (
               <Flex gap="4px" alignItems="center">
-                <IconButton
-                  bg="white"
-                  color="purple.800"
-                  size="md"
-                  rounded="lg"
-                  _hover={{
-                    bg: "purple.800",
-                    color: "white",
-                  }}
-                  icon={<HiOutlineUserPlus size={24} />}
-                  as={RouterLink}
-                  to={"/signup"}
-                />
-                <IconButton
-                  bg="white"
-                  color="purple.800"
-                  size="md"
-                  rounded="lg"
-                  _hover={{
-                    bg: "purple.800",
-                    color: "white",
-                  }}
-                  icon={<HiArrowLeftOnRectangle size={24} />}
-                  as={RouterLink}
-                  to={"/login"}
-                />
+                <Tooltip label=" الاشتراك" fontSize="md">
+                  <IconButton
+                    bg="white"
+                    color="purple.800"
+                    size="md"
+                    rounded="lg"
+                    _hover={{
+                      bg: "purple.800",
+                      color: "white",
+                    }}
+                    icon={<HiOutlineUserPlus size={24} />}
+                    as={RouterLink}
+                    to={"/signup"}
+                    aria-label="الاشتراك"
+                  />
+                </Tooltip>
+                <Tooltip label=" تسجيل الدخول" fontSize="md">
+                  <IconButton
+                    bg="white"
+                    color="purple.800"
+                    size="md"
+                    rounded="lg"
+                    _hover={{
+                      bg: "purple.800",
+                      color: "white",
+                    }}
+                    icon={<HiArrowLeftOnRectangle size={24} />}
+                    as={RouterLink}
+                    to={"/login"}
+                    aria-label="تسجيل الدخول"
+                  />
+                </Tooltip>
               </Flex>
             )}
           </Flex>

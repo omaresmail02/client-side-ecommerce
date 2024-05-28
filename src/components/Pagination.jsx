@@ -10,9 +10,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       {Array.from({ length: totalPages }, (_, index) => (
         <Button
           key={index}
-          bg={index + 1 === currentPage ? "purple.600" : "gray.600"}
+          bg={index + 1 === currentPage ? "purple.600" : "purple.300"}
           _hover={{
-            bg: index + 1 === currentPage ? "purple.800" : "gray.800",
+            bg: index + 1 === currentPage ? "purple.800" : "purple.800",
           }}
           color="white"
           onClick={() => handleClick(index + 1)}
