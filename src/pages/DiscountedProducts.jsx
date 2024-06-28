@@ -12,7 +12,7 @@ const DiscountedProducts = () => {
   const { isLoading, data } = useQuery("products", getProductList);
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.products || []
+    data || []
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,7 +59,9 @@ const DiscountedProducts = () => {
             gap={"6"}
           >
             {discountedProducts.slice(startIndex, endIndex).map((product) => (
-              <ProductCard key={product.id} {...product} />
+              <Box key={product.id} pt="30px" pb="15px" px="10px" height="100%">
+              <ProductCard {...product} />
+              </Box>
             ))}
           </Grid>
           <Pagination

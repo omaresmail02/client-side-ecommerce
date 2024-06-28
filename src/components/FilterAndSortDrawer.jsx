@@ -121,7 +121,7 @@ const FilterAndSortDrawer = ({
                       }}
                     >
                       <Stack>
-                        {data.products
+                      {/*}  {data
                           .reduce((acc, product) => {
                             const category = product.category;
                             if (category) {
@@ -136,8 +136,19 @@ const FilterAndSortDrawer = ({
                             <Checkbox key={title} value={title}>
                               {title}
                             </Checkbox>
-                          ))}
+                          ))} */}
+                            {data &&
+                              data.map((product) => (
+                                <Checkbox
+                                  key={product.category.id}
+                                  value={product.category.id}
+                                >
+                                  {product.category.title}
+                                </Checkbox>
+                              ))}
+                              
                       </Stack>
+                      
                     </CheckboxGroup>
                   </AccordionPanel>
                 </AccordionItem>

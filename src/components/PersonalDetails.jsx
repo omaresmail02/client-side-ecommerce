@@ -14,7 +14,7 @@ const PersonalDetails = () => {
   const { register, handleSubmit } = useForm();
 
   function onSubmit(data) {
-    console.log(data);
+    console.log(data);//????
   }
   return (
     <Container maxW="6xl" my="30px">
@@ -25,7 +25,7 @@ const PersonalDetails = () => {
             <Input
               type="text"
               name="firstName"
-              {...register("firstname", {
+              {...register("first_name", {
                 required: "This field is required",
               })}
             />
@@ -35,7 +35,7 @@ const PersonalDetails = () => {
             <Input
               type="text"
               name="lastName"
-              {...register("lastname", {
+              {...register("last_name", {
                 required: "This field is required",
               })}
             />

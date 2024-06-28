@@ -1,27 +1,11 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Heading,
-  Skeleton,
-} from "@chakra-ui/react";
-
+import { Box, Button, Container, Grid, Heading, Skeleton } from "@chakra-ui/react";
 import { useQuery } from "react-query";
-import { getProductList } from "../services/apiProduct";
+import { getCategoriesList } from "../services/apiCategories"; // Adjust this import as per your actual API service
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const Categories = () => {
-  const { data, isLoading } = useQuery("products", getProductList);
-
-  // Get unique categories
-  const categoriesSet = new Set();
-  data?.products.forEach((product) => {
-    categoriesSet.add(product.category);
-  });
-
-  const uniqueCategories = Array.from(categoriesSet);
+  const { data, isLoading } = useQuery("categories", getCategoriesList);
 
   return (
     <Container maxW="6xl">
@@ -58,12 +42,12 @@ const Categories = () => {
                   <Skeleton p="10px" w="100%" />
                 </Box>
               ))
-            : uniqueCategories.map((category) => (
-                <Box key={category}>
+            : data.map((category) => (
+                <Box key={category.id}>
                   <motion.div whileHover={{ scale: 1.05 }}>
                     <Button
                       as={Link}
-                      to={`/products/categories/${category}`}
+                      to={`/categories/${category.id}/`}
                       backgroundColor="purple.600"
                       color="white"
                       _hover={{ backgroundColor: "purple.800" }}
@@ -71,9 +55,9 @@ const Categories = () => {
                       p="10px"
                       w="100%"
                       whiteSpace="normal"
-                      aria-label={category}
+                      aria-label={category.title}
                     >
-                      {category.toUpperCase()}
+                      {category.title.toUpperCase()}
                     </Button>
                   </motion.div>
                 </Box>

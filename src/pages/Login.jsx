@@ -107,7 +107,7 @@ export default function Login() {
             <Stack spacing={4}>
               <FormControl id="email" isInvalid={!!errors.email}>
                 <FormLabel>البريد الالكتروني</FormLabel>
-                <Input type="email" {...register("email")} />
+                <Input type="email" {...register("username")} />
                 <FormErrorMessage color={"red.500"}>
                   {errors.email?.message}
                 </FormErrorMessage>

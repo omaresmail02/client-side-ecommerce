@@ -10,9 +10,10 @@ import useProductFilterAndSort from "../hooks/useProductFilterAndSort";
 
 const Products = () => {
   const { isLoading, data } = useQuery("products", getProductList);
+  console.log(data)
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.products || []
+    data || []
   );
 
   const [currentPage, setCurrentPage] = useState(1);

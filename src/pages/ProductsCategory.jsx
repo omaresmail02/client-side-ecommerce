@@ -28,12 +28,12 @@ import { HiInformationCircle } from "react-icons/hi2";
 function ProductDetailsPage() {
   const { category } = useParams();
 
-  const { isLoading, data } = useQuery(["products", category], () =>
-    getCategoryProduct(category)
+  const { isLoading, data } = useQuery(["product", category], () =>
+    getCategoryProduct(category.id)
   );
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.products || []
+    data || []
   );
 
   if (isLoading) return <ProductCardSkeleton />;
@@ -52,7 +52,7 @@ function ProductDetailsPage() {
             position="relative"
             display="inline-block"
           >
-            {category}
+            {category.title}
             <Box
               position="absolute"
               bottom="-10px"

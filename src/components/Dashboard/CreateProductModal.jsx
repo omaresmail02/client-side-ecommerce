@@ -55,7 +55,7 @@ const CreateProductModal = ({
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("price", data.price);
-    formData.append("discount", data.discount);
+    formData.append("discountPercentage", data.discount);
     formData.append("stock", data.stock);
     formData.append("category", data.category);
     formData.append("thumbnail", data.thumbnail[0]);
@@ -99,11 +99,11 @@ const CreateProductModal = ({
                 <Stack>
                   {categoriesData?.map((category) => (
                     <Radio
-                      key={category}
-                      value={category}
+                      key={category.id}
+                      value={category.id}
                       {...register("category")}
                     >
-                      {category}
+                      {category.title}
                     </Radio>
                   ))}
                 </Stack>

@@ -50,20 +50,20 @@ const DashboardReviewsTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {reviewsData?.data?.map((review) => {
+            {reviewsData?.map((review) => {
               return (
                 <Tr key={review.id}>
                   <Td>{review.id}</Td>
-                  <Td>{review?.attributes?.username}</Td>
+                  <Td>{review?.username}</Td>
                   <Td>
-                    {review?.attributes?.product?.data?.attributes?.title}
+                    {review?.product}
                   </Td>
-                  <Td>{review?.attributes?.review}</Td>
+                  <Td>{review?.comment}</Td>
                   <Td isNumeric>{review?.attributes?.rating}</Td>
                   <Td>
                     <Button
                       as={Link}
-                      to={`/products/${review?.attributes?.product?.data?.id}`}
+                      to={`products/${review?.product}`}
                       colorScheme="purple"
                       variant="solid"
                       mr={3}

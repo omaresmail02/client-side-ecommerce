@@ -13,7 +13,7 @@ export const getUsersList = async () => {
 
 export const getMyUser = async () => {
   try {
-    const { data } = await axiosInstance.get(`/auth/me`, {
+    const { data } = await axiosInstance.get(`/users/me`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

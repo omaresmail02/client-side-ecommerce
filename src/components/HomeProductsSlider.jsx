@@ -50,61 +50,95 @@ const ProductCarousel = () => {
 
   const { data, isLoading } = useQuery("products", getProductList);
 
-  return (
-    <Box mb="50px">
-      <Container maxW="6xl">
-        <Flex justify={"space-between"} align={"center"}>
-          <Heading
-            fontSize={{ base: "large", lg: "x-large" }}
-            position="relative"
-            display="inline-block"
-          >
-            المنتجات
-            <Box
-              position="absolute"
-              bottom="-5px"
-              left="50%"
-              transform="translateX(-50%)"
-              width="100%"
-              height="3px"
-              backgroundColor="purple.600"
-            />
-          </Heading>
-          <Button
-            as={Link}
-            to={"/products"}
-            backgroundColor="purple.600"
-            color="white"
-            _hover={{ backgroundColor: "purple.800" }}
-            size="sm"
-            py="20px"
-            px="10px"
-            rightIcon={<HiOutlineViewColumns size={20} />}
-          >
-            اظهر كل المنتجات
-          </Button>
-        </Flex>
-        {isLoading ? (
-          // Show loading skeleton while data is being fetched
-          <Slider {...settings} arrows={false}>
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Box key={index} p={1} height="100%" pb="30px" rounded="lg">
-                <Skeleton height="300px" rounded="lg" />
-              </Box>
-            ))}
-          </Slider>
-        ) : (
-          <Slider {...settings} arrows={false}>
-            {data?.products.map((product) => (
-              <Box key={product.id} pt="30px" pb="15px" px="10px" height="100%">
-                <ProductCard {...product} />
-              </Box>
-            ))}
-          </Slider>
-        )}
-      </Container>
-    </Box>
-  );
-};
+  const discountedProducts = data?.filter(
+    (product) => product.discountPercentage > 0
+  ) ;
+//   return (
+//     <Box mb="50px">
+//       <Container maxW="6xl">
+//         <Flex justify={"space-between"} align={"center"}>
+//           <Heading
+//             fontSize={{ base: "large", lg: "x-large" }}
+//             position="relative"
+//             display="inline-block"
+//           >
+//             المنتجات
+//             <Box
+//               position="absolute"
+//               bottom="-5px"
+//               left="50%"
+//               transform="translateX(-50%)"
+//               width="100%"
+//               height="3px"
+//               backgroundColor="purple.600"
+//             />
+//           </Heading>
+//           <Button
+//             as={Link}
+//             to={"/products"}
+//             backgroundColor="purple.600"
+//             color="white"
+//             _hover={{ backgroundColor: "purple.800" }}
+//             size="sm"
+//             py="20px"
+//             px="10px"
+//             rightIcon={<HiOutlineViewColumns size={20} />}
+//           >
+//             اظهر كل المنتجات
+//           </Button>
+//         </Flex>
+//         {isLoading ? (
+//           // Show loading skeleton while data is being fetched
+//           <Slider {...settings} arrows={false}>
+//             {Array.from({ length: 4 }).map((_, index) => (
+//               <Box key={index} p={1} height="100%" pb="30px" rounded="lg">
+//                 <Skeleton height="300px" rounded="lg" />
+//               </Box>
+//             ))}
+//           </Slider>
+//         ) : (
+//           <Slider {...settings} arrows={false}>
+//             {data?.products.map((product) => (
+//               <Box key={product.id} pt="30px" pb="15px" px="10px" height="100%">
+//                 <ProductCard {...product} />
+//               </Box>
+//             ))}
+//           </Slider>
+//         )}
+//       </Container>
+//     </Box>
+//   );
+// };
+
+// export default ProductCarousel;
+return (
+  <Container maxW="container.xl">
+    <Flex justifyContent="space-between" alignItems="center" mb={10}>
+      <Heading as="h2" size="xl" mb={4}>
+        المنتجات
+      </Heading>
+      <Button
+        as={Link}
+        to="/products"
+        colorScheme="teal"
+        variant="outline"
+        leftIcon={<HiOutlineViewColumns />}
+      >
+        كل المنتجات
+      </Button>
+    </Flex>
+    {isLoading ? (
+      <Skeleton height="200px" />
+    ) : (
+      <Slider {...settings}>
+        {discountedProducts.map((product) => (
+          <Box key={product.id} pt="30px" pb="15px" px="10px" height="100%">
+            <ProductCard {...product} />
+          </Box>
+        ))}
+      </Slider>
+    )}
+  </Container>
+);}
 
 export default ProductCarousel;

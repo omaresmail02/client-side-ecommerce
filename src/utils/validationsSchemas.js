@@ -6,7 +6,7 @@ export const CreateProductSchema = yup.object().shape({
   price: yup.number().required("Price is required"),
   discount: yup.number().required("Discount is required"),
   stock: yup.number().required("Stock is required"),
-  category: yup.string().required("Category is required"),
+  category: yup.number().required("Category is required"),
   thumbnail: yup.mixed().required("Thumbnail is required"),
 });
 
@@ -16,12 +16,12 @@ export const EditProductSchema = yup.object().shape({
   price: yup.number().required("Price is required"),
   discount: yup.number().required("Discount is required"),
   stock: yup.number().required("Stock is required"),
-  category: yup.string().required("Category is required"),
+  category: yup.number().required("Category is required"),
   thumbnail: yup.mixed(),
 });
 
 export const LoginSchema = yup.object().shape({
-  email: yup
+  username: yup
     .string()
     .email("من فضلك ادخل بريد الكتروني صالح")
     .required("البريد الالكتروني مطلوب"),
@@ -32,8 +32,7 @@ export const LoginSchema = yup.object().shape({
 });
 
 export const SignupSchema = yup.object().shape({
-  firstName: yup.string().required("الاسم مطلوب"),
-  lastName: yup.string().required("اللقب مطلوب"),
+
   email: yup
     .string()
     .email("من فضلك ادخل بريد الكتروني صالح")
@@ -45,4 +44,6 @@ export const SignupSchema = yup.object().shape({
     .matches(/[A-Z]/, "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل")
     .matches(/[0-9]/, "كلمة المرور يجب أن تحتوي على رقم على الاقل")
     .required("كلمة المرور مطلوبة"),
+  firstName: yup.string().required("الاسم مطلوب"),
+  lastName: yup.string().required("اللقب مطلوب"),
 });

@@ -124,7 +124,7 @@ const ProductCard = (product) => {
     }
   };
 
-  const { data } = useQuery(["product", product.id], () =>
+  const data = useQuery(["product", product.id], () =>
     getProduct(product.id)
   );
 

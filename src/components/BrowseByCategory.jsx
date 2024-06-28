@@ -1,11 +1,11 @@
 import { Box, Button, Grid, Heading } from "@chakra-ui/react";
-
 import { useQuery } from "react-query";
-import { getProductList } from "../services/apiProduct";
+import { getCategoriesList } from "../services/apiCategories";
 import { Link } from "react-router-dom";
 
 const BrowseByCategory = () => {
-  const { data } = useQuery("products", getProductList);
+  const { data } = useQuery("categories", getCategoriesList);
+  const { categories, isLoading } = data;
   return (
     <Box p={30} borderTop="1px solid" borderBottom="1px solid">
       <Heading fontSize={"x-large"}>استكشف التصنيفات</Heading>
@@ -14,21 +14,19 @@ const BrowseByCategory = () => {
         templateColumns={"repeat(auto-fill, minmax(110px, 1fr))"}
         gap={"3"}
       >
-        {data?.data?.map((product) => {
-          return (
-            <Link
-              key={product.id}
-              to={`/${product?.attributes?.category.data[0].attributes?.title}`}
-              // to={`/category/${product.attributes.category.data[0].attributes.title}`}
-            >
-              <Button boxSize={"110px"}>
-                {product?.attributes?.category.data.map(
-                  (item) => item.attributes.title
-                )}
-              </Button>
-            </Link>
-          );
-        })}
+         {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <Box key={index}>
+                <Button boxSize={"110px"} isLoading />
+              </Box>
+            ))
+          : categories.map((category) => (
+              <Link key={category.id} to={`/?category_id=${category.id}`}>
+                <Button boxSize={"110px"} variant="outline">
+                  {category.title}
+                </Button>
+              </Link>
+            ))}
       </Grid>
     </Box>
   );

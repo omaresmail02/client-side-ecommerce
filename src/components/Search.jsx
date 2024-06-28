@@ -25,7 +25,7 @@ const SearchComponent = () => {
   const { data } = useQuery("products", getProductList);
 
   const searchData = (value) => {
-    const results = data?.products.filter((product) =>
+    const results = data?.filter((product) =>
       product?.title?.toLowerCase().includes(value.toLowerCase())
     );
     setSearchResults(results);
