@@ -44,10 +44,10 @@ export default function Signup() {
   });
 
   function onSubmit(data) {
-    const { firstName, lastName, email, password } = data;
-    const username = `${firstName} ${lastName}`;
+    const {  email, password, firstName, lastName } = data;
+   // const username = `${firstName} ${lastName}`;
 
-    dispatch(userSignup({ email, password, username }));
+    dispatch(userSignup({ email, password, firstName, lastName  }));
   }
 
   // Navigate to /login if signup is successful

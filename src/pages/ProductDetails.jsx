@@ -124,7 +124,7 @@ function ProductDetailsPage() {
     }
   };
 
-  const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
+  const { isLoading, data } = useQuery(["products", id], () => getProduct(id));
 
   // const averageRating = useSelector((state) => state.averageRating);
 

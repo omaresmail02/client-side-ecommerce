@@ -3,7 +3,7 @@ import { axiosInstance } from "../api/axios.config.js";
 
 export const getCategoriesList = async () => {
   try {
-    const { data } = await axiosInstance.get(`/products/categories`);
+    const { data } = await axiosInstance.get(`/categories`);
     return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -13,7 +13,7 @@ export const getCategoriesList = async () => {
 
 export const createCategory = async ({ body }) => {
   try {
-    const { data } = await axiosInstance.post(`/api/categories`, body, {
+    const { data } = await axiosInstance.post(`/categories/`, body, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -27,7 +27,7 @@ export const createCategory = async ({ body }) => {
 
 export const deleteCategory = async (id) => {
   try {
-    const { data } = await axiosInstance.delete(`/api/categories/${id}`, {
+    const { data } = await axiosInstance.delete(`/categories/${id}`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

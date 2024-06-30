@@ -27,20 +27,18 @@ const Reviews = ({ productId }) => {
 
   const queryClient = useQueryClient();
 
-  const { data: reviewsData } = useQuery("reviews", getReviewsList);
+  const  {data: reviewsData }= useQuery("reviews", getReviewsList);
 
   const { isLoading: isCreating, mutate: mutateCreate } = useMutation(
     createReview,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["reviews"],
-        });
+        queryClient.invalidateQueries("reviews");
       },
     }
   );
 
-  const { data: userData } = useQuery("users", getMyUser);
+  const  {data: userData}  = useQuery("users", getMyUser);
 
   const token = CookieServices.get("jwt");
 
@@ -49,34 +47,28 @@ const Reviews = ({ productId }) => {
   };
 
   const onSubmit = (submitData) => {
-    const formData = new FormData();
-
-    formData.append(
-      "data",
-      JSON.stringify({
-        username: userData?.username,
+    const formData = {
         rating: rating,
-        review: submitData.review,
+        comment: submitData.comment,
         user: userData?.id,
         product: productId,
-      })
-    );
+      };
     mutateCreate({ body: formData });
   };
 
   // Check if the user has already made a review for this product
-  const hasReviewed = reviewsData?.data?.some(
+  const hasReviewed = reviewsData?.some(
     (review) =>
-      review?.attributes?.product?.data?.id === Number(productId) &&
-      review?.attributes?.username === userData?.username
+      review?.product === Number(productId) &&
+      review?.user === userData?.id
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     // Calculate average rating
-    const productReviews = reviewsData?.data?.filter(
-      (review) => review?.attributes?.product?.data?.id === Number(productId)
+    const productReviews = reviewsData?.filter(
+      (review) => review?.product.id === Number(productId)
     );
 
     if (!productReviews || productReviews.length === 0) {
@@ -85,7 +77,7 @@ const Reviews = ({ productId }) => {
     }
 
     const totalRating = productReviews.reduce(
-      (accumulator, review) => accumulator + review.attributes.rating,
+      (accumulator, review) => accumulator + review.rating,
       0
     );
 
@@ -118,7 +110,7 @@ const Reviews = ({ productId }) => {
               <FormLabel>مراجعة المنتج</FormLabel>
               <Textarea
                 placeholder="مراجعة المنتج"
-                {...register("review", {
+                {...register("comment", {
                   required: "This field is required",
                 })}
                 borderColor="purple.600"
@@ -151,10 +143,9 @@ const Reviews = ({ productId }) => {
         </Box>
       )}
       <Flex flexDirection="column" gap="3">
-        {reviewsData?.data
-          ?.filter(
+        {reviewsData?.filter(
             (review) =>
-              review?.attributes?.product?.data?.id === Number(productId)
+              review?.product === Number(productId)
           )
           .map((review) => (
             <Box
@@ -166,17 +157,17 @@ const Reviews = ({ productId }) => {
               p="4"
             >
               <Heading as="h3" mb="4px">
-                {review?.attributes?.username}
+                {review.username}
               </Heading>
               <Text display="inline-block" mb="4px">
-                التقييم:{review?.attributes?.rating}
+                التقييم:{review.rating}
                 <Text as="span" display="flex" gap="1">
-                  {[...Array(review?.attributes?.rating)].map((_, index) => (
+                  {[...Array(review.rating)].map((_, index) => (
                     <BsStarFill color="gold" key={index} />
                   ))}
                 </Text>
               </Text>
-              <Text>{review?.attributes?.review}</Text>
+              <Text>{review.comment}</Text>
             </Box>
           ))}
       </Flex>

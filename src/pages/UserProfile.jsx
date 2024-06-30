@@ -77,7 +77,7 @@ const UserProfile = () => {
             <strong>اسم المستخدم: {data?.username}</strong>
           </Text>
           <Text mb="3">
-            <strong>البريد الالكتروني: {data?.email}</strong>
+            <strong>البريد الالكتروني: {data?.username}</strong>
           </Text>
           <Text mb="3">
             <strong>تاريخ الانشاء: {formatDate(data?.createdAt)}</strong>

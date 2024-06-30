@@ -15,6 +15,7 @@ export const getProductList = async () => {
 export const getProduct = async (id) => {
   try {
     const { data } = await axiosInstance.get(`/products/${id}`);
+    console.log(data)
     return data;
   } catch (error) {
     console.error("Error fetching product :", error);
@@ -22,31 +23,31 @@ export const getProduct = async (id) => {
   }
 };
 
-export const getCategoryProduct = async (category) => {
-  try {
-    const { data } = await axiosInstance.get(`/products/category/${category}`);
-    return data;
-  } catch (error) {
-    console.error("Error fetching product of the category :", error);
-    throw error;
-  }
-};
+  export const getCategoryProduct = async (category_id) => {
+    try {
+      const { data } = await axiosInstance.get(`/products/?category_id=${category_id}`);
+      return data;
+    } catch (error) {
+      console.error("Error fetching product of the category :", error);
+      throw error;
+    }
+  };
 
 export const createProduct = async (formData) => {
   try {
-    // const { data } = await axiosInstance.post(`/products`, formData, {
-    const { data } = await axios.post(
-      `http://localhost:5000/products`,
-      formData,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        // },
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return data;
-  } catch (error) {
+    const { data } = await axiosInstance.post('/products/', formData
+    // const { data } = await axios.post(
+    //   `http://localhost:5000/products`,
+    //   formData,
+    //   {
+    //     // headers: {
+    //     //   Authorization: `Bearer ${CookieServices.get("jwt")}`,
+    //     // },
+    //     headers: { "Content-Type": "application/json" },
+    //   }
+    // );
+    // return data;
+  )} catch (error) {
     console.error("Error creating product:", error);
     throw error;
   }
@@ -56,7 +57,7 @@ export const updateProduct = async ({ id, body }) => {
   try {
     const { data } = await axiosInstance.put(`/products/${id}`, body, {
       headers: {
-        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+        Authorization: 'Bearer ${CookieServices.get("jwt")}',
       },
     });
     return data;

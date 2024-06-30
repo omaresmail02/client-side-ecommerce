@@ -78,7 +78,7 @@ const DashboardProductsTable = () => {
   if (isLoading) return <TableSkeleton />;
 
   // Filter products based on search query
-  const filteredProducts = data?.products?.filter((product) =>
+  const filteredProducts = data?.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -165,7 +165,7 @@ const DashboardProductsTable = () => {
                   {product.title}
                 </Td>
                 <Td whiteSpace="wrap" textAlign="center">
-                  {product.category}
+                  {product.category.title}
                 </Td>
                 <Td isNumeric textAlign="center">
                   {product.price}
@@ -179,7 +179,7 @@ const DashboardProductsTable = () => {
                 <Td gap={3} textAlign="center">
                   <Button
                     as={Link}
-                    to={`/products/${product.id}`}
+                    to={`products/${product.id}`}
                     mx="8px"
                     backgroundColor="purple.400"
                     color="white"
@@ -239,7 +239,7 @@ const DashboardProductsTable = () => {
               />
               <Text>ID: {product.id}</Text>
               <Text>Title: {product.title}</Text>
-              <Text>Category: {product.category}</Text>
+              <Text>Category: {product.category.title}</Text>
               <Text>Price: {product.price}</Text>
               <Text>Discount: {product.discountPercentage} %</Text>
               <Text>Stock: {product.stock}</Text>

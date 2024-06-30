@@ -61,7 +61,7 @@ const DashboardUsersTable = () => {
                 <Tr key={user.id}>
                   <Td>{user.id}</Td>
                   <Td>{user?.username}</Td>
-                  <Td>{user?.email}</Td>
+                  <Td>{user?.username}</Td>
                   <Td>{formatDate(user?.createdAt)}</Td>
                   <Td>
                     <Button

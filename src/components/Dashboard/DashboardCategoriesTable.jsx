@@ -47,8 +47,8 @@ const DashboardCategoriesTable = () => {
   });
 
   function onCreateSubmit(data) {
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
+    const formData = JSON.stringify(data);
+    // formData.append(JSON.stringify(data));
     mutateCreate({ body: formData });
   }
 
@@ -93,11 +93,11 @@ const DashboardCategoriesTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((category, index) => {
+            {data.map(category => {
               return (
-                <Tr key={category}>
-                  <Td>{index + 1}</Td>
-                  <Td>{category}</Td>
+                <Tr key={category.id}>
+                  <Td>{category.id + 1}</Td>
+                  <Td>{category.title}</Td>
 
                   <Td>
                     {/* <Button
