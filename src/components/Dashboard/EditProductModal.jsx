@@ -19,6 +19,8 @@ import {
   Box,
   FormErrorMessage,
 } from "@chakra-ui/react";
+
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CustomeModal from "../../shared/Modal";
@@ -35,47 +37,47 @@ const EditProductModal = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(EditProductSchema),
     defaultValues: {
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      discount: product.discount,
-      stock: product.stock,
-      category: product.category,
+      title: product?.title || "",
+      description: product?.description || "",
+      price: product?.price || 0,
+      stock: product?.stock || 0,
+      discount: product?.discountPercentage || 0,
+      // thumbnail: null,
     },
   });
 
-  const onSubmit = (data) => {
-    // const selectedCategory = categoriesData.find(
-    //   (category) => category === data.category
-    // );
-    // const formData = new FormData();
-    // formData.append(
-    //   "products",
-    //   JSON.stringify({
-    //     title: data.title,
-    //     description: data.description,
-    //     price: data.price,
-    //     discount: data.discount,
-    //     stock: data.stock,
-    //     category: selectedCategory,
-    //   })
-    // );
-    const formData = new FormData();
-    JSON.stringify(
-      formData.append("title", data.title),
-      formData.append("description", data.description),
-      formData.append("price", data.price),
-      formData.append("discount", data.discount),
-      formData.append("stock", data.stock),
-      formData.append("category", data.category),
-      formData.append("thumbnail", data.thumbnail[0])
-    );
+  useEffect(() => {
+    if (product) {
+      setValue("title", product.title);
+      setValue("description", product.description);
+      setValue("price", product.price);
+      setValue("stock", product.stock);
+      setValue("discount", product.discountPercentage);
+      // setValue("thumbnail", product.thumbnail);
+    }
+  }, [product, setValue]);
 
-    mutateUpdate(formData);
+  const onSubmit = (data) => {
+    const formData = new FormData();
+    console.log(data);
+
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("stock", data.stock);
+    formData.append("discountPercentage", data.discount);
+    formData.append("category", data.category);
+
+    if (data.thumbnail && data.thumbnail.length > 0) {
+      formData.append("thumbnail", data.thumbnail[0]);
+    }
+
+    mutateUpdate({ id: product.id, formData });
   };
 
   return (
@@ -115,13 +117,13 @@ const EditProductModal = ({
             <AccordionPanel pb={4}>
               <RadioGroup>
                 <Stack>
-                  {categoriesData?.map((category) => (
+                  {categoriesData?.data.categories.map((category) => (
                     <Radio
-                      key={category}
-                      value={category}
+                      key={category.id}
+                      value={category.id}
                       {...register("category")}
                     >
-                      {category}
+                      {category.title}
                     </Radio>
                   ))}
                 </Stack>

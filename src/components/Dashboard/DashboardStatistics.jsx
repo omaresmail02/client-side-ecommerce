@@ -2,30 +2,32 @@ import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 
 import { useQuery } from "react-query";
 import { getProductList } from "../../services/apiProduct";
+import { getUsersList } from "../../services/apiUsers";
 import TinyBarChart from "./BarChart";
 import { getReviewsList } from "../../services/apiReviews";
-import { getUsersList } from "../../services/apiUsers";
 import {
   HiOutlineChartBar,
   HiOutlinePencilSquare,
   HiOutlineUser,
   HiOutlineViewColumns,
 } from "react-icons/hi2";
+import { getCategoriesList } from "../../services/apiCategories";
 
 const DashboardStatistics = () => {
   const { data: productsList } = useQuery("products", getProductList);
   const { data: reviewsList } = useQuery("reviews", getReviewsList);
   const { data: usersList } = useQuery("users", getUsersList);
+  const { data: categoriesList } = useQuery("categories", getCategoriesList);
 
-  const productData = productsList?.products?.map((product) => ({
+  const productData = productsList?.data.products.map((product) => ({
     name: product?.title,
     value: product?.stock,
   }));
 
   const categoryCounts = {};
 
-  productsList?.products?.forEach((product) => {
-    const categoryName = product?.category;
+  productsList?.data.products?.forEach((product) => {
+    const categoryName = product?.category.title;
 
     if (!categoryCounts[categoryName]) {
       categoryCounts[categoryName] = 1;
@@ -53,7 +55,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineViewColumns size={24} />
           <Text fontSize="lg">عدد المنتجات</Text>
-          <Text fontSize="2xl">{productsList?.products.length}</Text>
+          <Text fontSize="2xl">{productsList?.data?.products.length}</Text>
         </VStack>
         <VStack
           spacing="4px"
@@ -66,7 +68,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineChartBar size={24} />
           <Text fontSize="lg">عدد الفئات</Text>
-          <Text fontSize="2xl">{categoryData?.length}</Text>
+          <Text fontSize="2xl">{categoriesList?.data?.categories.length}</Text>
         </VStack>
 
         <VStack
@@ -80,7 +82,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineUser size={24} />
           <Text fontSize="lg">عدد المستخدمين</Text>
-          <Text fontSize="2xl">{usersList?.length}</Text>
+          <Text fontSize="2xl">{usersList?.data?.users.length}</Text>
         </VStack>
         <VStack
           spacing="4px"
@@ -93,7 +95,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlinePencilSquare size={24} />
           <Text fontSize="lg">عدد المراجعات</Text>
-          <Text fontSize="2xl">{reviewsList?.data?.length}</Text>
+          <Text fontSize="2xl">{reviewsList?.data?.reviews.length}</Text>
         </VStack>
       </Flex>
       <Box w="100%" h="50vh">
@@ -114,6 +116,7 @@ const DashboardStatistics = () => {
             backgroundColor="purple.600"
           />
         </Heading>
+
         <TinyBarChart data={productData} />
       </Box>
       <Box w="100%" h="50vh">

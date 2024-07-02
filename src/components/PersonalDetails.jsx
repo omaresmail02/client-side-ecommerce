@@ -10,36 +10,73 @@ import {
 import { useForm } from "react-hook-form";
 import { HiCreditCard } from "react-icons/hi2";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { axiosInstance } from "../api/axios.config";
+import CookieServices from "../services/CookieServices";
+import { useSelector } from "react-redux";
+
 const PersonalDetails = () => {
   const { register, handleSubmit } = useForm();
+  const cart = useSelector((state) => state.cart);
 
   function onSubmit(data) {
     console.log(data);
+    const body = {
+      products: cart.cart,
+
+      email: data.email,
+      name: data.name,
+      phone: data.phone,
+      address: data.address,
+    };
+    makePayment(body);
   }
+
+  const makePayment = async (body) => {
+    try {
+      const stripe = await loadStripe(
+        "pk_test_51PTsIxI95CbFfi98yXkuEZxusbrcQWN53voALFtT67UvCRqjjRDZW9pGsKm4Yus8YD24cfxAFnJd4JGvvdraaAKk00mj1SeaNA"
+      );
+
+      const response = await axiosInstance.post(
+        "/payment/checkout-session",
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${CookieServices.get("jwt")}`,
+          },
+        }
+      );
+
+      const session = response.data;
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.data.sessionId,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+    }
+  };
+
   return (
     <Container maxW="6xl" my="30px">
       <Box as="form" onSubmit={handleSubmit(onSubmit)} maxW="md">
         <VStack spacing="4">
-          <FormControl id="firstName">
+          <FormControl id="name">
             <FormLabel>الاسم</FormLabel>
             <Input
               type="text"
-              name="firstName"
-              {...register("firstname", {
+              name="name"
+              {...register("name", {
                 required: "This field is required",
               })}
             />
           </FormControl>
-          <FormControl id="lastName">
-            <FormLabel>اللقب</FormLabel>
-            <Input
-              type="text"
-              name="lastName"
-              {...register("lastname", {
-                required: "This field is required",
-              })}
-            />
-          </FormControl>
+
           <FormControl id="email">
             <FormLabel>البريد الالكتروني</FormLabel>
             <Input
@@ -50,9 +87,9 @@ const PersonalDetails = () => {
               })}
             />
           </FormControl>
-          <FormControl id="phoneNumber">
+          <FormControl id="phone">
             <FormLabel>رقم الهاتف</FormLabel>
-            <Input type="tel" name="phoneNumber" {...register("phoneNumber")} />
+            <Input type="tel" name="phone" {...register("phone")} />
           </FormControl>
           <FormControl id="address">
             <FormLabel>العنوان</FormLabel>

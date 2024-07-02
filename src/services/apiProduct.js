@@ -1,6 +1,5 @@
 import CookieServices from "./CookieServices";
 import { axiosInstance } from "../api/axios.config.js";
-import axios from "axios";
 
 export const getProductList = async () => {
   try {
@@ -22,9 +21,9 @@ export const getProduct = async (id) => {
   }
 };
 
-export const getCategoryProduct = async (category) => {
+export const getCategoryProduct = async (id) => {
   try {
-    const { data } = await axiosInstance.get(`/products/category/${category}`);
+    const { data } = await axiosInstance.get(`/categories/${id}/products`);
     return data;
   } catch (error) {
     console.error("Error fetching product of the category :", error);
@@ -34,17 +33,11 @@ export const getCategoryProduct = async (category) => {
 
 export const createProduct = async (formData) => {
   try {
-    // const { data } = await axiosInstance.post(`/products`, formData, {
-    const { data } = await axios.post(
-      `http://localhost:5000/products`,
-      formData,
-      {
-        // headers: {
-        //   Authorization: `Bearer ${CookieServices.get("jwt")}`,
-        // },
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    const { data } = await axiosInstance.post(`/products`, formData, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
     return data;
   } catch (error) {
     console.error("Error creating product:", error);
@@ -52,9 +45,9 @@ export const createProduct = async (formData) => {
   }
 };
 
-export const updateProduct = async ({ id, body }) => {
+export const updateProduct = async ({ id, formData }) => {
   try {
-    const { data } = await axiosInstance.put(`/products/${id}`, body, {
+    const { data } = await axiosInstance.patch(`/products/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

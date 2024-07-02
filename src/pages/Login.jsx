@@ -40,8 +40,8 @@ export default function Login() {
   const { loading, error: loginError, success } = useSelector(selectLogin);
 
   function onSubmit(data) {
-    const { username, password } = data;
-    dispatch(userLogin({ username, password }));
+    const { email, password } = data;
+    dispatch(userLogin({ email, password }));
   }
 
   // Navigate to the home page if login is successful
@@ -128,7 +128,7 @@ export default function Login() {
                   <Text as={Link} to={"/signup"} color={"blue.400"}>
                     مستخدم جديد؟
                   </Text>
-                  <Text as={Link} to={"/reset-password"} color={"blue.400"}>
+                  <Text as={Link} to={"/forgot-password"} color={"blue.400"}>
                     نسيت كلمة المرور؟
                   </Text>
                 </Stack>

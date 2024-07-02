@@ -8,26 +8,48 @@ import {
   Text,
   Textarea,
   VStack,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Rating } from "react-simple-star-rating";
-import { createReview, getReviewsList } from "../services/apiReviews";
+import {
+  createReview,
+  deleteReview,
+  getProductReviews,
+  updateReview,
+} from "../services/apiReviews";
 import { getMyUser } from "../services/apiUsers";
 import { useForm } from "react-hook-form";
 import { BsStarFill } from "react-icons/bs";
-import { setAverageRating } from "../app/features/averageRatingSlice";
-import { useDispatch } from "react-redux";
 import CookieServices from "../services/CookieServices";
+import { formatDate } from "../utils";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import CustomeModal from "../shared/Modal";
+import CustomeAlertDialog from "../shared/AlretDialog";
 
 const Reviews = ({ productId }) => {
   const [rating, setRating] = useState(0);
+  const [clickedReviewId, setClickedReviewId] = useState(null);
 
   const { register, handleSubmit } = useForm();
+  const toast = useToast();
 
   const queryClient = useQueryClient();
 
-  const { data: reviewsData } = useQuery("reviews", getReviewsList);
+  const { data: reviewsData } = useQuery(["reviews", productId], () =>
+    getProductReviews(productId)
+  );
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
+  } = useDisclosure();
+
+  const { data: myUserData } = useQuery("myUser", getMyUser);
 
   const { isLoading: isCreating, mutate: mutateCreate } = useMutation(
     createReview,
@@ -39,6 +61,38 @@ const Reviews = ({ productId }) => {
       },
     }
   );
+  const { isLoading: isUpdating, mutate: mutateUpdate } = useMutation(
+    updateReview,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["reviews"],
+        });
+        onClose();
+        toast({
+          title: "تم تعديل المراجعة بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      },
+    }
+  );
+
+  const { isLoading: isDeleting, mutate: mutateDelete } = useMutation({
+    mutationFn: () => deleteReview(clickedReviewId),
+    onSuccess: () => {
+      queryClient.invalidateQueries("reviews"),
+        toast({
+          title: "تم حذف المراجعة بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+    },
+  });
 
   const { data: userData } = useQuery("users", getMyUser);
 
@@ -48,50 +102,29 @@ const Reviews = ({ productId }) => {
     setRating(newRating); // Update rating state when the user clicks on a star
   };
 
-  const onSubmit = (submitData) => {
-    const formData = new FormData();
+  const onSubmit = (data) => {
+    const body = {
+      rating: rating,
+      review: data.review,
+    };
 
-    formData.append(
-      "data",
-      JSON.stringify({
-        username: userData?.username,
-        rating: rating,
-        review: submitData.review,
-        user: userData?.id,
-        product: productId,
-      })
-    );
-    mutateCreate({ body: formData });
+    mutateCreate({ id: productId, body });
+  };
+
+  const onUpdate = (data) => {
+    const body = {
+      rating: rating,
+      review: data.review,
+    };
+
+    mutateUpdate({ id: clickedReviewId, body });
   };
 
   // Check if the user has already made a review for this product
-  const hasReviewed = reviewsData?.data?.some(
-    (review) =>
-      review?.attributes?.product?.data?.id === Number(productId) &&
-      review?.attributes?.username === userData?.username
+  const hasReviewed = reviewsData?.data?.reviews.some(
+    (review) => review?.user?._id === userData?.data.user._id
   );
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    // Calculate average rating
-    const productReviews = reviewsData?.data?.filter(
-      (review) => review?.attributes?.product?.data?.id === Number(productId)
-    );
-
-    if (!productReviews || productReviews.length === 0) {
-      dispatch(setAverageRating(0));
-      return;
-    }
-
-    const totalRating = productReviews.reduce(
-      (accumulator, review) => accumulator + review.attributes.rating,
-      0
-    );
-
-    const averageRating = totalRating / productReviews.length;
-    dispatch(setAverageRating(averageRating));
-  }, [dispatch, productId, reviewsData]);
   return (
     <>
       <Heading
@@ -150,36 +183,105 @@ const Reviews = ({ productId }) => {
           </VStack>
         </Box>
       )}
-      <Flex flexDirection="column" gap="3">
-        {reviewsData?.data
-          ?.filter(
-            (review) =>
-              review?.attributes?.product?.data?.id === Number(productId)
-          )
-          .map((review) => (
-            <Box
-              key={review.id}
-              borderWidth="1px"
-              borderRadius="md"
-              borderColor={"purple.600"}
-              boxShadow="xl"
-              p="4"
-            >
-              <Heading as="h3" mb="4px">
-                {review?.attributes?.username}
+      <Flex flexDirection="column" gap="15px">
+        {reviewsData?.data.reviews.map((review) => (
+          <Flex
+            key={review.id}
+            justifyContent="space-between"
+            borderWidth="1px"
+            borderRadius="md"
+            borderColor={"purple.600"}
+            boxShadow="xl"
+            p="4"
+          >
+            <Box>
+              <Heading as="h4" fontSize="22px" mb="8px">
+                {review?.user?.name}
               </Heading>
-              <Text display="inline-block" mb="4px">
-                التقييم:{review?.attributes?.rating}
+              <Box my="8px">
+                <Text color="gray.300">{formatDate(review.createdAt)}</Text>
+                {review.updatedAt > review.createdAt && (
+                  <Text color="gray.300">
+                    تم تعديله:{formatDate(review.updatedAt)}
+                  </Text>
+                )}
+              </Box>
+              <Text display="inline-block" my="8px">
+                التقييم:{review?.rating}
                 <Text as="span" display="flex" gap="1">
-                  {[...Array(review?.attributes?.rating)].map((_, index) => (
+                  {[...Array(review?.rating)].map((_, index) => (
                     <BsStarFill color="gold" key={index} />
                   ))}
                 </Text>
               </Text>
-              <Text>{review?.attributes?.review}</Text>
+              <Text fontSize="18px">{review?.review}</Text>
             </Box>
-          ))}
+            {myUserData?.data.user?._id === review.user?._id && (
+              <Flex gap="15px">
+                <Box
+                  cursor="pointer"
+                  onClick={() => {
+                    setClickedReviewId(review.id);
+                    onOpen();
+                  }}
+                >
+                  <FiEdit2 size="18px" />
+                </Box>
+                <Box
+                  cursor="pointer"
+                  onClick={() => {
+                    setClickedReviewId(review.id);
+                    onDeleteOpen();
+                  }}
+                >
+                  <FiTrash2 size="18px" />
+                </Box>
+              </Flex>
+            )}
+          </Flex>
+        ))}
       </Flex>
+      <CustomeModal
+        isModalOpen={isOpen}
+        onModalOpen={onOpen}
+        onModalClose={onClose}
+        title="تعديل المراجعة"
+        okTxt="تعديل"
+        cancelTxt="الغاء"
+        loading={isUpdating}
+        mutate={mutateUpdate}
+        onSubmit={handleSubmit(onUpdate)}
+      >
+        <FormControl mb="20px">
+          <FormLabel>مراجعة المنتج</FormLabel>
+          <Textarea
+            placeholder="مراجعة المنتج"
+            {...register("review", {
+              required: "This field is required",
+            })}
+            borderColor="purple.600"
+            _hover={{ borderColor: "purple.800" }}
+          />
+        </FormControl>
+        <Box>
+          <Rating
+            onClick={handleRating}
+            ratingValue={rating}
+            rtl
+            transition
+            iconsCount={5}
+            titleSeparator="من"
+            SVGstyle={{ display: "inline-block" }}
+          />
+        </Box>
+      </CustomeModal>
+      <CustomeAlertDialog
+        isOpen={isDeleteOpen}
+        onOpen={onDeleteOpen}
+        onClose={onDeleteClose}
+        mutate={mutateDelete}
+        loading={isDeleting}
+      />
     </>
   );
 };

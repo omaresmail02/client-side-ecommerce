@@ -12,15 +12,28 @@ const useProductFilterAndSort = (products) => {
     // Filter by price
     if (priceFilters.length > 0) {
       filteredProducts = filteredProducts.filter((product) => {
-        const price = product.price;
-        return priceFilters.some((range) => {
-          const [min, max] = range.split("-");
-          if (max) {
-            return price >= parseInt(min) && price <= parseInt(max);
-          } else {
-            return price >= parseInt(min);
-          }
-        });
+        if (product.discountPercentage > 0) {
+          const price =
+            product.price - product.price * (product.discountPercentage / 100);
+          return priceFilters.some((range) => {
+            const [min, max] = range.split("-");
+            if (max) {
+              return price >= parseInt(min) && price <= parseInt(max);
+            } else {
+              return price >= parseInt(min);
+            }
+          });
+        } else {
+          const price = product.price;
+          return priceFilters.some((range) => {
+            const [min, max] = range.split("-");
+            if (max) {
+              return price >= parseInt(min) && price <= parseInt(max);
+            } else {
+              return price >= parseInt(min);
+            }
+          });
+        }
       });
     }
 
@@ -28,10 +41,9 @@ const useProductFilterAndSort = (products) => {
     if (categoryFilters.length > 0) {
       const uniqueCategoryFilters = new Set(categoryFilters);
       filteredProducts = filteredProducts.filter((product) =>
-        uniqueCategoryFilters.has(product.category)
+        uniqueCategoryFilters.has(product.category.title)
       );
     }
-
     // Sort products
     filteredProducts.sort((a, b) => {
       if (sortBy === "name") {

@@ -38,27 +38,18 @@ const CreateProductModal = ({
   } = useForm({
     resolver: yupResolver(CreateProductSchema),
   });
-  const onSubmit = (data) => {
-    // const selectedCategory = categoriesData.find(
-    //   (category) => category === data.category
 
-    // );
-    // const productData = {
-    //   title: data.title,
-    //   description: data.description,
-    //   price: data.price,
-    //   discount: data.discount,
-    //   stock: data.stock,
-    //   category: selectedCategory,
-    // };
+  const onSubmit = (data) => {
     const formData = new FormData();
+
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("price", data.price);
-    formData.append("discount", data.discount);
     formData.append("stock", data.stock);
+    formData.append("discountPercentage", data.discount);
     formData.append("category", data.category);
     formData.append("thumbnail", data.thumbnail[0]);
+
     mutateCreate(formData);
   };
 
@@ -97,13 +88,13 @@ const CreateProductModal = ({
             <AccordionPanel pb={4}>
               <RadioGroup>
                 <Stack>
-                  {categoriesData?.map((category) => (
+                  {categoriesData?.data.categories.map((category) => (
                     <Radio
-                      key={category}
-                      value={category}
+                      key={category.id}
+                      value={category.id}
                       {...register("category")}
                     >
-                      {category}
+                      {category.title}
                     </Radio>
                   ))}
                 </Stack>

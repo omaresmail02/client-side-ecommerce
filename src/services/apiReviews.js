@@ -3,7 +3,7 @@ import { axiosInstance } from "../api/axios.config.js";
 
 export const getReviewsList = async () => {
   try {
-    const { data } = await axiosInstance.get(`/api/reviews?populate=product`);
+    const { data } = await axiosInstance.get(`/reviews`);
     return data;
   } catch (error) {
     console.error("Error fetching reviews list:", error);
@@ -11,9 +11,19 @@ export const getReviewsList = async () => {
   }
 };
 
-export const createReview = async ({ body }) => {
+export const getProductReviews = async (id) => {
   try {
-    const { data } = await axiosInstance.post(`/api/reviews`, body, {
+    const { data } = await axiosInstance.get(`/products/${id}/reviews`);
+    return data;
+  } catch (error) {
+    console.error("Error fetching reviews list:", error);
+    throw error;
+  }
+};
+
+export const createReview = async ({ id, body }) => {
+  try {
+    const { data } = await axiosInstance.post(`/products/${id}/reviews`, body, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -27,7 +37,7 @@ export const createReview = async ({ body }) => {
 
 export const deleteReview = async (id) => {
   try {
-    const { data } = await axiosInstance.delete(`/api/reviews/${id}`, {
+    const { data } = await axiosInstance.delete(`/reviews/${id}`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -41,7 +51,7 @@ export const deleteReview = async (id) => {
 
 export const updateReview = async ({ id, body }) => {
   try {
-    const { data } = await axiosInstance.put(`/api/reviews/${id}`, body, {
+    const { data } = await axiosInstance.patch(`/reviews/${id}`, body, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

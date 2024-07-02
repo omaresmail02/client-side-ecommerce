@@ -14,11 +14,14 @@ export const selectUserData = (state) => state.login.data;
 
 export const userLogin = createAsyncThunk(
   "login/userLogin",
-  async (user, thunkApi) => {
+  async ({ email, password }, thunkApi) => {
     const { rejectWithValue } = thunkApi;
 
     try {
-      const { data } = await axiosInstance.post(`/auth/login`, user);
+      const { data } = await axiosInstance.post(`/users/login`, {
+        email,
+        password,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error);
@@ -47,7 +50,7 @@ const loginSlice = createSlice({
         date.setTime(date.getTime() + EXPIRES_AT);
         const options = { path: "/", expires: date };
 
-        CookieServices.set("jwt", action.payload.jwt, options);
+        CookieServices.set("jwt", action.payload.token, options);
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.loading = false;

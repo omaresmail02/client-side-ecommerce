@@ -8,6 +8,7 @@ import {
   VStack,
   useBreakpointValue,
   HStack,
+  Heading,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
@@ -18,7 +19,7 @@ export default function Hero() {
   return (
     <Flex
       w={"full"}
-      h={"90vh"}
+      h={"100vh"}
       backgroundImage={heroImg}
       backgroundSize={"cover"}
       backgroundPosition={"center center"}
@@ -36,13 +37,16 @@ export default function Hero() {
           spacing={6}
           alignItems="center"
         >
+          <Heading color="white" fontWeight="bold">
+            تسوق الآن، وكن في طليعة الموضة
+          </Heading>
           <Text
             color={"white"}
             fontWeight={700}
             lineHeight={1.2}
-            fontSize={useBreakpointValue({ base: "3xl", md: "4xl" })}
+            fontSize={useBreakpointValue({ base: "lg", md: "xl" })}
           >
-            متجر التجارة الالكتروني الافضل في مصر
+            اختر من بين أفضل التصميمات وكن دائمًا على الموضة.
           </Text>
           <HStack>
             <Button
@@ -51,9 +55,7 @@ export default function Hero() {
               backgroundColor="purple.600"
               color="white"
               _hover={{ backgroundColor: "purple.800" }}
-              size="lg"
-              py="20px"
-              px="10px"
+              size="md"
               rightIcon={<HiOutlineViewColumns size={20} />}
             >
               منتجاتنا
@@ -61,12 +63,10 @@ export default function Hero() {
             <Button
               as={Link}
               to={"/products/offers/discounts"}
-              backgroundColor="purple.600"
-              color="white"
-              _hover={{ backgroundColor: "purple.800" }}
-              size="lg"
-              py="20px"
-              px="10px"
+              backgroundColor="white"
+              color="purple.600"
+              _hover={{ backgroundColor: "purple.600", color: "white" }}
+              size="md"
               rightIcon={<HiOutlineTag size={20} />}
             >
               خصوماتنا

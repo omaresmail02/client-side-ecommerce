@@ -1,38 +1,10 @@
-// "use client";
-
-// import { Box, Container, Stack, Text } from "@chakra-ui/react";
-// import { HiShoppingCart } from "react-icons/hi2";
-// import { Link } from "react-router-dom";
-
-// export default function Footer() {
-//   const currentYear = new Date().getFullYear();
-
-//   return (
-//     <Box bg="purple.600" color="white">
-//       <Container
-//         as={Stack}
-//         maxW={"6xl"}
-//         py={4}
-//         direction={{ base: "column", md: "row" }}
-//         spacing={4}
-//         justify={{ base: "center", md: "space-between" }}
-//         align={{ base: "center", md: "center" }}
-//       >
-//         <Box as={Link} to="/">
-//           <HiShoppingCart fontSize={"xxx-large"} />
-//         </Box>
-//         <Text> متجر التجارة الالكتروني © {currentYear}</Text>
-//       </Container>
-//     </Box>
-//   );
-// }
-
 "use client";
 
 import {
   Box,
   chakra,
   Container,
+  Flex,
   Stack,
   Text,
   useColorModeValue,
@@ -40,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { HiShoppingCart } from "react-icons/hi2";
+import { PiTShirtBold } from "react-icons/pi";
 
 const SocialButton = ({ children, label, href }) => {
   return (
@@ -81,9 +53,19 @@ export default function Footer() {
         justify={"center"}
         align={"center"}
       >
-        <Box as={Link} to="/">
-          <HiShoppingCart fontSize={"xxx-large"} />
-        </Box>
+        <Flex
+          flexDirection="column"
+          alignItems="center"
+          as={Link}
+          to="/"
+          aria-label="logo"
+          p="5px"
+        >
+          <PiTShirtBold fontSize={"xxx-large"} color={"white"} />
+          <Text fontSize="24px" fontWeight="bold" color="white">
+            Eureka
+          </Text>
+        </Flex>
       </Container>
 
       <Box
@@ -100,7 +82,7 @@ export default function Footer() {
           justify={{ base: "center", md: "space-between" }}
           align={{ base: "center", md: "center" }}
         >
-          <Text> متجر التجارة الالكتروني {currentYear} ©</Text>
+          <Text> Eureka {currentYear} ©</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton label={"YouTube"} href={"#"}>
               <FaFacebook />

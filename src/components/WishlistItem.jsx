@@ -5,6 +5,7 @@ import { HiEye, HiTrash } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { formatPrice } from "../utils";
+import { BsStarFill } from "react-icons/bs";
 
 const WishlistItem = ({ item }) => {
   const dispatch = useDispatch();
@@ -12,13 +13,12 @@ const WishlistItem = ({ item }) => {
   return (
     <motion.div whileHover={{ scale: 1.02 }}>
       <Flex
-        key={item.id}
         alignItems="center"
         borderWidth="1px"
         borderRadius="md"
         borderColor={"purple.600"}
         p="2"
-        mb="2"
+        mb="4"
         justify={"space-between"}
         boxShadow="md"
         flexDirection={{ base: "column", md: "row" }}
@@ -32,8 +32,8 @@ const WishlistItem = ({ item }) => {
         >
           <Box w={{ base: "100%", md: "25%" }} h="100%">
             <Image
-              src={item.thumbnail}
-              alt={item.title}
+              src={item.data.product.thumbnail}
+              alt={item.data.product.title}
               objectFit="cover"
               rounded="md"
               w="100%"
@@ -44,34 +44,68 @@ const WishlistItem = ({ item }) => {
             <Heading
               fontSize={{ base: "xl", md: "2xl" }}
               fontWeight="bold"
-              mb="2"
+              mb="8px"
             >
-              {item.title}
+              {item.data.product.title}
             </Heading>
-            {item.discountPercentage > 0 && (
+
+            <Text
+              fontSize={{ base: "md", md: "lg" }}
+              mb="16px"
+              color="gray.400"
+            >
+              {item.data.product.description}
+            </Text>
+            <Box
+              borderWidth="1px"
+              borderRadius="lg"
+              p={2}
+              w="88px"
+              boxShadow="md"
+              mb="8px"
+            >
+              <Flex alignItems="center" gap="4px">
+                <BsStarFill color="gold" />
+                <Text fontSize="xl" fontWeight="bold">
+                  {item.data.product.ratingsAverage.toFixed(1)}
+                </Text>
+                <Text fontSize="md" color="gray.500">
+                  / 5
+                </Text>
+              </Flex>
+              <Text fontSize="sm" color="gray.500">
+                {item.data.product.ratingsQuantity}{" "}
+                {item.data.product.ratingsQuantity === 1 ? "review" : "reviews"}
+              </Text>
+            </Box>
+            {item.data.product.discountPercentage > 0 && (
               <Text
                 fontSize={{ base: "md", md: "lg" }}
                 fontWeight="bold"
-                mb="2"
+                mb="4px"
               >
                 {formatPrice(
-                  item.price - item.price * (item.discountPercentage / 100)
+                  item.data.product.price -
+                    item.data.product.price *
+                      (item.data.product.discountPercentage / 100)
                 )}
               </Text>
             )}
             <Text
               fontSize={{ base: "md", md: "lg" }}
               textDecoration={
-                item.discountPercentage > 0 ? "line-through" : "none"
+                item.data.product.discountPercentage > 0
+                  ? "line-through"
+                  : "none"
               }
-              color={item.discountPercentage > 0 ? "gray.500" : "white"}
-              fontWeight={item.discountPercentage > 0 ? "normal" : "bold"}
+              color={
+                item.data.product.discountPercentage > 0 ? "gray.500" : "white"
+              }
+              fontWeight={
+                item.data.product.discountPercentage > 0 ? "normal" : "bold"
+              }
             >
-              {formatPrice(item.price)}
-            </Text>
-
-            <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
-              {item.description}
+              {formatPrice(item.data.product.price)}
             </Text>
           </Box>
         </Flex>
@@ -81,7 +115,7 @@ const WishlistItem = ({ item }) => {
             color="white"
             _hover={{ backgroundColor: "purple.800" }}
             as={Link}
-            to={`/products/${item.id}`}
+            to={`/products/${item.data.product.id}`}
             icon={<HiEye />}
           />
 
@@ -89,7 +123,7 @@ const WishlistItem = ({ item }) => {
             backgroundColor={"red.600"}
             color="white"
             _hover={{ backgroundColor: "red.800" }}
-            onClick={() => dispatch(deleteItem(item.id))}
+            onClick={() => dispatch(deleteItem(item.data.product.id))}
             icon={<HiTrash />}
           />
         </Flex>

@@ -1,4 +1,3 @@
-// src/ResetPassword.js
 import {
   Box,
   Button,
@@ -11,41 +10,33 @@ import {
   useToast,
   FormErrorMessage,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { resetPassword } from "../services/apiUsers";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { resetPasswordSchema } from "../utils/validationsSchemas";
+import { useMutation, useQueryClient } from "react-query";
+import { forgotPassword } from "../services/apiUsers";
 import BackButton from "../shared/BackButton";
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   const toast = useToast();
 
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(resetPasswordSchema),
-  });
+  } = useForm();
 
-  const { token } = useParams();
-
-  const { isLoading, mutate } = useMutation(resetPassword, {
+  const { isLoading, mutate } = useMutation(forgotPassword, {
     onSuccess: () => {
-      queryClient.invalidateQueries("resetPassword"),
+      queryClient.invalidateQueries("forgotPassword"),
         toast({
-          title: "تم اعادة تعيين كلمة المرور بنجاح",
+          title: "تم ارسال رابط اعادة تعيين كلمة المرور بنجاح",
           status: "success",
           duration: 3000,
           isClosable: true,
           position: "top-right",
         });
-      navigate("/login");
+      // navigate("/reset-password");
     },
     onError: (e) => {
       toast({
@@ -62,11 +53,11 @@ const ResetPassword = () => {
     // const formData = new FormData();
     // formData.append("email", data.email);
     const body = {
-      password: data.password,
-      passwordConfirm: data.passwordConfirm,
+      email: data.email,
     };
-    mutate({ body, token });
+    mutate(body);
   }
+
   return (
     <>
       <Box position="absolute" top="50px" left="80px">
@@ -86,32 +77,21 @@ const ResetPassword = () => {
           boxShadow="lg"
         >
           <Heading as="h2" size="xl" mb={6} textAlign="center">
-            اعادة تعيين كلمة المرور
+            نسيت كلمة المرور ؟
           </Heading>
           <Text mb={4} textAlign="center">
-            ادخل كلمة المرور الجديدة
+            ادخل بريدك الالكتروني و سنقوم بارسال رابط اعادة تعيين كلمة المرور
           </Text>
           <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isRequired mb={4} isInvalid={errors.password}>
-              <FormLabel>كلمة المرور الجديدة</FormLabel>
+            <FormControl isRequired mb={4}>
+              <FormLabel>البريد الالكتروني </FormLabel>
               <Input
-                type="password"
-                placeholder="ادخل كلمة المرور الجديدة"
-                {...register("password")}
+                type="email"
+                placeholder="ادخل بريدك الالكتروني"
+                {...register("email")}
               />
-              <FormErrorMessage>
-                {errors.password && errors.password.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isRequired mb={4} isInvalid={errors.passwordConfirm}>
-              <FormLabel>تأكيد كلمة المرور الجديدة</FormLabel>
-              <Input
-                type="password"
-                placeholder="أكد كلمة المرور الجديدة"
-                {...register("passwordConfirm")}
-              />
-              <FormErrorMessage>
-                {errors.passwordConfirm && errors.passwordConfirm.message}
+              <FormErrorMessage color={"red.500"}>
+                {errors.email?.message}
               </FormErrorMessage>
             </FormControl>
             <Button
@@ -124,7 +104,7 @@ const ResetPassword = () => {
               width="full"
               isLoading={isLoading}
             >
-              إعادة تعيين كلمة المرور
+              ارسال
             </Button>
           </Box>
         </Box>
@@ -133,4 +113,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;

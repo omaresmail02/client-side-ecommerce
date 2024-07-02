@@ -1,3 +1,5 @@
+import { loadStripe } from "@stripe/stripe-js";
+
 import { useDispatch, useSelector } from "react-redux";
 import CartItem from "../components/CartItem";
 import {
@@ -10,14 +12,51 @@ import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../utils";
 import { HiCreditCard, HiXMark } from "react-icons/hi2";
+import { axiosInstance } from "../api/axios.config";
+import CookieServices from "../services/CookieServices";
 
 function CartPage() {
   const cart = useSelector((state) => state.cart);
+
   const totalPrice = useSelector(selectTotalPrice);
   const totalDiscountedPrice = useSelector(selectTotalDiscountedPrice);
   const totalQuantity = useSelector(selectTotalQuantity);
 
   const dispatch = useDispatch();
+
+  const makePayment = async () => {
+    try {
+      const stripe = await loadStripe(
+        "pk_test_51PTsIxI95CbFfi98yXkuEZxusbrcQWN53voALFtT67UvCRqjjRDZW9pGsKm4Yus8YD24cfxAFnJd4JGvvdraaAKk00mj1SeaNA"
+      );
+
+      const body = {
+        products: cart.cart,
+      };
+
+      const response = await axiosInstance.post(
+        "/payment/checkout-session",
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${CookieServices.get("jwt")}`,
+          },
+        }
+      );
+
+      const session = response.data;
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.data.sessionId,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+    }
+  };
 
   return (
     <Box p="4">
@@ -41,7 +80,7 @@ function CartPage() {
             />
           </Heading>
           {cart.cart.map((item) => (
-            <CartItem item={item} key={item.id} />
+            <CartItem item={item} key={item.data.product.id} />
           ))}
           <Flex align={"center"} justify={"space-between"} gap="20px">
             <Box
@@ -64,13 +103,13 @@ function CartPage() {
                 </Text>
               ) : null}
               <Button
-                as={Link}
-                to="/checkout"
+                // as={Link}
+                // to="/checkout"
+                onClick={makePayment}
                 mt="4"
                 backgroundColor="purple.600"
                 color="white"
-                size="large"
-                p="3"
+                size="md"
                 _hover={{ backgroundColor: "purple.800" }}
                 rightIcon={<HiCreditCard size={24} />}
                 aria-label="الدفع"
@@ -81,8 +120,7 @@ function CartPage() {
             <Button
               bg={"red.600"}
               color="white"
-              size="md"
-              p="10px"
+              size="sm"
               _hover={{ backgroundColor: "red.800" }}
               onClick={() => dispatch(clearCart())}
               rightIcon={<HiXMark size={24} />}

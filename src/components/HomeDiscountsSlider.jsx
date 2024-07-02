@@ -49,7 +49,7 @@ const DiscountsCarousel = () => {
 
   const { data, isLoading } = useQuery("products", getProductList);
 
-  const discountedProducts = data?.products.filter(
+  const discountedProducts = data?.data.products.filter(
     (product) => product.discountPercentage > 0
   );
 

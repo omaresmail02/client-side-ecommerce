@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Input,
@@ -8,13 +8,13 @@ import {
   ListItem,
   Text,
   Divider,
-  useColorMode,
   InputLeftElement,
+  Image,
 } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { getProductList } from "../services/apiProduct";
 import { Link } from "react-router-dom";
-import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiOutlineMagnifyingGlass, HiXMark } from "react-icons/hi2";
 
 const SearchComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,7 +25,7 @@ const SearchComponent = () => {
   const { data } = useQuery("products", getProductList);
 
   const searchData = (value) => {
-    const results = data?.products.filter((product) =>
+    const results = data?.data.products.filter((product) =>
       product?.title?.toLowerCase().includes(value.toLowerCase())
     );
     setSearchResults(results);
@@ -33,40 +33,47 @@ const SearchComponent = () => {
 
   const handleSearch = (value) => {
     setSearchQuery(value);
-    searchData(value);
-    onToggle(true);
+    const timer = setTimeout(() => {
+      searchData(value);
+      onToggle(true);
+    }, 500); // Adjust the delay as needed (e.g., 300ms)
+    return () => clearTimeout(timer);
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    searchData([]);
+    setSearchResults([]);
     onToggle(false);
   };
-
-  const bgColor = { light: "gray.100", dark: "gray.700" };
-  const textColor = { light: "gray.800", dark: "gray.200" };
-  const borderColor = { light: "gray.300", dark: "gray.600" };
-
-  const { colorMode } = useColorMode();
 
   return (
     <Box position="relative">
       <InputGroup>
-        <InputLeftElement pointerEvents="none">
-          <HiOutlineMagnifyingGlass color="white" size={20} />
+        <InputLeftElement>
+          {searchQuery.length > 0 ? (
+            <HiXMark
+              color="white"
+              size={20}
+              onClick={handleClearSearch}
+              cursor="pointer"
+            />
+          ) : (
+            <HiOutlineMagnifyingGlass color="white" size={20} />
+          )}
         </InputLeftElement>
         <Input
           placeholder="ابحث عن منتجك..."
           value={searchQuery}
           onChange={(e) => handleSearch(e.target.value)}
-          bg={"none"}
           color={"white"}
           _focus={{
-            _placeholder: { opacity: 0.5 },
+            _placeholder: { opacity: 0.4 },
             boxShadow: "none",
+            bg: "purple.800",
+            borderBottom: "1px solid white",
           }}
-          rounded={{ base: "none", md: "lg" }}
           border="none"
+          rounded="none"
         />
       </InputGroup>
       {searchQuery && (
@@ -76,31 +83,51 @@ const SearchComponent = () => {
           left="0"
           width="100%"
           boxShadow="md"
-          borderRadius="md"
           overflow="hidden"
           zIndex="10"
-          p="4"
-          bg={bgColor[colorMode]}
-          color={textColor[colorMode]}
-          borderColor={borderColor[colorMode]}
-          borderWidth="1px"
+          p="2"
+          bg={"purple.800"}
+          color={"white"}
         >
-          <List>
-            {searchResults.map((result) => (
-              <>
-                <ListItem
-                  key={result.id}
-                  as={Link}
-                  to={`/products/${result.id}`}
-                  onClick={handleClearSearch}
-                >
-                  <Text fontWeight="bold" fontSize="md" p={2}>
-                    {result.title}
-                  </Text>
-                </ListItem>
-                <Divider />
-              </>
-            ))}
+          <List h="250px" overflowY="scroll" px="10px">
+            {searchResults.length > 0 ? (
+              searchResults.map((result) => (
+                <React.Fragment key={result.id}>
+                  <ListItem
+                    as={Link}
+                    to={`/products/${result.id}`}
+                    onClick={handleClearSearch}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    p="3"
+                    _hover={{
+                      bg: "purple.600",
+                      color: "white",
+                    }}
+                  >
+                    <Text fontWeight="bold" fontSize="md" p={2}>
+                      {result.title}
+                    </Text>
+                    <Image
+                      rounded="lg"
+                      objectFit="contain"
+                      boxSize="60px"
+                      bg="white"
+                      src={result.thumbnail}
+                      alt={result.title}
+                    />
+                  </ListItem>
+                  <Divider />
+                </React.Fragment>
+              ))
+            ) : (
+              <ListItem>
+                <Text fontSize="large" fontWeight="semibold" textAlign="center">
+                  لا يوجد نتائج متاحة
+                </Text>
+              </ListItem>
+            )}
           </List>
         </Box>
       )}

@@ -32,7 +32,7 @@ function WishlistPage() {
             />
           </Heading>
           {wishlist.wishlist.map((item) => (
-            <WishlistItem item={item} key={item.id} />
+            <WishlistItem item={item} key={item.data.product.id} />
           ))}
 
           <Button

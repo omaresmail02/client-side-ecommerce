@@ -1,30 +1,10 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-// import Home from "./pages/Home";
-// import Products from "./pages/Products";
-// import ProductDetails from "./pages/ProductDetails";
-// import Login from "./pages/Login";
-// import AppLayout from "./layout/AppLayout";
-// import Cart from "./pages/Cart";
-// import ProductsCategory from "./pages/ProductsCategory";
-// import DashboardLayout from "./pages/dashboard/DashboardLayout";
-// import DashboardProducts from "./pages/dashboard/DashboardProducts";
-// import DashboardCategories from "./pages/dashboard/DashboardCategories";
-// import DashboardReviews from "./pages/dashboard/DashboardReviews";
-// import Signup from "./pages/Signup";
-// import Checkout from "./pages/Checkout";
-// import UserProfile from "./pages/UserProfile";
-// import PageNotFound from "./pages/PageNotFound";
-// import Dashboard from "./pages/dashboard/Dashboard";
-// import DashboardUsers from "./pages/dashboard/DashboardUsers";
-// import WishlistPage from "./pages/Wishlist";
-// import DiscountedProducts from "./pages/DiscountedProducts";
-// import ComparePage from "./pages/Compare";
-
 import CookieServices from "./services/CookieServices";
 import Popup from "./components/Popup";
 import Loading from "./components/Loading";
+import BackToTopButton from "./shared/BackToTop";
 
 const AppLayout = lazy(() => import("./layout/AppLayout"));
 const Home = lazy(() => import("./pages/Home"));
@@ -39,6 +19,10 @@ const ProductsCategory = lazy(() => import("./pages/ProductsCategory"));
 const Checkout = lazy(() => import("./pages/Checkout"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const PageNotFound = lazy(() => import("./pages/PageNotFound"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+const PaymentCancel = lazy(() => import("./pages/PaymentCancel"));
 
 const DashboardLayout = lazy(() => import("./pages/dashboard/DashboardLayout"));
 const DashboardProducts = lazy(() =>
@@ -75,6 +59,9 @@ const App = () => {
   return (
     <>
       {!token && <Popup isOpen={isOpen} onClose={handleClose} />}
+
+      <BackToTopButton />
+
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<AppLayout />}>
@@ -105,7 +92,13 @@ const App = () => {
           </Route>
 
           <Route path="/Signup" element={<Signup />} />
-          <Route path="/login" element={<Login isAuthenticated={token} />} />
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>

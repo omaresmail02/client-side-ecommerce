@@ -27,6 +27,8 @@ import {
 } from "../app/features/compareSlice";
 import { addItem } from "../app/features/cartSlice";
 import { addItem as addItemToWishlist } from "../app/features/wishlistSlice";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Compare() {
   const compare = useSelector((state) => state.compare);
@@ -38,10 +40,10 @@ export default function Compare() {
   const attributes = [
     { label: "اسم المنتج", key: "title" },
     { label: "الوصف", key: "description" },
-    { label: "الفئة", key: "category" },
     { label: "السعر", key: "price" },
     { label: "نسبة الخصم", key: "discountPercentage" },
-    { label: "التقييم", key: "rating" },
+    { label: "التقييم", key: "ratingsAverage" },
+    { label: "عدد المقيمين", key: "ratingsQuantity" },
     { label: " عدد القطع المتبقية", key: "stock" },
   ];
 
@@ -51,7 +53,10 @@ export default function Compare() {
   const toast = useToast();
 
   const handleAddToCart = (product) => {
-    const existingProduct = cart.cart.find((item) => item.id === product.id);
+    const existingProduct = cart.cart.find(
+      (item) => item.data.product.id === product.data.product.id
+    );
+
     !existingProduct &&
       (dispatch(addItem(product)),
       toast({
@@ -76,7 +81,7 @@ export default function Compare() {
 
   const handleAddToWishlist = (product) => {
     const existingProduct = wishlist.wishlist.find(
-      (item) => item.id === product.id
+      (item) => item.data.product.id === product.data.product.id
     );
     !existingProduct &&
       (dispatch(addItemToWishlist(product)),
@@ -117,49 +122,52 @@ export default function Compare() {
           >
             {compare.compare.map((product) => (
               <Box
-                key={product.id}
+                key={product.data.product.id}
                 p="8px"
                 border="2px solid"
                 borderColor="purple.600"
                 rounded="lg"
               >
                 <Box
-                  onClick={() => dispatch(deleteItemFromCompare(product.id))}
+                  onClick={() =>
+                    dispatch(deleteItemFromCompare(product.data.product.id))
+                  }
                   display="inline-block"
                   cursor="pointer"
                   mb="5px"
-                  bg="purple.600"
-                  color="white"
+                  color="purple.600"
                   size="md"
                   rounded="lg"
                   _hover={{
-                    bg: "purple.800",
-                    color: "white",
+                    color: "purple.800",
                   }}
                 >
-                  <HiOutlineXMark size={24} />
+                  <HiOutlineXMark size={28} />
                 </Box>
                 <Box
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"
                   mb={2}
+                  as={Link}
+                  to={`/products/${product.data.product.id}`}
+                  cursor="pointer"
                 >
                   <Image
-                    src={product.thumbnail}
-                    alt={product.title}
+                    src={product.data.product.thumbnail}
+                    alt={product.data.product.title}
                     rounded="lg"
                     boxSize="90px"
                     objectFit="cover"
-                    mr={4}
                   />
                   <Text
                     fontSize="lg"
                     fontWeight="bold"
                     color="purple.600"
                     flex="1"
+                    textAlign="center"
                   >
-                    {product.title}
+                    {product.data.product.title}
                   </Text>
                 </Box>
                 <ButtonGroup variant="outline" spacing={1} width="100%">
@@ -171,7 +179,7 @@ export default function Compare() {
                     onClick={() => handleAddToCart(product)}
                     aria-label="اضافة الى العربة"
                     icon={<HiOutlineShoppingBag size={22} />}
-                    flexBasis="50%"
+                    flexBasis="75%"
                     border="none"
                   />
                   <IconButton
@@ -182,7 +190,7 @@ export default function Compare() {
                     onClick={() => handleAddToWishlist(product)}
                     aria-label="اضافة الى المفضلة"
                     icon={<HiOutlineHeart size={22} />}
-                    flexBasis="50%"
+                    flexBasis="25%"
                     border="none"
                   />
                 </ButtonGroup>
@@ -198,7 +206,7 @@ export default function Compare() {
           >
             <Tbody>
               {attributes.map((attribute, rowIndex) => (
-                <>
+                <React.Fragment key={rowIndex}>
                   <Text mb="6px" mt="20px" fontSize="large" color="purple.600">
                     {attribute.label}
                   </Text>
@@ -210,13 +218,13 @@ export default function Compare() {
                       }}
                     >
                       {compare.compare.map((product) => (
-                        <Td key={product.id} textAlign="center">
-                          {product[attribute.key]}
+                        <Td key={product.data.product.id} textAlign="center">
+                          {product.data.product[attribute.key]}
                         </Td>
                       ))}
                     </Grid>
                   </Tr>
-                </>
+                </React.Fragment>
               ))}
             </Tbody>
           </Table>

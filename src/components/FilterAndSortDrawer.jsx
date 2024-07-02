@@ -20,6 +20,9 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { HiOutlineFunnel } from "react-icons/hi2";
+import { getCategoriesList } from "../services/apiCategories";
+
+import { useQuery } from "react-query";
 
 const FilterAndSortDrawer = ({
   sortBy,
@@ -33,6 +36,11 @@ const FilterAndSortDrawer = ({
   data,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { data: categoriesData, isLoading } = useQuery(
+    "categories",
+    getCategoriesList
+  );
 
   return (
     <>
@@ -121,22 +129,13 @@ const FilterAndSortDrawer = ({
                       }}
                     >
                       <Stack>
-                        {data.products
-                          .reduce((acc, product) => {
-                            const category = product.category;
-                            if (category) {
-                              const title = category.trim();
-                              if (title && !acc.includes(title)) {
-                                acc.push(title);
-                              }
-                            }
-                            return acc;
-                          }, [])
-                          .map((title) => (
-                            <Checkbox key={title} value={title}>
-                              {title}
+                        {categoriesData?.data.categories.map((category) => {
+                          return (
+                            <Checkbox key={category.id} value={category.title}>
+                              {category.title}
                             </Checkbox>
-                          ))}
+                          );
+                        })}
                       </Stack>
                     </CheckboxGroup>
                   </AccordionPanel>

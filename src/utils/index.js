@@ -1,28 +1,22 @@
+import { format } from "date-fns";
+
 export const addItemToShoppingCart = (
   cartItem = {},
   shoppingCartItems = []
 ) => {
-  const existsItem = shoppingCartItems.find((item) => item.id === cartItem.id);
+  const existsItem = shoppingCartItems.find(
+    (item) => item.data.product.id === cartItem.id
+  );
 
   if (existsItem) {
     return shoppingCartItems.map((item) =>
-      item.id === cartItem.id ? { ...item, quantity: item.quantity + 1 } : item
+      item.data.product.id === cartItem.id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
     );
   }
 
   return [...shoppingCartItems, { ...cartItem, quantity: 1 }];
-};
-
-export const addItemToWishlist = (favItem = {}, wishlistItems = []) => {
-  const existsItem = wishlistItems.find((item) => item.id === favItem.id);
-
-  if (existsItem) {
-    return wishlistItems.map((item) =>
-      item.id === favItem.id ? { ...item, quantity: item.quantity + 1 } : item
-    );
-  }
-
-  return [...wishlistItems, { ...favItem, quantity: 1 }];
 };
 
 export const formatPrice = (price) => {
@@ -33,6 +27,14 @@ export const formatPrice = (price) => {
     currency: "EGP",
   });
   return formatedPrice;
+};
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+  return format(date, "dd/MM/yyyy HH:mm");
 };
 
 export const textSlicer = (txt, max = 50) => {

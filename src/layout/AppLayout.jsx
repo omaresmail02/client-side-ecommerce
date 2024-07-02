@@ -12,11 +12,11 @@ const AppLayout = () => {
   return (
     <Flex flexDirection="column" minH="100vh">
       <Navbar />
-      <Box flex="1">
+      <Box flex="1" mt="135px">
         {pathname !== "/" && (
           <Container
             maxW="6xl"
-            mt="10px"
+            mt="20px"
             display="flex"
             justifyContent="space-between"
             alignItems="center"
@@ -25,7 +25,6 @@ const AppLayout = () => {
             <BackButton />
           </Container>
         )}
-        {/* {pathname !== "/" && <Breadcrumbs pathname={pathname} />} */}
         <Outlet />
       </Box>
       <Footer />

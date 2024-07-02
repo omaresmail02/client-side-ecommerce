@@ -13,7 +13,7 @@ export const getUsersList = async () => {
 
 export const getMyUser = async () => {
   try {
-    const { data } = await axiosInstance.get(`/auth/me`, {
+    const { data } = await axiosInstance.get(`/users/me`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -25,9 +25,9 @@ export const getMyUser = async () => {
   }
 };
 
-export const updateUser = async ({ id, body }) => {
+export const updateMe = async (formData) => {
   try {
-    const { data } = await axiosInstance.put(`/users/${id}`, body, {
+    const { data } = await axiosInstance.patch(`/users/updateMe`, formData, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -35,6 +35,38 @@ export const updateUser = async ({ id, body }) => {
     return data;
   } catch (error) {
     console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+export const updateUser = async ({ id, formData }) => {
+  try {
+    const { data } = await axiosInstance.patch(`/users/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${CookieServices.get("jwt")}`,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+export const updateMyPassword = async (body) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      `/users/updateMyPassword`,
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${CookieServices.get("jwt")}`,
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    console.error("Error updating user password:", error);
     throw error;
   }
 };
@@ -49,6 +81,28 @@ export const deleteUser = async (id) => {
     return data;
   } catch (error) {
     console.error("Error deleting user:", error);
+    throw error;
+  }
+};
+
+export const forgotPassword = async (body) => {
+  try {
+    const { data } = await axiosInstance.post(`/users/forgotPassword`, body);
+    return data;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
+};
+export const resetPassword = async ({ body, token }) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      `/users/resetPassword/${token}`,
+      body
+    );
+    return data;
+  } catch (error) {
+    console.error("Error reseting password:", error);
     throw error;
   }
 };

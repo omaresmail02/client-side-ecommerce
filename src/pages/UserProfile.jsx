@@ -1,125 +1,335 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   FormControl,
   FormLabel,
-  Heading,
+  Image,
   Input,
   Text,
   useDisclosure,
+  useToast,
+  Grid,
+  Flex,
+  Container,
+  Icon,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getMyUser, updateUser } from "../services/apiUsers";
+import { getMyUser, updateMe, updateMyPassword } from "../services/apiUsers";
 import CustomeModal from "../shared/Modal";
 import { useForm } from "react-hook-form";
-
-import { format } from "date-fns";
+import { formatDate } from "../utils";
+import CookieServices from "../services/CookieServices";
+import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { updatePasswordSchema } from "../utils/validationsSchemas";
+import { useRef } from "react";
+import {
+  HiArrowUpTray,
+  HiCalendar,
+  HiEnvelope,
+  HiPencilSquare,
+  HiUser,
+} from "react-icons/hi2";
 
 const UserProfile = () => {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery("users", getMyUser);
-  console.log(data);
-  const userId = data?.id;
+  const { data } = useQuery("myUser", getMyUser);
+  const toast = useToast();
+  const navigate = useNavigate();
+  const imageRef = useRef();
+
+  const handleClick = () => {
+    onOpen();
+    const timer = setTimeout(() => {
+      imageRef.current.click();
+    }, 200);
+    return () => clearTimeout(timer);
+  };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isPasswordModalOpen,
+    onOpen: onPasswordModalOpen,
+    onClose: onPasswordModalClose,
+  } = useDisclosure();
 
-  const { register, handleSubmit } = useForm();
-
-  function onSubmit(data) {
-    const username = `${data.firstname} ${data.lastname}`;
-    const formData = new FormData();
-    formData.append("username", username);
-    mutateUpdate({ id: userId, body: formData });
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const {
+    register: registerPasswordUpdate,
+    handleSubmit: handleSubmitPasswordUpdate,
+  } = useForm({
+    resolver: yupResolver(updatePasswordSchema),
+  });
 
   const { isLoading: isUpdating, mutate: mutateUpdate } = useMutation(
-    updateUser,
+    updateMe,
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["users"],
-        });
+        queryClient.invalidateQueries("myUser");
+        onClose();
       },
     }
   );
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return "Invalid Date";
+
+  const { isLoading: isPasswordUpdating, mutate: mutatePasswordUpdate } =
+    useMutation(updateMyPassword, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("myUser");
+        onPasswordModalClose();
+        toast({
+          title: "تم تغيير كلمة المرور بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+        CookieServices.remove("jwt");
+        navigate("/login");
+      },
+      onError: (e) => {
+        toast({
+          title: e.response.data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
+      },
+    });
+
+  function onSubmit(data) {
+    const name = `${data.firstname} ${data.lastname}`;
+    const formData = new FormData();
+    formData.append("name", name);
+    if (data.image && data.image.length > 0) {
+      formData.append("image", data.image[0]);
     }
-    return format(date, "dd/MM/yyyy HH:mm:ss");
-  };
+    mutateUpdate(formData);
+  }
+
+  function onPasswordSubmit(data) {
+    const body = {
+      passwordCurrent: data.passwordCurrent,
+      password: data.password,
+      passwordConfirm: data.passwordConfirm,
+    };
+    mutatePasswordUpdate(body);
+  }
 
   return (
     <>
-      <Box p={4}>
-        <Heading
-          fontSize={{ base: "x-large", lg: "xxx-large" }}
-          mb="20px"
-          position="relative"
-          display="inline-block"
+      <Container maxW="6xl">
+        <Box
+          p={8}
+          w="full"
+          my="20px"
+          border="2px"
+          borderColor="purple.600"
+          shadow="md"
+          rounded="lg"
         >
-          حساب المستخدم
-          <Box
-            position="absolute"
-            bottom="-5px"
-            left="50%"
-            transform="translateX(-50%)"
-            width="100%"
-            height="3px"
-            backgroundColor="purple.600"
-          />
-        </Heading>
-
-        <Box mt={4}>
-          <Text mb="3">
-            <strong>اسم المستخدم: {data?.username}</strong>
-          </Text>
-          <Text mb="3">
-            <strong>البريد الالكتروني: {data?.email}</strong>
-          </Text>
-          <Text mb="3">
-            <strong>تاريخ الانشاء: {formatDate(data?.createdAt)}</strong>
-          </Text>
-          <Text mb="3">
-            <strong>اخر تعديل : {formatDate(data?.updatedAt)}</strong>
-          </Text>
+          <Grid
+            templateColumns={{ base: "1fr", md: "1fr 2fr" }}
+            gap={3}
+            alignItems="center"
+            justifyItems="center"
+          >
+            <Box
+              position="relative"
+              boxSize="140px"
+              rounded="full"
+              cursor="pointer"
+              overflow="hidden"
+              _hover={{
+                "& > img": { filter: "blur(3px)" },
+                "& > .icon-overlay": { opacity: 1 },
+              }}
+              onClick={handleClick}
+            >
+              <Image
+                objectFit="cover"
+                boxSize="100%"
+                bg="gray.100"
+                src={data?.data.user.image}
+                alt={data?.data.user.name}
+                transition="filter 0.3s ease"
+              />
+              <Icon
+                as={HiArrowUpTray}
+                boxSize="50px"
+                rounded="full"
+                p="5px"
+                color="purple.600"
+                bg="white"
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                opacity={0}
+                transition="opacity 0.3s ease"
+                className="icon-overlay"
+              />
+            </Box>
+            <Box
+              p={5}
+              borderWidth="1px"
+              borderRadius="lg"
+              boxShadow="sm"
+              maxW="md"
+            >
+              <Flex mb={3} align="center" gap="5px">
+                <Icon as={HiUser} boxSize={5} mr={2} color="purple.600" />
+                <Text fontSize="16px" fontWeight="bold">
+                  اسم المستخدم:
+                </Text>
+                <Text ml={2} fontSize="16px">
+                  {data?.data?.user?.name}
+                </Text>
+              </Flex>
+              <Flex mb={3} align="center" gap="5px">
+                <Icon as={HiEnvelope} boxSize={5} mr={2} color="purple.600" />
+                <Text fontSize="16px" fontWeight="bold">
+                  البريد الالكتروني:
+                </Text>
+                <Text ml={2} fontSize="16px">
+                  {data?.data?.user?.email}
+                </Text>
+              </Flex>
+              <Flex mb={3} align="center" gap="5px">
+                <Icon as={HiCalendar} boxSize={5} mr={2} color="purple.600" />
+                <Text fontSize="16px" fontWeight="bold">
+                  تاريخ الانشاء:
+                </Text>
+                <Text ml={2} fontSize="16px">
+                  {formatDate(data?.data?.user?.createdAt)}
+                </Text>
+              </Flex>
+              {data?.data?.user?.updatedAt &&
+                data?.data?.user?.updatedAt !== data?.data?.user?.createdAt && (
+                  <Flex mb={3} align="center" gap="5px">
+                    <Icon
+                      as={HiPencilSquare}
+                      boxSize={5}
+                      mr={2}
+                      color="purple.600"
+                    />
+                    <Text fontSize="16px" fontWeight="bold">
+                      اخر تعديل:
+                    </Text>
+                    <Text ml={2} fontSize="16px">
+                      {formatDate(data?.data?.user?.updatedAt)}
+                    </Text>
+                  </Flex>
+                )}
+            </Box>
+          </Grid>
+          <Flex justify="center" mt={6}>
+            <ButtonGroup>
+              <Button
+                backgroundColor="purple.600"
+                color="white"
+                size="sm"
+                _hover={{ backgroundColor: "purple.800" }}
+                onClick={onOpen}
+              >
+                تعديل الحساب
+              </Button>
+              <Button
+                backgroundColor="white"
+                color="purple.600"
+                size="sm"
+                _hover={{ backgroundColor: "purple.600", color: "white" }}
+                onClick={onPasswordModalOpen}
+              >
+                تغير كلمة المرور
+              </Button>
+            </ButtonGroup>
+          </Flex>
         </Box>
-        <Button
-          mt={4}
-          backgroundColor="purple.600"
-          color="white"
-          size="large"
-          p="5"
-          _hover={{ backgroundColor: "purple.800" }}
-          onClick={() => onOpen()}
-        >
-          تعديل الحساب
-        </Button>
-      </Box>
+      </Container>
+
       <CustomeModal
         isModalOpen={isOpen}
         onModalOpen={onOpen}
         onModalClose={onClose}
-        title={"تعديل المستخدم"}
+        title="تعديل المستخدم"
         okTxt="تعديل"
         cancelTxt="الغاء"
         loading={isUpdating}
-        mutate={mutateUpdate}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <FormControl>
+        <FormControl my={3}>
           <FormLabel>الاسم</FormLabel>
           <Input
             placeholder="الاسم"
             id="firstname"
             {...register("firstname")}
+            defaultValue={data?.data?.user?.name.split(" ")[0]}
           />
         </FormControl>
-        <FormControl>
+        <FormControl my={3}>
           <FormLabel>اللقب</FormLabel>
-          <Input placeholder="اللقب" id="lastname" {...register("lastname")} />
+          <Input
+            placeholder="اللقب"
+            id="lastname"
+            {...register("lastname")}
+            defaultValue={data?.data?.user?.name.split(" ")[1]}
+          />
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel ref={imageRef}>الصورة</FormLabel>
+          <Input type="file" {...register("image")} />
+        </FormControl>
+      </CustomeModal>
+
+      <CustomeModal
+        isModalOpen={isPasswordModalOpen}
+        onModalOpen={onPasswordModalOpen}
+        onModalClose={onPasswordModalClose}
+        title="تغيير كلمة المرور"
+        okTxt="تغيير"
+        cancelTxt="الغاء"
+        loading={isPasswordUpdating}
+        onSubmit={handleSubmitPasswordUpdate(onPasswordSubmit)}
+      >
+        <FormControl my={3}>
+          <FormLabel>كلمة المرور الحالية</FormLabel>
+          <Input
+            type="password"
+            placeholder="كلمة المرور الحالية"
+            {...registerPasswordUpdate("passwordCurrent")}
+          />
+          {errors.passwordCurrent && (
+            <Text color="red.500">{errors.passwordCurrent.message}</Text>
+          )}
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>كلمة المرور الجديدة</FormLabel>
+          <Input
+            type="password"
+            placeholder="كلمة المرور الجديدة"
+            {...registerPasswordUpdate("password")}
+          />
+          {errors.password && (
+            <Text color="red.500">{errors.password.message}</Text>
+          )}
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>تأكيد كلمة المرور الجديدة</FormLabel>
+          <Input
+            type="password"
+            placeholder="تأكيد كلمة المرور الجديدة"
+            {...registerPasswordUpdate("passwordConfirm")}
+          />
+          {errors.passwordConfirm && (
+            <Text color="red.500">{errors.passwordConfirm.message}</Text>
+          )}
         </FormControl>
       </CustomeModal>
     </>

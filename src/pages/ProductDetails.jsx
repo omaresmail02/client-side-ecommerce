@@ -13,6 +13,9 @@ import {
 
 import {
   Box,
+  Container,
+  Flex,
+  Grid,
   Heading,
   HStack,
   IconButton,
@@ -23,10 +26,11 @@ import {
 } from "@chakra-ui/react";
 import Reviews from "../components/Reviews";
 import { useSelector } from "react-redux";
-import { BsStarFill } from "react-icons/bs";
-import { getProduct } from "../services/apiProduct";
+import { getCategoryProduct, getProduct } from "../services/apiProduct";
 import { formatPrice } from "../utils";
 import { addItemToCompare } from "../app/features/compareSlice";
+import ProductCard from "../components/ProductCard";
+import { BsStarFill } from "react-icons/bs";
 
 function ProductDetailsPage() {
   const { id } = useParams();
@@ -38,8 +42,17 @@ function ProductDetailsPage() {
 
   const toast = useToast();
 
+  const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
+
+  const category = data?.data.product.category.title;
+  const { data: categoryData } = useQuery(["products", category], () =>
+    getCategoryProduct(category)
+  );
   const handleAddToCart = () => {
-    const existingProduct = cart.cart.find((item) => item.id === data.id);
+    const existingProduct = cart.cart.find(
+      (item) => item.data.product.id === data.data.product.id
+    );
+
     !existingProduct &&
       (dispatch(addItem(data)),
       toast({
@@ -64,7 +77,7 @@ function ProductDetailsPage() {
 
   const handleAddToWishlist = () => {
     const existingProduct = wishlist.wishlist.find(
-      (item) => item.id === data.id
+      (item) => item.data.product.id === data.data.product.id
     );
     !existingProduct &&
       (dispatch(addItemToWishlist(data)),
@@ -79,7 +92,7 @@ function ProductDetailsPage() {
 
     existingProduct &&
       toast({
-        title: "المنتج موجود بالفعل في قائمة الرغبات",
+        title: " المنتج موجود بالفعل في قائمة الرغبات ",
         status: "warning",
         duration: 3000,
         isClosable: true,
@@ -89,7 +102,9 @@ function ProductDetailsPage() {
   };
 
   const handleAddToCompare = () => {
-    const existingProduct = compare.compare.find((item) => item.id === data.id);
+    const existingProduct = compare.compare.find(
+      (item) => item.data.product.id === data.data.product.id
+    );
 
     if (!existingProduct) {
       if (compare.compare.length < 3) {
@@ -124,14 +139,10 @@ function ProductDetailsPage() {
     }
   };
 
-  const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
-
-  // const averageRating = useSelector((state) => state.averageRating);
-
   if (isLoading) return <ProductDetailsSkeleton />;
 
   return (
-    <Box m={30}>
+    <Container maxW="6xl" my="20px">
       <Box>
         <Heading
           fontSize={{ base: "large", lg: "xx-large" }}
@@ -139,7 +150,7 @@ function ProductDetailsPage() {
           position="relative"
           display="inline-block"
         >
-          {data?.title}
+          {data?.data.product.title}
           <Box
             position="absolute"
             bottom="-5px"
@@ -165,9 +176,10 @@ function ProductDetailsPage() {
             flexDirection={{ base: "column", lg: "row" }}
           >
             <Image
-              src={data?.thumbnail}
-              alt={data.title}
-              width="100%"
+              src={data?.data.product.thumbnail}
+              alt={data.data.product.title}
+              maxW="400px"
+              aspectRatio="1/1"
               objectFit={"fill"}
               rounded="lg"
               roundedBottom={{ base: "none", lg: "lg" }}
@@ -175,21 +187,39 @@ function ProductDetailsPage() {
               flexBasis="50%"
             />
             <VStack
-              align="start"
+              align="center"
               justify="center"
               spacing="4"
               flexBasis="50%"
               p="20px"
             >
-              <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
-                {data.description}
-              </Text>
-
-              {data.discountPercentage > 0 ? (
-                <Text fontSize="lg" fontWeight="semibold">
-                  تخفيض : {`${Math.ceil(data.discountPercentage)} %`}
+              <Box
+                borderWidth="1px"
+                borderRadius="lg"
+                p={4}
+                maxW="sm"
+                boxShadow="md"
+              >
+                <Flex alignItems="center">
+                  <BsStarFill color="gold" />
+                  <Text fontSize="2xl" fontWeight="bold" mx={2}>
+                    {data.data.product.ratingsAverage.toFixed(1)}
+                  </Text>
+                  <Text fontSize="lg" color="gray.500" ml={2}>
+                    / 5
+                  </Text>
+                </Flex>
+                <Text fontSize="md" color="gray.500" mt={2}>
+                  {data.data.product.ratingsQuantity}{" "}
+                  {data.data.product.ratingsQuantity === 1
+                    ? "review"
+                    : "reviews"}
                 </Text>
-              ) : null}
+              </Box>
+
+              <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
+                {data.data.product.description}
+              </Text>
 
               <Box
                 display="flex"
@@ -199,33 +229,39 @@ function ProductDetailsPage() {
               >
                 <Text
                   fontSize="large"
-                  fontWeight="semibold"
                   textDecoration={
-                    data.discountPercentage ? "line-through" : "none"
+                    data.data.product.discountPercentage
+                      ? "line-through"
+                      : "none"
+                  }
+                  fontWeight={
+                    data.data.product.discountPercentage ? "thin" : "semibold"
                   }
                 >
-                  {formatPrice(data.price)}
+                  {formatPrice(data.data.product.price)}
                 </Text>
-                <Text fontSize="large" fontWeight="semibold">
-                  {formatPrice(
-                    data.price - data.price * (data.discountPercentage / 100)
-                  )}
-                </Text>
+                {data.data.product.discountPercentage > 0 ? (
+                  <Text fontSize="large" fontWeight="semibold">
+                    {formatPrice(
+                      data.data.product.price -
+                        data.data.product.price *
+                          (data.data.product.discountPercentage / 100)
+                    )}
+                  </Text>
+                ) : null}
               </Box>
-              <Text fontSize="md">عدد القطع المتوفرة :{data.stock}</Text>
-              {/* <Text>
-                التقييم :{" "}
-                {averageRating === 0
-                  ? "لايوجد مراجعات , كن اول المراجعين"
-                  : averageRating}
-              </Text> */}
-              {/* <Text as="span" display="flex" gap="1">
-                {[...Array(Math.round(averageRating))].map((_, index) => (
-                  <BsStarFill color="gold" key={index} />
-                ))}
-              </Text> */}
-              <HStack spacing="2" flexDirection="row">
+              {data.data.product.discountPercentage > 0 ? (
+                <Text fontSize="md">
+                  تخفيض : {`${data.data.product.discountPercentage} %`}
+                </Text>
+              ) : null}
+              <Text fontSize="md">
+                عدد القطع المتوفرة :{data.data.product.stock}
+              </Text>
+
+              <HStack spacing="2" flexDirection="row" w="full">
                 <IconButton
+                  flexGrow="1"
                   backgroundColor="purple.600"
                   color="white"
                   size="lg"
@@ -235,19 +271,17 @@ function ProductDetailsPage() {
                   icon={<HiOutlineShoppingBag />}
                 />
                 <IconButton
-                  backgroundColor="purple.600"
-                  color="white"
+                  variant="outline"
+                  colorScheme="purple"
                   size="lg"
-                  _hover={{ backgroundColor: "purple.800" }}
                   onClick={handleAddToWishlist}
                   aria-label="اضافة الى المفضلة"
                   icon={<HiOutlineHeart />}
                 />
                 <IconButton
-                  backgroundColor="purple.600"
-                  color="white"
+                  variant="outline"
+                  colorScheme="purple"
                   size="lg"
-                  _hover={{ backgroundColor: "purple.800" }}
                   icon={<HiOutlineArrowsRightLeft size="20" />}
                   onClick={handleAddToCompare}
                 />
@@ -258,7 +292,34 @@ function ProductDetailsPage() {
       </Box>
 
       <Reviews productId={id} />
-    </Box>
+      <Box mt="20px">
+        <Heading
+          fontSize={{ base: "large", lg: "xx-large" }}
+          mb="20px"
+          position="relative"
+          display="inline-block"
+        >
+          منتجات قد تعجبك
+          <Box
+            position="absolute"
+            bottom="-5px"
+            left="50%"
+            transform="translateX(-50%)"
+            width="100%"
+            height="3px"
+            backgroundColor="purple.600"
+          />
+        </Heading>
+        <Grid
+          templateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
+          gap={"5"}
+        >
+          {categoryData?.data.products.slice(0, 5).map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </Grid>
+      </Box>
+    </Container>
   );
 }
 

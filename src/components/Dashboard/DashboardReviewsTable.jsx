@@ -41,29 +41,33 @@ const DashboardReviewsTable = () => {
         <Table variant="simple" my={5}>
           <Thead>
             <Tr>
-              <Th>ID</Th>
-              <Th>المستخدم</Th>
-              <Th>المنتج</Th>
-              <Th>المراجعة</Th>
-              <Th isNumeric>التقييم</Th>
-              <Th>Action</Th>
+              <Th textAlign="center !important">اسم المستخدم</Th>
+              <Th textAlign="center !important">البريد الالكتروني</Th>
+              <Th textAlign="center !important">المنتج</Th>
+              <Th textAlign="center !important">المراجعة</Th>
+              <Th textAlign="center !important" isNumeric>
+                التقييم
+              </Th>
+              <Th textAlign="center !important">Action</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {reviewsData?.data?.map((review) => {
+            {reviewsData?.data.reviews.map((review) => {
               return (
                 <Tr key={review.id}>
-                  <Td>{review.id}</Td>
-                  <Td>{review?.attributes?.username}</Td>
-                  <Td>
-                    {review?.attributes?.product?.data?.attributes?.title}
+                  <Td textAlign="center !important">{review?.user?.name}</Td>
+                  <Td textAlign="center !important">{review.user?.email}</Td>
+                  <Td textAlign="center !important">
+                    {review?.product?.title}
                   </Td>
-                  <Td>{review?.attributes?.review}</Td>
-                  <Td isNumeric>{review?.attributes?.rating}</Td>
-                  <Td>
+                  <Td textAlign="center !important">{review?.review}</Td>
+                  <Td textAlign="center !important" isNumeric>
+                    {review?.rating}
+                  </Td>
+                  <Td textAlign="center !important">
                     <Button
                       as={Link}
-                      to={`/products/${review?.attributes?.product?.data?.id}`}
+                      to={`/products/${review?.product?.id}`}
                       colorScheme="purple"
                       variant="solid"
                       mr={3}

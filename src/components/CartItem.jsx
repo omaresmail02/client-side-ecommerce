@@ -12,18 +12,17 @@ import { HiMinus, HiPlus } from "react-icons/hi";
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
-
   return (
     <motion.div whileHover={{ scale: 1.02 }}>
       <Flex
-        key={item.id}
+        key={item.data.product.id}
         alignItems="center"
         justify={"space-between"}
         borderWidth="1px"
         borderRadius="md"
         borderColor={"purple.600"}
         p="2"
-        mb="2"
+        mb="4"
         gap={2}
         boxShadow="md"
         flexDirection={{ base: "column", md: "row" }}
@@ -37,8 +36,8 @@ const CartItem = ({ item }) => {
         >
           <Box w="100%">
             <Image
-              src={item?.thumbnail}
-              alt={item.title}
+              src={item.data.product.thumbnail}
+              alt={item.data.product.title}
               boxSize="200px"
               objectFit="cover"
               rounded="md"
@@ -47,36 +46,42 @@ const CartItem = ({ item }) => {
           </Box>
           <Box w="100%">
             <Heading fontSize="larger" mb="10px">
-              {item.title}
+              {item.data.product.title}
             </Heading>
-            {item.discountPercentage > 0 && (
+            {item.data.product.discountPercentage > 0 && (
               <Text
                 fontSize={{ base: "md", md: "lg" }}
                 fontWeight="bold"
                 mb="2"
               >
                 {formatPrice(
-                  item.price - item.price * (item.discountPercentage / 100)
+                  item.data.product.price -
+                    item.data.product.price *
+                      (item.data.product.discountPercentage / 100)
                 )}
               </Text>
             )}
             <Text
               fontSize={{ base: "md", md: "lg" }}
               textDecoration={
-                item.discountPercentage > 0 ? "line-through" : "none"
+                item.data.product.discountPercentage > 0
+                  ? "line-through"
+                  : "none"
               }
-              color={item.discountPercentage > 0 ? "gray.500" : "white"}
-              fontWeight={item.discountPercentage > 0 ? "normal" : "bold"}
+              color={item.data.product.discountPercentage > 0 ? "gray.500" : ""}
+              fontWeight={
+                item.data.product.discountPercentage > 0 ? "normal" : "bold"
+              }
             >
-              {formatPrice(item.price)}
+              {formatPrice(item.data.product.price)}
             </Text>
             <Flex align={"center"} justify={"flex-start"} gap={4} mt={4}>
               <IconButton
                 backgroundColor="purple.600"
                 color="white"
-                p="5"
+                size="sm"
                 _hover={{ backgroundColor: "purple.800" }}
-                onClick={() => dispatch(incressItem(item.id))}
+                onClick={() => dispatch(incressItem(item.data.product.id))}
                 icon={<HiPlus />}
               />
               <Text color="purple.600" fontWeight="bold">
@@ -85,9 +90,9 @@ const CartItem = ({ item }) => {
               <IconButton
                 backgroundColor="purple.600"
                 color="white"
-                p="5"
+                size="sm"
                 _hover={{ backgroundColor: "purple.800" }}
-                onClick={() => dispatch(decressItem(item.id))}
+                onClick={() => dispatch(decressItem(item.data.product.id))}
                 icon={<HiMinus />}
               />
             </Flex>
@@ -103,13 +108,14 @@ const CartItem = ({ item }) => {
           <Box>
             <Text fontWeight="bold">
               <Text> السعر الكلي</Text>
-              {item.discountPercentage > 0
+              {item.data.product.discountPercentage > 0
                 ? formatPrice(
-                    (item.price -
-                      item.price * (item.discountPercentage / 100)) *
+                    (item.data.product.price -
+                      item.data.product.price *
+                        (item.data.product.discountPercentage / 100)) *
                       item.quantity
                   )
-                : formatPrice(item.price * item.quantity)}
+                : formatPrice(item.data.product.price * item.quantity)}
             </Text>
           </Box>
           <IconButton
@@ -117,7 +123,7 @@ const CartItem = ({ item }) => {
             color="white"
             maxW={"120px"}
             _hover={{ backgroundColor: "red.800" }}
-            onClick={() => dispatch(deleteItem(item.id))}
+            onClick={() => dispatch(deleteItem(item.data.product.id))}
             icon={<HiTrash />}
           />
         </Flex>

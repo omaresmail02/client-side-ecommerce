@@ -2,7 +2,6 @@ import {
   Card,
   CardBody,
   Text,
-  Button,
   Image,
   Heading,
   CardFooter,
@@ -10,6 +9,7 @@ import {
   Box,
   IconButton,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -17,17 +17,18 @@ import { formatPrice, textSlicer } from "../utils";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../app/features/cartSlice";
 import { addItem as addItemToWishlist } from "../app/features/wishlistSlice";
+import { addItemToCompare } from "../app/features/compareSlice";
 import { getProduct } from "../services/apiProduct";
 
 import { useQuery } from "react-query";
 import {
-  HiEye,
   HiOutlineArrowsRightLeft,
   HiOutlineExclamationTriangle,
+  HiOutlineEye,
   HiOutlineHeart,
   HiOutlineShoppingBag,
 } from "react-icons/hi2";
-import { addItemToCompare } from "../app/features/compareSlice";
+import { BsStarFill } from "react-icons/bs";
 
 const ProductCard = (product) => {
   const dispatch = useDispatch();
@@ -39,8 +40,15 @@ const ProductCard = (product) => {
 
   const { pathname } = useLocation();
 
+  const { data } = useQuery(["product", product.id], () =>
+    getProduct(product.id)
+  );
+
   const handleAddToCart = () => {
-    const existingProduct = cart.cart.find((item) => item.id === data.id);
+    const existingProduct = cart.cart.find(
+      (item) => item.data.product.id === data.data.product.id
+    );
+
     !existingProduct &&
       (dispatch(addItem(data)),
       toast({
@@ -65,7 +73,7 @@ const ProductCard = (product) => {
 
   const handleAddToWishlist = () => {
     const existingProduct = wishlist.wishlist.find(
-      (item) => item.id === data.id
+      (item) => item.data.product.id === data.data.product.id
     );
     !existingProduct &&
       (dispatch(addItemToWishlist(data)),
@@ -89,7 +97,9 @@ const ProductCard = (product) => {
       });
   };
   const handleAddToCompare = () => {
-    const existingProduct = compare.compare.find((item) => item.id === data.id);
+    const existingProduct = compare.compare.find(
+      (item) => item.data.product.id === data.data.product.id
+    );
 
     if (!existingProduct) {
       if (compare.compare.length < 3) {
@@ -123,10 +133,6 @@ const ProductCard = (product) => {
       });
     }
   };
-
-  const { data } = useQuery(["product", product.id], () =>
-    getProduct(product.id)
-  );
 
   return (
     <motion.div whileHover={{ scale: 1.05 }}>
@@ -168,8 +174,9 @@ const ProductCard = (product) => {
               bg="white"
               size="sm"
               rounded="lg"
-              icon={<HiOutlineShoppingBag size="20" />}
-              onClick={handleAddToCart}
+              icon={<HiOutlineEye size="20" />}
+              as={Link}
+              to={`/products/${product.id}`}
             />
             <IconButton
               color="purple.600"
@@ -201,7 +208,6 @@ const ProductCard = (product) => {
           <Image
             src={product.thumbnail}
             alt={product.title}
-            mx="auto"
             objectFit="fill"
             // height="350px" // Set a fixed height for all images
             width="100%"
@@ -214,67 +220,63 @@ const ProductCard = (product) => {
           height="100%"
           display="flex"
           flexDirection="column"
-          justifyContent="space-between"
           alignItems="center"
         >
-          <Heading
-            fontSize="larger"
-            fontWeight="bold"
-            p={3}
-            mb={2}
-            rounded="lg"
-            textTransform="capitalize"
-            wordBreak="break-word"
-            // noOfLines="1"
-          >
-            {textSlicer(product.title, 20)}
-          </Heading>
+          <Flex justifyContent="space-between" alignItems="center" w="full">
+            <Heading
+              fontSize="larger"
+              fontWeight="bold"
+              p={3}
+              mb={2}
+              rounded="lg"
+              textTransform="capitalize"
+              wordBreak="break-word"
+              // noOfLines="1"
+            >
+              {product.title}
+            </Heading>
+            <Box display="flex" alignItems="center" gap="3px">
+              <BsStarFill color="gold" />
+              {product.ratingsAverage} ({product.ratingsQuantity})
+            </Box>
+          </Flex>
 
-          <Text mb={3} textAlign="center">
-            {textSlicer(product.description, 30)}
-          </Text>
+          <Text mb={3}>{textSlicer(product.description, 30)}</Text>
         </CardBody>
         <CardFooter
           justifyContent="space-between"
           alignItems="center"
           padding="0 !important"
+          gap="10px"
         >
-          <Button
-            as={Link}
-            to={`/products/${product.id}`}
+          <IconButton
             backgroundColor="purple.600"
             color="white"
             size="sm"
-            py="20px"
-            px="10px"
-            rightIcon={<HiEye size={20} />}
             _hover={{ backgroundColor: "purple.800" }}
             rounded="lg"
-            aria-label="التفاصيل"
-          >
-            التفاصيل
-          </Button>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="space-between"
-            gap="5px"
-          >
-            {product.discountPercentage > 0 ? (
-              <Text color="purple.600" fontSize="larger" fontWeight="semibold">
+            icon={<HiOutlineShoppingBag size={20} />}
+            onClick={handleAddToCart}
+            aria-label="اضافة الى السلة"
+            flexBasis="50%"
+          />
+          <Box display="flex" alignItems="center" gap="4px">
+            {product.discountPercentage > 0 && (
+              <Text color="purple.600" fontSize="md" fontWeight="semibold">
                 {formatPrice(
                   product.price -
                     product.price * (product.discountPercentage / 100)
                 )}
               </Text>
-            ) : null}
+            )}
             <Text
               color={
                 product.discountPercentage > 0 ? "purple.300" : "purple.600"
               }
-              fontSize="large"
-              fontWeight="semibold"
+              fontSize="md"
+              fontWeight={
+                product.discountPercentage > 0 ? "medium" : "semibold"
+              }
               textDecoration={
                 product.discountPercentage > 0 ? "line-through" : "none"
               }

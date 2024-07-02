@@ -12,7 +12,7 @@ const Products = () => {
   const { isLoading, data } = useQuery("products", getProductList);
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.products || []
+    data?.data.products || []
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,33 +38,40 @@ const Products = () => {
 
   return (
     <>
-      <Box mt="10px">
-        <Container maxW="6xl">
-          <FilterAndSortDrawer data={data} {...filterAndSortProps} />
-        </Container>
-      </Box>
-      {filteredProducts.length === 0 ? (
-        <Text textAlign={"center"} fontWeight={"bolder"} fontSize={"xx-large"}>
-          لا يوجد منتجات تطابق الفرز
-        </Text>
-      ) : (
-        <>
-          <Grid
-            m={"30"}
-            templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"}
-            gap={"6"}
-          >
-            {filteredProducts.slice(startIndex, endIndex).map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
-          </Grid>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
+      <Container maxW="6xl">
+        <Box>
+          <FilterAndSortDrawer
+            data={data.data.products}
+            {...filterAndSortProps}
           />
-        </>
-      )}
+        </Box>
+        {filteredProducts.length === 0 ? (
+          <Text
+            textAlign={"center"}
+            fontWeight={"bolder"}
+            fontSize={"xx-large"}
+          >
+            لا يوجد منتجات تطابق الفرز
+          </Text>
+        ) : (
+          <>
+            <Grid
+              templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"}
+              gap={"5"}
+              my="20px"
+            >
+              {filteredProducts.slice(startIndex, endIndex).map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </Grid>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </>
+        )}
+      </Container>
     </>
   );
 };

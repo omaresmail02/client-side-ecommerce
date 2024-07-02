@@ -8,20 +8,12 @@ import {
 } from "@chakra-ui/react";
 
 import { useQuery } from "react-query";
-import { getProductList } from "../services/apiProduct";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getCategoriesList } from "../services/apiCategories";
 
 const Categories = () => {
-  const { data, isLoading } = useQuery("products", getProductList);
-
-  // Get unique categories
-  const categoriesSet = new Set();
-  data?.products.forEach((product) => {
-    categoriesSet.add(product.category);
-  });
-
-  const uniqueCategories = Array.from(categoriesSet);
+  const { data, isLoading } = useQuery("categories", getCategoriesList);
 
   return (
     <Container maxW="6xl">
@@ -44,13 +36,8 @@ const Categories = () => {
           />
         </Heading>
         <Grid
-          templateColumns={{
-            base: "repeat(3, 1fr)",
-            sm: "repeat(4, 1fr)",
-            md: "repeat(4, 1fr)",
-            lg: "repeat(5, 1fr)",
-          }}
-          gap="20px"
+          templateColumns={"repeat(auto-fill, minmax(150px, 1fr))"}
+          gap={"6"}
         >
           {isLoading // Show loading skeleton while data is being fetched
             ? Array.from({ length: 16 }).map((_, index) => (
@@ -58,25 +45,33 @@ const Categories = () => {
                   <Skeleton p="10px" w="100%" />
                 </Box>
               ))
-            : uniqueCategories.map((category) => (
-                <Box key={category}>
-                  <motion.div whileHover={{ scale: 1.05 }}>
+            : data.data.categories.map((category) => (
+                <motion.div whileHover={{ scale: 1.05 }} key={category.id}>
+                  <Box
+                    backgroundImage={`url(${category.thumbnail})`}
+                    backgroundSize="cover"
+                    backgroundPosition="center"
+                    color="white"
+                    boxShadow="md"
+                    rounded="md"
+                    h="150px"
+                  >
                     <Button
+                      to={`/products/categories/${category.title}`}
                       as={Link}
-                      to={`/products/categories/${category}`}
-                      backgroundColor="purple.600"
                       color="white"
-                      _hover={{ backgroundColor: "purple.800" }}
+                      background="none"
                       boxShadow="md"
                       p="10px"
                       w="100%"
-                      whiteSpace="normal"
-                      aria-label={category}
+                      h="100%"
+                      fontSize="18px"
+                      aria-label={category.title}
                     >
-                      {category.toUpperCase()}
+                      {category.title}
                     </Button>
-                  </motion.div>
-                </Box>
+                  </Box>
+                </motion.div>
               ))}
         </Grid>
       </Box>

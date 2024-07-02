@@ -16,9 +16,9 @@ import "swiper/css/scrollbar";
 
 import "./offers-slider.css";
 
-import sliderImg1 from "../assets/phones.webp";
-import sliderImg2 from "../assets/electrical-devices.jpg";
-import sliderImg3 from "../assets/laptops.jpg";
+import sliderImg1 from "../assets/1.jpg";
+import sliderImg2 from "../assets/2.jpg";
+import sliderImg3 from "../assets/3.jpg";
 import { Box, Container, Heading, Image } from "@chakra-ui/react";
 
 const OffersSlider = () => {
@@ -58,7 +58,7 @@ const OffersSlider = () => {
           <SwiperSlide>
             <Image
               src={sliderImg1}
-              objectFit="cover"
+              objectFit="fillco"
               height="500px"
               width="100%"
               rounded="lg"

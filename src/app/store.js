@@ -3,8 +3,6 @@ import loginSlice from "./features/loginSlice";
 import cartSlice from "./features/cartSlice";
 import wishlistSlice from "./features/wishlistSlice";
 import networkSlice from "./features/networkSlice";
-import signupSlice from "./features/signupSlice";
-import averageRatingSlice from "./features/averageRatingSlice";
 import compareSlice from "./features/compareSlice";
 
 import { persistStore, persistReducer } from "redux-persist";
@@ -32,13 +30,15 @@ const persistedCompare = persistReducer(persistCompareConfig, compareSlice);
 export const store = configureStore({
   reducer: {
     network: networkSlice,
-    signup: signupSlice,
     login: loginSlice,
-    averageRating: averageRatingSlice,
     cart: persistedCart,
     wishlist: persistedWishlist,
     compare: persistedCompare,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export const persistor = persistStore(store);

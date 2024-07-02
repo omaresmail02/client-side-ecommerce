@@ -17,22 +17,21 @@ import {
   useToast,
   FormHelperText,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { selectSignup, userSignup } from "../app/features/signupSlice";
-import { useDispatch, useSelector } from "react-redux";
+
 import BackButton from "../shared/BackButton";
 import { HiOutlineUserPlus } from "react-icons/hi2";
 import { SignupSchema } from "../utils/validationsSchemas";
+import { useMutation, useQueryClient } from "react-query";
+import { signup } from "../services/apiAth";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toast = useToast();
+  const queryClient = useQueryClient();
 
-  const { error: signupError, loading, success } = useSelector(selectSignup);
+  const toast = useToast();
 
   const {
     register,
@@ -43,43 +42,43 @@ export default function Signup() {
     resolver: yupResolver(SignupSchema),
   });
 
-  function onSubmit(data) {
-    const { firstName, lastName, email, password } = data;
-    const username = `${firstName} ${lastName}`;
-
-    dispatch(userSignup({ email, password, username }));
-  }
-
-  // Navigate to /login if signup is successful
-  useEffect(() => {
-    if (success) {
-      toast({
-        title: "تم الاشتراك بنجاح",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top-right",
-        icon: <HiOutlineUserPlus size={20} />,
-      });
-
-      reset(); // Reset form fields after successful signup
+  const { isLoading, mutate } = useMutation(signup, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("signup"),
+        toast({
+          title: "تم الاشتراك بنجاح",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+          icon: <HiOutlineUserPlus size={20} />,
+        });
       navigate("/login");
-    }
-  }, [success, navigate, reset, toast]);
-
-  // Handle login error
-  useEffect(() => {
-    if (signupError) {
+      reset();
+    },
+    onError: (error) => {
       toast({
         title: "حدث خطأ أثناء تسجيل الدخول",
-        description: signupError.message || signupError,
+        description: error.response.data.message,
         status: "error",
         duration: 3000,
         isClosable: true,
         position: "top-right",
       });
-    }
-  }, [signupError, toast]);
+    },
+  });
+
+  function onSubmit(data) {
+    const { firstName, lastName, email, password } = data;
+    const name = `${firstName} ${lastName}`;
+    const body = {
+      email,
+      password,
+      name,
+    };
+
+    mutate(body);
+  }
 
   return (
     <>
@@ -150,7 +149,7 @@ export default function Signup() {
                   p="5"
                   _hover={{ backgroundColor: "purple.800" }}
                   type="submit"
-                  isLoading={loading}
+                  isLoading={isLoading}
                 >
                   اشترك
                 </Button>

@@ -13,7 +13,7 @@ const compareSlice = createSlice({
     },
     deleteItemFromCompare(state, action) {
       state.compare = state.compare.filter(
-        (item) => item.id !== action.payload
+        (item) => item.data.product.id !== action.payload
       );
     },
     clearCompare(state) {
