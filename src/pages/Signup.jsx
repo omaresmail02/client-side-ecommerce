@@ -142,7 +142,6 @@ export default function Signup() {
 
               <Stack spacing={10} pt={2}>
                 <Button
-                  loadingText="Submitting"
                   size="lg"
                   backgroundColor="purple.600"
                   color="white"
@@ -156,7 +155,7 @@ export default function Signup() {
               </Stack>
               <Stack pt={6}>
                 <Text align={"center"}>
-                  انت مشترك بالفعل؟{" "}
+                  انت مشترك بالفعل؟
                   <Link as={RouterLink} to={"/login"} color={"blue.400"}>
                     سجل الدخول
                   </Link>

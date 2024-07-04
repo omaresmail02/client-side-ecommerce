@@ -13,6 +13,7 @@ import {
   Flex,
   Container,
   Icon,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getMyUser, updateMe, updateMyPassword } from "../services/apiUsers";
@@ -55,14 +56,11 @@ const UserProfile = () => {
     onClose: onPasswordModalClose,
   } = useDisclosure();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
   const {
     register: registerPasswordUpdate,
     handleSubmit: handleSubmitPasswordUpdate,
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(updatePasswordSchema),
   });
@@ -298,38 +296,38 @@ const UserProfile = () => {
         loading={isPasswordUpdating}
         onSubmit={handleSubmitPasswordUpdate(onPasswordSubmit)}
       >
-        <FormControl my={3}>
+        <FormControl my={3} isInvalid={!!errors.passwordCurrent}>
           <FormLabel>كلمة المرور الحالية</FormLabel>
           <Input
             type="password"
             placeholder="كلمة المرور الحالية"
             {...registerPasswordUpdate("passwordCurrent")}
           />
-          {errors.passwordCurrent && (
-            <Text color="red.500">{errors.passwordCurrent.message}</Text>
-          )}
+          <FormErrorMessage color={"red.500"}>
+            {errors.passwordCurrent?.message}
+          </FormErrorMessage>
         </FormControl>
-        <FormControl my={3}>
+        <FormControl my={3} isInvalid={!!errors.password}>
           <FormLabel>كلمة المرور الجديدة</FormLabel>
           <Input
             type="password"
             placeholder="كلمة المرور الجديدة"
             {...registerPasswordUpdate("password")}
           />
-          {errors.password && (
-            <Text color="red.500">{errors.password.message}</Text>
-          )}
+          <FormErrorMessage color={"red.500"}>
+            {errors.password?.message}
+          </FormErrorMessage>
         </FormControl>
-        <FormControl my={3}>
+        <FormControl my={3} isInvalid={!!errors.passwordConfirm}>
           <FormLabel>تأكيد كلمة المرور الجديدة</FormLabel>
           <Input
             type="password"
             placeholder="تأكيد كلمة المرور الجديدة"
             {...registerPasswordUpdate("passwordConfirm")}
           />
-          {errors.passwordConfirm && (
-            <Text color="red.500">{errors.passwordConfirm.message}</Text>
-          )}
+          <FormErrorMessage color={"red.500"}>
+            {errors.passwordConfirm?.message}
+          </FormErrorMessage>
         </FormControl>
       </CustomeModal>
     </>

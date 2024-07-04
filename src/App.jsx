@@ -43,14 +43,14 @@ const App = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // Check login status and show popup if user is not logged in
-      setIsOpen(true);
-    }, 5000); // Show popup after 5 seconds
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     // Check login status and show popup if user is not logged in
+  //     setIsOpen(true);
+  //   }, 5000); // Show popup after 5 seconds
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -58,7 +58,7 @@ const App = () => {
 
   return (
     <>
-      {!token && <Popup isOpen={isOpen} onClose={handleClose} />}
+      {/* {!token && <Popup isOpen={isOpen} onClose={handleClose} />} */}
 
       <BackToTopButton />
 

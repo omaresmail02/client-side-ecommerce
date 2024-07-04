@@ -19,7 +19,6 @@ import {
   HiOutlineArrowsRightLeft,
   HiOutlineHeart,
   HiOutlineShoppingBag,
-  HiOutlineUser,
   HiOutlineUserPlus,
 } from "react-icons/hi2";
 
@@ -42,7 +41,9 @@ export default function Nav() {
 
   const logoutHandler = () => {
     CookieServices.remove("jwt");
-    document.location.reload();
+    setTimeout(() => {
+      document.location.reload();
+    }, 300);
   };
 
   const { data } = useQuery("myUser", getMyUser);
@@ -214,21 +215,18 @@ export default function Nav() {
                 <Menu>
                   <MenuButton
                     as={Button}
-                    p="6px"
-                    rounded={"lg"}
                     variant={"link"}
                     cursor={"pointer"}
-                    minW={0}
-                    bg="white"
-                    color="purple.800"
-                    size="md"
-                    _hover={{
-                      bg: "purple.800",
-                      color: "white",
-                    }}
                     aria-label="المستخدم"
                   >
-                    <HiOutlineUser size={28} />
+                    <Image
+                      rounded="full"
+                      objectFit="contain"
+                      boxSize="50px"
+                      bg="white"
+                      src={data?.data.user.image}
+                      alt={data?.data.user.name}
+                    />
                   </MenuButton>
                   <MenuList
                     alignItems={"center"}

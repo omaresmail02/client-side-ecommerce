@@ -59,7 +59,6 @@ export default function Login() {
       navigate("/");
     }
   }, [success, navigate, toast]);
-
   // Handle login error
   useEffect(() => {
     if (loginError) {

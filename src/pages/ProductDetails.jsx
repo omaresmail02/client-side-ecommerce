@@ -145,7 +145,7 @@ function ProductDetailsPage() {
     <Container maxW="6xl" my="20px">
       <Box>
         <Heading
-          fontSize={{ base: "large", lg: "xx-large" }}
+          fontSize={{ base: "large", md: "xx-large" }}
           mb="20px"
           position="relative"
           display="inline-block"
@@ -170,28 +170,27 @@ function ProductDetailsPage() {
           mb="4"
         >
           <HStack
-            spacing="4"
             justifyContent={"space-between"}
-            gap={4}
-            flexDirection={{ base: "column", lg: "row" }}
+            flexDirection={{ base: "column", md: "row" }}
           >
             <Image
               src={data?.data.product.thumbnail}
               alt={data.data.product.title}
-              maxW="400px"
+              // maxW="400px"
+              w={{ base: "100%", md: "50%" }}
               aspectRatio="1/1"
-              objectFit={"fill"}
-              rounded="lg"
-              roundedBottom={{ base: "none", lg: "lg" }}
-              roundedLeft={{ base: "lg", lg: "none" }}
+              objectFit="cover"
+              rounded={{ base: "none", md: "lg" }}
+              roundedLeft={{ md: "none" }}
+              roundedTop={{ base: "lg" }}
               flexBasis="50%"
             />
             <VStack
               align="center"
               justify="center"
               spacing="4"
-              flexBasis="50%"
               p="20px"
+              flexBasis="50%"
             >
               <Box
                 borderWidth="1px"
@@ -294,7 +293,7 @@ function ProductDetailsPage() {
       <Reviews productId={id} />
       <Box mt="20px">
         <Heading
-          fontSize={{ base: "large", lg: "xx-large" }}
+          fontSize={{ base: "large", md: "xx-large" }}
           mb="20px"
           position="relative"
           display="inline-block"
@@ -314,9 +313,12 @@ function ProductDetailsPage() {
           templateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
           gap={"5"}
         >
-          {categoryData?.data.products.slice(0, 5).map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
+          {categoryData?.data.products
+            .slice(0, 5)
+            .filter((el) => el._id !== id)
+            .map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
         </Grid>
       </Box>
     </Container>

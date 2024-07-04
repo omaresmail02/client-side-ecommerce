@@ -55,7 +55,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineViewColumns size={24} />
           <Text fontSize="lg">عدد المنتجات</Text>
-          <Text fontSize="2xl">{productsList?.data?.products.length}</Text>
+          <Text fontSize="2xl">{productsList?.data?.products?.length}</Text>
         </VStack>
         <VStack
           spacing="4px"
@@ -68,7 +68,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineChartBar size={24} />
           <Text fontSize="lg">عدد الفئات</Text>
-          <Text fontSize="2xl">{categoriesList?.data?.categories.length}</Text>
+          <Text fontSize="2xl">{categoriesList?.data?.categories?.length}</Text>
         </VStack>
 
         <VStack
@@ -82,7 +82,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineUser size={24} />
           <Text fontSize="lg">عدد المستخدمين</Text>
-          <Text fontSize="2xl">{usersList?.data?.users.length}</Text>
+          <Text fontSize="2xl">{usersList?.data?.users?.length}</Text>
         </VStack>
         <VStack
           spacing="4px"
@@ -95,7 +95,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlinePencilSquare size={24} />
           <Text fontSize="lg">عدد المراجعات</Text>
-          <Text fontSize="2xl">{reviewsList?.data?.reviews.length}</Text>
+          <Text fontSize="2xl">{reviewsList?.data?.reviews?.length}</Text>
         </VStack>
       </Flex>
       <Box w="100%" h="50vh">

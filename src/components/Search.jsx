@@ -3,7 +3,6 @@ import {
   Box,
   Input,
   InputGroup,
-  useDisclosure,
   List,
   ListItem,
   Text,
@@ -20,12 +19,10 @@ const SearchComponent = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  const { onToggle } = useDisclosure();
-
   const { data } = useQuery("products", getProductList);
 
   const searchData = (value) => {
-    const results = data?.data.products.filter((product) =>
+    const results = data?.data?.products.filter((product) =>
       product?.title?.toLowerCase().includes(value.toLowerCase())
     );
     setSearchResults(results);
@@ -33,17 +30,12 @@ const SearchComponent = () => {
 
   const handleSearch = (value) => {
     setSearchQuery(value);
-    const timer = setTimeout(() => {
-      searchData(value);
-      onToggle(true);
-    }, 500); // Adjust the delay as needed (e.g., 300ms)
-    return () => clearTimeout(timer);
+    searchData(value);
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
     setSearchResults([]);
-    onToggle(false);
   };
 
   return (

@@ -21,11 +21,11 @@ import {
   HiOutlineRectangleGroup,
   HiOutlineUser,
   HiOutlineViewColumns,
-  HiShoppingCart,
 } from "react-icons/hi2";
 
-import { Link, Outlet, Link as RouterLink } from "react-router-dom";
+import { Outlet, Link as RouterLink } from "react-router-dom";
 import { DarkmodeToggle } from "../../components/DarkmodeToggle";
+import { PiTShirtBold } from "react-icons/pi";
 
 const LinkItems = [
   { name: "الرئيسية", to: "/", icon: HiOutlineHome },
@@ -52,11 +52,27 @@ const SidebarContent = ({ onClose, ...rest }) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          <Box as={Link} to="/">
-            <HiShoppingCart fontSize={"xxx-large"} color={"white"} />
-          </Box>
+      <Flex
+        // h="20"
+        alignItems="center"
+        mx="16px"
+        justifyContent="space-between"
+        borderBottom="white solid 1px"
+        p="16px"
+      >
+        <Text fontSize="2xl" fontWeight="bold">
+          <Flex
+            flexDirection="column"
+            alignItems="center"
+            as={RouterLink}
+            to="/"
+            aria-label="logo"
+          >
+            <PiTShirtBold fontSize={"xxx-large"} color={"white"} />
+            <Text fontSize="24px" fontWeight="bold" color="white">
+              Eureka
+            </Text>
+          </Flex>
         </Text>
         <CloseButton display="flex" onClick={onClose} />
       </Flex>
@@ -121,7 +137,6 @@ const MobileNav = ({ onOpen, ...rest }) => {
   return (
     <Flex
       px={{ base: 4, md: 4 }}
-      height="20"
       alignItems="center"
       justifyContent="space-between"
       {...rest}
@@ -140,10 +155,20 @@ const MobileNav = ({ onOpen, ...rest }) => {
         icon={<HiOutlineBars3 size={34} />}
       />
 
-      <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-        <Box as={Link} to="/">
-          <HiShoppingCart fontSize={"xxx-large"} color="white" />
-        </Box>
+      <Text fontSize="2xl" fontWeight="bold">
+        <Flex
+          flexDirection="column"
+          alignItems="center"
+          as={RouterLink}
+          to="/"
+          aria-label="logo"
+          p="5px"
+        >
+          <PiTShirtBold fontSize={"xxx-large"} color={"white"} />
+          <Text fontSize="24px" fontWeight="bold" color="white">
+            Eureka
+          </Text>
+        </Flex>
       </Text>
     </Flex>
   );

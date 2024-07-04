@@ -99,7 +99,7 @@ const DashboardUsersTable = () => {
         <Table variant="simple" my={5}>
           <Thead>
             <Tr>
-              <Th>ID</Th>
+              <Th>NO.</Th>
               <Th>الصورة</Th>
               <Th>اسم المستخدم</Th>
               <Th>البريد الالكتروني</Th>
@@ -110,10 +110,10 @@ const DashboardUsersTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {usersData?.data.users.map((user) => {
+            {usersData?.data.users.map((user, index) => {
               return (
                 <Tr key={user._id}>
-                  <Td>{user._id}</Td>
+                  <Td>{index + 1}</Td>
                   <Td>
                     <Image
                       rounded="lg"
