@@ -15,7 +15,7 @@ const Breadcrumbs = ({ pathname }) => {
       separator={<HiChevronLeft />}
       spacing="1px"
       color="purple.600"
-      fontSize="large"
+      fontSize={{ base: "sm", md: "lg" }}
     >
       <BreadcrumbItem>
         <BreadcrumbLink
