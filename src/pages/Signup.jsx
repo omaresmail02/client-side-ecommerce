@@ -25,7 +25,7 @@ import BackButton from "../shared/BackButton";
 import { HiOutlineUserPlus } from "react-icons/hi2";
 import { SignupSchema } from "../utils/validationsSchemas";
 import { useMutation, useQueryClient } from "react-query";
-import { signup } from "../services/apiAth";
+import { signup } from "../services/apiAuth";
 
 export default function Signup() {
   const navigate = useNavigate();

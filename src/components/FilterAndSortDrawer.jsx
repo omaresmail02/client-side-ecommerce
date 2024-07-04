@@ -100,7 +100,7 @@ const FilterAndSortDrawer = ({
                     onChange={(values) => setPriceFilters(values)}
                   >
                     <Stack>
-                      <Checkbox value="0-99">$0-$99</Checkbox>
+                      <Checkbox value="1-99">$1-$99</Checkbox>
                       <Checkbox value="100-499">$100-$499</Checkbox>
                       <Checkbox value="500-999">$500-$999</Checkbox>
                       <Checkbox value="1000-4999">$1000-$4999</Checkbox>
@@ -129,6 +129,7 @@ const FilterAndSortDrawer = ({
                       }}
                     >
                       <Stack>
+                        {isLoading & "Loading..."}
                         {categoriesData?.data.categories.map((category) => {
                           return (
                             <Checkbox key={category.id} value={category.title}>
