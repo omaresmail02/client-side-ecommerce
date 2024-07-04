@@ -10,7 +10,7 @@ const BackButton = () => {
     <IconButton
       bg="purple.600"
       color="white"
-      size="md"
+      size={{ base: "sm", md: "md" }}
       rounded="lg"
       _hover={{
         bg: "purple.800",

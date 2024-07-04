@@ -58,7 +58,7 @@ const OffersSlider = () => {
           <SwiperSlide>
             <Image
               src={sliderImg1}
-              objectFit="fillco"
+              objectFit="fill"
               height="500px"
               width="100%"
               rounded="lg"
@@ -68,7 +68,7 @@ const OffersSlider = () => {
           <SwiperSlide>
             <Image
               src={sliderImg2}
-              objectFit="cover"
+              objectFit="fill"
               height="500px"
               width="100%"
               rounded="lg"
@@ -78,7 +78,7 @@ const OffersSlider = () => {
           <SwiperSlide>
             <Image
               src={sliderImg3}
-              objectFit="cover"
+              objectFit="fill"
               height="500px"
               width="100%"
               rounded="lg"

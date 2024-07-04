@@ -149,6 +149,8 @@ const UserProfile = () => {
                 "& > .icon-overlay": { opacity: 1 },
               }}
               onClick={handleClick}
+              border="3px solid transparent"
+              outline="3px solid #6b46c1"
             >
               <Image
                 objectFit="cover"
@@ -181,46 +183,52 @@ const UserProfile = () => {
               boxShadow="sm"
               maxW="md"
             >
-              <Flex mb={3} align="center" gap="5px">
+              <Flex
+                mb={3}
+                align="center"
+                gap="5px"
+                fontSize={{ base: "12px", md: "16px" }}
+              >
                 <Icon as={HiUser} boxSize={5} mr={2} color="purple.600" />
-                <Text fontSize="16px" fontWeight="bold">
-                  اسم المستخدم:
-                </Text>
-                <Text ml={2} fontSize="16px">
-                  {data?.data?.user?.name}
-                </Text>
+                <Text fontWeight="bold">اسم المستخدم:</Text>
+                <Text ml={2}>{data?.data?.user?.name}</Text>
               </Flex>
-              <Flex mb={3} align="center" gap="5px">
+              <Flex
+                mb={3}
+                align="center"
+                gap="5px"
+                fontSize={{ base: "12px", md: "16px" }}
+              >
                 <Icon as={HiEnvelope} boxSize={5} mr={2} color="purple.600" />
-                <Text fontSize="16px" fontWeight="bold">
-                  البريد الالكتروني:
-                </Text>
-                <Text ml={2} fontSize="16px">
-                  {data?.data?.user?.email}
-                </Text>
+                <Text fontWeight="bold">البريد الالكتروني:</Text>
+                <Text ml={2}>{data?.data?.user?.email}</Text>
               </Flex>
-              <Flex mb={3} align="center" gap="5px">
+              <Flex
+                mb={3}
+                align="center"
+                gap="5px"
+                fontSize={{ base: "12px", md: "16px" }}
+              >
                 <Icon as={HiCalendar} boxSize={5} mr={2} color="purple.600" />
-                <Text fontSize="16px" fontWeight="bold">
-                  تاريخ الانشاء:
-                </Text>
-                <Text ml={2} fontSize="16px">
-                  {formatDate(data?.data?.user?.createdAt)}
-                </Text>
+                <Text fontWeight="bold">تاريخ الانشاء:</Text>
+                <Text ml={2}>{formatDate(data?.data?.user?.createdAt)}</Text>
               </Flex>
               {data?.data?.user?.updatedAt &&
                 data?.data?.user?.updatedAt !== data?.data?.user?.createdAt && (
-                  <Flex mb={3} align="center" gap="5px">
+                  <Flex
+                    mb={3}
+                    align="center"
+                    gap="5px"
+                    fontSize={{ base: "12px", md: "16px" }}
+                  >
                     <Icon
                       as={HiPencilSquare}
                       boxSize={5}
                       mr={2}
                       color="purple.600"
                     />
-                    <Text fontSize="16px" fontWeight="bold">
-                      اخر تعديل:
-                    </Text>
-                    <Text ml={2} fontSize="16px">
+                    <Text fontWeight="bold">اخر تعديل:</Text>
+                    <Text ml={2}>
                       {formatDate(data?.data?.user?.updatedAt)}
                     </Text>
                   </Flex>
