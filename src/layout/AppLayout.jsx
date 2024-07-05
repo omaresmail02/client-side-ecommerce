@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 
-import Navbar from "./Navbar";
+import Header from "./Header";
 import Footer from "./Footer";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import Breadcrumbs from "../components/Breadcrumbs";
@@ -11,8 +11,9 @@ const AppLayout = () => {
 
   return (
     <Flex flexDirection="column" minH="100vh">
-      <Navbar />
-      <Box flex="1" mt="135px">
+      <Header />
+
+      <Box flex="1" mt="199px">
         {pathname !== "/" && (
           <Container
             maxW="6xl"

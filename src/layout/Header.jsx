@@ -31,8 +31,9 @@ import SearchBar from "../components/Search";
 import { useQuery } from "react-query";
 import { getMyUser } from "../services/apiUsers";
 import { DarkmodeToggle } from "../components/DarkmodeToggle";
+import Navbar from "./../components/Navbar";
 
-export default function Nav() {
+export default function Header() {
   const cart = useSelector((state) => state.cart);
   const wishlist = useSelector((state) => state.wishlist);
   const compare = useSelector((state) => state.compare);
@@ -73,7 +74,7 @@ export default function Nav() {
         zIndex={10}
         position={"fixed"}
         transition={"top 0.3s"}
-        top={visible ? "0" : "-135px"}
+        top={visible ? "0" : "-200px"}
       >
         <Flex
           h={16}
@@ -300,6 +301,7 @@ export default function Nav() {
             </Flex>
           </Flex>
         </Flex>
+        <Navbar />
         <Box bg="purple.600" borderTop="1px solid white">
           <SearchBar />
         </Box>
