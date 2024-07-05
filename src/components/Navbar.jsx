@@ -25,10 +25,11 @@ const Navbar = () => {
     <Box bg="purple.600" px="5px">
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <HStack spacing={8} alignItems="center">
-          <HStack as="nav" spacing={2}>
+          <HStack as="nav" spacing={2} fontSize={{ base: "sm", md: "md" }}>
             <Link
               as={NavLink}
               to="/"
+              color="white"
               bg={isActive("/") ? "purple.800" : "transparent"}
               rounded="lg"
               fontWeight="bold"
@@ -45,6 +46,7 @@ const Navbar = () => {
                   ? "purple.800"
                   : "transparent"
               }
+              color="white"
               rounded="lg"
               fontWeight="bold"
               p="8px"
@@ -72,8 +74,12 @@ const Navbar = () => {
                 bg="transparent"
                 color="white"
                 fontWeight="bold"
+                fontSize={{ base: "sm", md: "md" }}
                 p="8px"
                 _hover={{
+                  bg: "purple.800",
+                }}
+                _active={{
                   bg: "purple.800",
                 }}
               >
@@ -88,7 +94,6 @@ const Navbar = () => {
                       <Link
                         as={NavLink}
                         to={`/products/categories/${category.title}`}
-                        color="white"
                         fontWeight="bold"
                       >
                         {category.title}

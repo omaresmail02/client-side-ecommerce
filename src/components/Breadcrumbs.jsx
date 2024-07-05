@@ -5,6 +5,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { HiChevronLeft } from "react-icons/hi";
+import { HiHome } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 
 const Breadcrumbs = ({ pathname }) => {
@@ -15,7 +16,13 @@ const Breadcrumbs = ({ pathname }) => {
       separator={<HiChevronLeft />}
       spacing="1px"
       color="purple.600"
-      fontSize={{ base: "sm", md: "lg" }}
+      fontSize="lg"
+      flexBasis="90%"
+      sx={{
+        "& > ol:first-of-type": {
+          flexWrap: "wrap",
+        },
+      }}
     >
       <BreadcrumbItem>
         <BreadcrumbLink
@@ -23,7 +30,7 @@ const Breadcrumbs = ({ pathname }) => {
           to="/"
           _hover={{ textDecoration: "none", color: "purple.300" }}
         >
-          Home
+          <HiHome />
         </BreadcrumbLink>
       </BreadcrumbItem>
       {segments.map((segment, index) => (
