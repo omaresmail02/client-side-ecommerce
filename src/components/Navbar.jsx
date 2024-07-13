@@ -89,7 +89,7 @@ const Navbar = () => {
                 {isLoading ? (
                   <MenuItem>Loading...</MenuItem>
                 ) : (
-                  data.data.categories.map((category) => (
+                  data.map((category) => (
                     <MenuItem key={category.id}>
                       <Link
                         as={NavLink}

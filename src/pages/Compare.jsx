@@ -150,7 +150,7 @@ export default function Compare() {
                   justifyContent="space-between"
                   mb={2}
                   as={Link}
-                  to={`/products/${product.data.product.id}`}
+                  to={`/products/${product.id}`}
                   cursor="pointer"
                 >
                   <Image

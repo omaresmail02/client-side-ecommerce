@@ -117,7 +117,7 @@ const EditProductModal = ({
             <AccordionPanel pb={4}>
               <RadioGroup>
                 <Stack>
-                  {categoriesData?.data.categories.map((category) => (
+                  {categoriesData?.map((category) => (
                     <Radio
                       key={category.id}
                       value={category.id}

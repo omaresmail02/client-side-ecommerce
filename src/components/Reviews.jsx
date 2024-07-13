@@ -158,8 +158,8 @@ const Reviews = ({ productId }) => {
   };
 
   // Check if the user has already made a review for this product
-  const hasReviewed = reviewsData?.data?.reviews.some(
-    (review) => review?.user?._id === userData?.data?.user?._id
+  const hasReviewed = reviewsData?.some(
+    (review) => review?.user?._id === userData?._id
   );
 
   return (
@@ -225,8 +225,8 @@ const Reviews = ({ productId }) => {
         </Box>
       )}
       <Flex flexDirection="column" gap="15px">
-        {reviewsData?.data.reviews.length > 0 ? (
-          reviewsData?.data.reviews.map((review) => (
+        {reviewsData?.length > 0 ? (
+          reviewsData?.map((review) => (
             <Flex
               key={review.id}
               justifyContent="space-between"
@@ -268,7 +268,7 @@ const Reviews = ({ productId }) => {
                 </Text>
                 <Text fontSize="18px">{review?.review}</Text>
               </Box>
-              {myUserData?.data.user?._id === review.user?._id && (
+              {myUserData?._id === review.user?._id && (
                 <Flex gap="15px">
                   <Box
                     cursor="pointer"

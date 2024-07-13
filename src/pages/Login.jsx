@@ -124,10 +124,10 @@ export default function Login() {
                   align={"start"}
                   justify={"space-between"}
                 >
-                  <Text as={Link} to={"/signup"} color={"blue.400"}>
+                  <Text as={Link} to={"/signup/"} color={"blue.400"}>
                     مستخدم جديد؟
                   </Text>
-                  <Text as={Link} to={"/forgot-password"} color={"blue.400"}>
+                  <Text as={Link} to={"/forgot-password/"} color={"blue.400"}>
                     نسيت كلمة المرور؟
                   </Text>
                 </Stack>

@@ -18,7 +18,7 @@ export const userLogin = createAsyncThunk(
     const { rejectWithValue } = thunkApi;
 
     try {
-      const { data } = await axiosInstance.post(`/users/login`, {
+      const { data } = await axiosInstance.post(`/users/login/`, {
         email,
         password,
       });
@@ -50,7 +50,7 @@ const loginSlice = createSlice({
         date.setTime(date.getTime() + EXPIRES_AT);
         const options = { path: "/", expires: date };
 
-        CookieServices.set("jwt", action.payload.token, options);
+        CookieServices.set("jwt", action.payload.access, options);
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.loading = false;

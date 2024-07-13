@@ -164,7 +164,7 @@ const DashboardCategoriesTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.data.categories.map((category, index) => {
+            {data.map((category, index) => {
               return (
                 <Tr key={category.id}>
                   <Td>{index + 1}</Td>

@@ -12,7 +12,7 @@ const DiscountedProducts = () => {
   const { isLoading, data } = useQuery("products", getProductList);
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.data.products || []
+    data
   );
 
   const [currentPage, setCurrentPage] = useState(1);

@@ -14,7 +14,7 @@ const BrowseByCategory = () => {
         templateColumns={"repeat(auto-fill, minmax(110px, 1fr))"}
         gap={"3"}
       >
-        {data?.data?.map((product) => {
+        {data?.map((product) => {
           return (
             <Link
               key={product.id}

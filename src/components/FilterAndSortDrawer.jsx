@@ -130,7 +130,7 @@ const FilterAndSortDrawer = ({
                     >
                       <Stack>
                         {isLoading & "Loading..."}
-                        {categoriesData?.data.categories.map((category) => {
+                        {categoriesData?.map((category) => {
                           return (
                             <Checkbox key={category.id} value={category.title}>
                               {category.title}

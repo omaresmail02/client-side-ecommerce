@@ -225,8 +225,8 @@ export default function Header() {
                       objectFit="contain"
                       boxSize="50px"
                       bg="white"
-                      src={data?.data.user.image}
-                      alt={data?.data.user.name}
+                      src={data?.image}
+                      alt={data?.name}
                     />
                   </MenuButton>
                   <MenuList
@@ -240,18 +240,18 @@ export default function Header() {
                         objectFit="cover"
                         boxSize="90px"
                         bg="white"
-                        src={data?.data.user.image}
-                        alt={data?.data.user.name}
+                        src={data?.image}
+                        alt={data?.name}
                         mb={4}
                       />
                     </Center>
                     <br />
                     <Center>
-                      <Text>{data?.data.user.name}</Text>
+                      <Text>{data?.name}</Text>
                     </Center>
                     <br />
                     <MenuDivider />
-                    {data?.data.user.role === "admin" && (
+                    {data?.role === "admin" && (
                       <MenuItem as={RouterLink} to="/dashboard">
                         لوحة التحكم
                       </MenuItem>

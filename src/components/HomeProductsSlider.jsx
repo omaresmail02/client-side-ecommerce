@@ -95,7 +95,7 @@ const ProductCarousel = () => {
           </Slider>
         ) : (
           <Slider {...settings} arrows={false}>
-            {data?.data.products.map((product) => (
+            {data?.map((product) => (
               <Box key={product.id} pt="30px" pb="15px" px="10px" height="100%">
                 <ProductCard {...product} />
               </Box>

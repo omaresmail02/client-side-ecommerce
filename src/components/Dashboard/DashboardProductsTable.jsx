@@ -132,7 +132,7 @@ const DashboardProductsTable = () => {
   if (isLoading) return <TableSkeleton />;
 
   // Filter products based on search query
-  const filteredProducts = data?.data.products?.filter((product) =>
+  const filteredProducts = data?.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

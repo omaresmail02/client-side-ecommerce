@@ -45,7 +45,7 @@ const Categories = () => {
                   <Skeleton p="10px" w="100%" />
                 </Box>
               ))
-            : data.data.categories.map((category) => (
+            : data.map((category) => (
                 <motion.div whileHover={{ scale: 1.05 }} key={category.id}>
                   <Box
                     backgroundImage={`url(${category.thumbnail})`}
@@ -57,7 +57,7 @@ const Categories = () => {
                     h="150px"
                   >
                     <Button
-                      to={`/products/categories/${category.title}`}
+                      to={`/categories/products/${category.id}/`}
                       as={Link}
                       color="white"
                       background="none"

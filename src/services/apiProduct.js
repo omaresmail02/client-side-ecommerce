@@ -3,7 +3,7 @@ import { axiosInstance } from "../api/axios.config.js";
 
 export const getProductList = async () => {
   try {
-    const { data } = await axiosInstance.get(`/products`);
+    const { data } = await axiosInstance.get(`/products/`);
     return data;
   } catch (error) {
     console.error("Error fetching product list:", error);
@@ -13,7 +13,7 @@ export const getProductList = async () => {
 
 export const getProduct = async (id) => {
   try {
-    const { data } = await axiosInstance.get(`/products/${id}`);
+    const { data } = await axiosInstance.get(`/products/${id}/`);
     return data;
   } catch (error) {
     console.error("Error fetching product :", error);
@@ -23,7 +23,7 @@ export const getProduct = async (id) => {
 
 export const getCategoryProduct = async (id) => {
   try {
-    const { data } = await axiosInstance.get(`/categories/${id}/products`);
+    const { data } = await axiosInstance.get(`/categories/products/${id}`);
     return data;
   } catch (error) {
     console.error("Error fetching product of the category :", error);
@@ -33,7 +33,7 @@ export const getCategoryProduct = async (id) => {
 
 export const createProduct = async (formData) => {
   try {
-    const { data } = await axiosInstance.post(`/products`, formData, {
+    const { data } = await axiosInstance.post(`/products/`, formData, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -47,7 +47,7 @@ export const createProduct = async (formData) => {
 
 export const updateProduct = async ({ id, formData }) => {
   try {
-    const { data } = await axiosInstance.patch(`/products/${id}`, formData, {
+    const { data } = await axiosInstance.patch(`/products/${id}/`, formData, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },
@@ -61,7 +61,7 @@ export const updateProduct = async ({ id, formData }) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const { data } = await axiosInstance.delete(`/products/${id}`, {
+    const { data } = await axiosInstance.delete(`/products/${id}/`, {
       headers: {
         Authorization: `Bearer ${CookieServices.get("jwt")}`,
       },

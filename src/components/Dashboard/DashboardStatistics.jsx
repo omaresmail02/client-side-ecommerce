@@ -19,14 +19,14 @@ const DashboardStatistics = () => {
   const { data: usersList } = useQuery("users", getUsersList);
   const { data: categoriesList } = useQuery("categories", getCategoriesList);
 
-  const productData = productsList?.data.products.map((product) => ({
+  const productData = productsList?.map((product) => ({
     name: product?.title,
     value: product?.stock,
   }));
 
   const categoryCounts = {};
 
-  productsList?.data.products?.forEach((product) => {
+  productsList?.forEach((product) => {
     const categoryName = product?.category.title;
 
     if (!categoryCounts[categoryName]) {
@@ -55,7 +55,7 @@ const DashboardStatistics = () => {
         >
           <HiOutlineViewColumns size={24} />
           <Text fontSize="lg">عدد المنتجات</Text>
-          <Text fontSize="2xl">{productsList?.data?.products?.length}</Text>
+          <Text fontSize="2xl">{productsList?.length}</Text>
         </VStack>
         <VStack
           spacing="4px"

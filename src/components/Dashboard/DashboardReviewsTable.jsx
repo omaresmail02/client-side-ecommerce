@@ -52,7 +52,7 @@ const DashboardReviewsTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {reviewsData?.data.reviews.map((review) => {
+            {reviewsData?.map((review) => {
               return (
                 <Tr key={review.id}>
                   <Td textAlign="center !important">{review?.user?.name}</Td>

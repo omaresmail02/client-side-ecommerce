@@ -39,7 +39,7 @@ const PersonalDetails = () => {
       );
 
       const response = await axiosInstance.post(
-        "/payment/checkout-session",
+        "/payment/checkout-session/",
         body,
         {
           headers: {

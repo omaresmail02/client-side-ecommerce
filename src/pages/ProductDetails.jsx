@@ -44,7 +44,7 @@ function ProductDetailsPage() {
 
   const { isLoading, data } = useQuery(["product", id], () => getProduct(id));
 
-  const category = data?.data.product.category.title;
+  const category = data?.category;
   const { data: categoryData } = useQuery(["products", category], () =>
     getCategoryProduct(category)
   );
@@ -150,7 +150,7 @@ function ProductDetailsPage() {
           position="relative"
           display="inline-block"
         >
-          {data?.data.product.title}
+          {data?.title}
           <Box
             position="absolute"
             bottom="-5px"
@@ -174,8 +174,8 @@ function ProductDetailsPage() {
             flexDirection={{ base: "column", md: "row" }}
           >
             <Image
-              src={data?.data.product.thumbnail}
-              alt={data.data.product.title}
+              src={data?.thumbnail}
+              alt={data.title}
               // maxW="400px"
               w={{ base: "100%", md: "50%" }}
               aspectRatio="1/1"
@@ -202,22 +202,22 @@ function ProductDetailsPage() {
                 <Flex alignItems="center">
                   <BsStarFill color="gold" />
                   <Text fontSize="2xl" fontWeight="bold" mx={2}>
-                    {data.data.product.ratingsAverage.toFixed(1)}
+                    {data.ratingsAverage.toFixed(1)}
                   </Text>
                   <Text fontSize="lg" color="gray.500" ml={2}>
                     / 5
                   </Text>
                 </Flex>
                 <Text fontSize="md" color="gray.500" mt={2}>
-                  {data.data.product.ratingsQuantity}{" "}
-                  {data.data.product.ratingsQuantity === 1
+                  {data.ratingsQuantity}{" "}
+                  {data.ratingsQuantity === 1
                     ? "review"
                     : "reviews"}
                 </Text>
               </Box>
 
               <Text fontSize={{ base: "md", md: "lg" }} mt="2" color="gray.400">
-                {data.data.product.description}
+                {data.description}
               </Text>
 
               <Box
@@ -229,33 +229,33 @@ function ProductDetailsPage() {
                 <Text
                   fontSize="large"
                   textDecoration={
-                    data.data.product.discountPercentage
+                    data.discountPercentage
                       ? "line-through"
                       : "none"
                   }
                   fontWeight={
-                    data.data.product.discountPercentage ? "thin" : "semibold"
+                    data.discountPercentage ? "thin" : "semibold"
                   }
                 >
-                  {formatPrice(data.data.product.price)}
+                  {formatPrice(data.price)}
                 </Text>
-                {data.data.product.discountPercentage > 0 ? (
+                {data.discountPercentage > 0 ? (
                   <Text fontSize="large" fontWeight="semibold">
                     {formatPrice(
-                      data.data.product.price -
-                        data.data.product.price *
-                          (data.data.product.discountPercentage / 100)
+                      data.price -
+                        data.price *
+                          (data.discountPercentage / 100)
                     )}
                   </Text>
                 ) : null}
               </Box>
-              {data.data.product.discountPercentage > 0 ? (
+              {data.discountPercentage > 0 ? (
                 <Text fontSize="md">
-                  تخفيض : {`${data.data.product.discountPercentage} %`}
+                  تخفيض : {`${data.discountPercentage} %`}
                 </Text>
               ) : null}
               <Text fontSize="md">
-                عدد القطع المتوفرة :{data.data.product.stock}
+                عدد القطع المتوفرة :{data.stock}
               </Text>
 
               <HStack spacing="2" flexDirection="row" w="full">
@@ -313,8 +313,8 @@ function ProductDetailsPage() {
           templateColumns={"repeat(auto-fill, minmax(200px, 1fr))"}
           gap={"5"}
         >
-          {categoryData?.data.products
-            .slice(0, 5)
+          {categoryData?.
+            slice(0, 5)
             .filter((el) => el._id !== id)
             .map((product) => (
               <ProductCard key={product.id} {...product} />

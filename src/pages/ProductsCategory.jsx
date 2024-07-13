@@ -25,7 +25,7 @@ function ProductDetailsPage() {
   );
 
   const { filteredProducts, ...filterAndSortProps } = useProductFilterAndSort(
-    data?.data.products || []
+    data
   );
 
   if (isLoading) return <ProductCardSkeleton />;

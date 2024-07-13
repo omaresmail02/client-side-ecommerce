@@ -45,17 +45,25 @@ const useProductFilterAndSort = (products) => {
       );
     }
     // Sort products
-    filteredProducts.sort((a, b) => {
-      if (sortBy === "name") {
-        return sortOrder === "asc"
-          ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title);
-      } else if (sortBy === "price") {
-        return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
-      }
-      return 0;
-    });
+    if (Array.isArray(filteredProducts) && filteredProducts.length > 0) {
+      filteredProducts.sort((a, b) => {
+        if (sortBy === "name") {
+          return sortOrder === "asc"
+            ? a.title.localeCompare(b.title)
+            : b.title.localeCompare(a.title);
+        } else if (sortBy === "price") {
+          return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+        }
+        return 0;
+      });
+    } else {
+      console.log("filteredProducts is not an array or is empty");
+    }
 
+
+
+
+    
     return filteredProducts;
   };
 

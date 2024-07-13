@@ -110,7 +110,7 @@ const DashboardUsersTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {usersData?.data.users.map((user, index) => {
+            {usersData?.map((user, index) => {
               return (
                 <Tr key={user._id}>
                   <Td>{index + 1}</Td>

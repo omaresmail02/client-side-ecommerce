@@ -5,7 +5,7 @@ import { getMyUser } from "../services/apiUsers";
 const ProtectedRoute = ({ children }) => {
   const { data } = useQuery("myUser", getMyUser);
 
-  if (data?.data.user.role !== "admin") {
+  if (data?.role !== "admin") {
     return <Navigate to="/" />;
   }
 

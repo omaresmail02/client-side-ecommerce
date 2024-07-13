@@ -156,8 +156,8 @@ const UserProfile = () => {
                 objectFit="cover"
                 boxSize="100%"
                 bg="gray.100"
-                src={data?.data.user.image}
-                alt={data?.data.user.name}
+                src={data?.image}
+                alt={data?.name}
                 transition="filter 0.3s ease"
               />
               <Icon
@@ -191,7 +191,7 @@ const UserProfile = () => {
               >
                 <Icon as={HiUser} boxSize={5} mr={2} color="purple.600" />
                 <Text fontWeight="bold">اسم المستخدم:</Text>
-                <Text ml={2}>{data?.data?.user?.name}</Text>
+                <Text ml={2}>{data.name}</Text>
               </Flex>
               <Flex
                 mb={3}
@@ -201,7 +201,7 @@ const UserProfile = () => {
               >
                 <Icon as={HiEnvelope} boxSize={5} mr={2} color="purple.600" />
                 <Text fontWeight="bold">البريد الالكتروني:</Text>
-                <Text ml={2}>{data?.data?.user?.email}</Text>
+                <Text ml={2}>{data?.email}</Text>
               </Flex>
               <Flex
                 mb={3}
@@ -211,10 +211,10 @@ const UserProfile = () => {
               >
                 <Icon as={HiCalendar} boxSize={5} mr={2} color="purple.600" />
                 <Text fontWeight="bold">تاريخ الانشاء:</Text>
-                <Text ml={2}>{formatDate(data?.data?.user?.createdAt)}</Text>
+                <Text ml={2}>{formatDate(data?.createdAt)}</Text>
               </Flex>
-              {data?.data?.user?.updatedAt &&
-                data?.data?.user?.updatedAt !== data?.data?.user?.createdAt && (
+              {data?.user?.updatedAt &&
+                data?.updatedAt !== data?.createdAt && (
                   <Flex
                     mb={3}
                     align="center"
@@ -229,7 +229,7 @@ const UserProfile = () => {
                     />
                     <Text fontWeight="bold">اخر تعديل:</Text>
                     <Text ml={2}>
-                      {formatDate(data?.data?.user?.updatedAt)}
+                      {formatDate(data?.updatedAt)}
                     </Text>
                   </Flex>
                 )}
@@ -276,7 +276,7 @@ const UserProfile = () => {
             placeholder="الاسم"
             id="firstname"
             {...register("firstname")}
-            defaultValue={data?.data?.user?.name.split(" ")[0]}
+            defaultValue={data?.name.split(" ")[0]}
           />
         </FormControl>
         <FormControl my={3}>
@@ -285,7 +285,7 @@ const UserProfile = () => {
             placeholder="اللقب"
             id="lastname"
             {...register("lastname")}
-            defaultValue={data?.data?.user?.name.split(" ")[1]}
+            defaultValue={data?.name.split(" ")[1]}
           />
         </FormControl>
         <FormControl my={3}>
